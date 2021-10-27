@@ -4,10 +4,11 @@
 import { Low, JSONFileSync } from "lowdb";
 import path from "path";
 import lodash from "lodash";
-import { Mutex } from "./mutex.js";
+import { Mutex } from "async-mutex";
 
 const db = {};
-const mutex = new Mutex();
+let mutexMemoryForDB = {};
+let mutexFileForDB = {};
 
 // 如果数据库不存在，将自动创建新的空数据库。
 async function init(dbName, defaultElement = { user: [] }) {
@@ -17,28 +18,52 @@ async function init(dbName, defaultElement = { user: [] }) {
   db[dbName] = new Low(adapter);
   await db[dbName].read();
   db[dbName].data = db[dbName].data || defaultElement;
-  db[dbName].chain = lodash.chain(db[dbName].data);
-  db[dbName].write();
+  db[dbName].chain = await lodash.chain(db[dbName].data);
+
+  mutexFileForDB[dbName] = new Mutex();
+  mutexMemoryForDB[dbName] = new Mutex();
+
+  const release = await mutexFileForDB[dbName].acquire();
+  await db[dbName].write();
+  release();
 }
 
 async function has(dbName, ...path) {
-  return undefined === db[dbName]
-    ? false
-    : db[dbName].chain.hasIn(path).value();
+  if (undefined === db[dbName]) {
+    return false;
+  }
+
+  const release = await mutexMemoryForDB[dbName].acquire();
+  const result = (await db[dbName].chain.hasIn(path).value()) ? true : false;
+  release();
+
+  return result;
 }
 
 async function write(dbName) {
   if (db[dbName]) {
-    await mutex.acquire();
-    db[dbName].write();
-    mutex.release();
+    const release = await mutexFileForDB[dbName].acquire();
+    await db[dbName].write();
+    release();
   }
 }
 
 async function includes(dbName, key, index, value) {
-  return (
-    db[dbName] && db[dbName].chain.get(key).map(index).includes(value).value()
-  );
+  if (undefined === db[dbName]) {
+    return false;
+  }
+
+  const release = await mutexMemoryForDB[dbName].acquire();
+  const result = (await db[dbName].chain
+    .get(key)
+    .map(index)
+    .includes(value)
+    .value())
+    ? true
+    : false;
+  release();
+
+  return result;
 }
 
 async function remove(dbName, key, index) {
@@ -46,20 +71,26 @@ async function remove(dbName, key, index) {
     return;
   }
 
-  await mutex.acquire();
-  db[dbName].data[key] = db[dbName].chain.get(key).reject(index).value();
-  mutex.release();
+  const release = await mutexMemoryForDB[dbName].acquire();
+  db[dbName].data[key] = await db[dbName].chain.get(key).reject(index).value();
+  release();
 
-  write(dbName);
+  await write(dbName);
 }
 
 async function get(dbName, key, index = undefined) {
-  return (
-    db[dbName] &&
-    (undefined === index
-      ? db[dbName].chain.get(key).value()
-      : db[dbName].chain.get(key).find(index).value())
-  );
+  if (undefined === db[dbName]) {
+    return undefined;
+  }
+
+  const release = await mutexMemoryForDB[dbName].acquire();
+  const result =
+    undefined === index
+      ? await db[dbName].chain.get(key).value()
+      : await db[dbName].chain.get(key).find(index).value();
+  release();
+
+  return result;
 }
 
 async function push(dbName, key, data) {
@@ -67,11 +98,11 @@ async function push(dbName, key, data) {
     return;
   }
 
-  await mutex.acquire();
-  db[dbName].chain.get(key).push(data).value();
-  mutex.release();
+  const release = await mutexMemoryForDB[dbName].acquire();
+  await db[dbName].chain.get(key).push(data).value();
+  release();
 
-  write(dbName);
+  await write(dbName);
 }
 
 async function update(dbName, key, index, data) {
@@ -79,11 +110,11 @@ async function update(dbName, key, index, data) {
     return;
   }
 
-  await mutex.acquire();
-  db[dbName].chain.get(key).find(index).assign(data).value();
-  mutex.release();
+  const release = await mutexMemoryForDB[dbName].acquire();
+  await db[dbName].chain.get(key).find(index).assign(data).value();
+  release();
 
-  write(dbName);
+  await write(dbName);
 }
 
 async function set(dbName, key, data) {
@@ -91,11 +122,11 @@ async function set(dbName, key, data) {
     return;
   }
 
-  await mutex.acquire();
-  db[dbName].chain.set(key, data).value();
-  mutex.release();
+  const release = await mutexMemoryForDB[dbName].acquire();
+  await db[dbName].chain.set(key, data).value();
+  release();
 
-  write(dbName);
+  await write(dbName);
 }
 
 async function cleanByTimeDB(
@@ -127,10 +158,13 @@ async function cleanByTimeDB(
 
   for (const i in records) {
     const uid = records[i][dbKey[1]];
+    let release;
 
     // 没有基准字段则删除该记录（因为很可能是错误数据）
     if (!uid || !(await has(dbName, dbKey[0], i, dbKey[1]))) {
+      release = await mutexMemoryForDB[dbName].acquire();
       records.splice(i, 1);
+      release();
       nums++;
       continue;
     }
@@ -141,7 +175,9 @@ async function cleanByTimeDB(
     const now = new Date().valueOf();
 
     if (!time || now - time > milliseconds) {
+      release = await mutexMemoryForDB[dbName].acquire();
       records.splice(i, 1);
+      release();
       nums++;
     }
   }
@@ -159,6 +195,7 @@ async function cleanCookies() {
 
   for (const key of keys) {
     let records = await get(dbName, key);
+    const release = await mutexMemoryForDB[dbName].acquire();
 
     for (const i in records) {
       // 1. 没有基准字段则删除该记录
@@ -168,6 +205,8 @@ async function cleanCookies() {
         nums++;
       }
     }
+
+    release();
   }
 
   await write(dbName);
@@ -179,6 +218,7 @@ async function cleanCookiesInvalid() {
   const dbName = "cookies_invalid";
   const cookies = (await get(dbName, "cookie")) || [];
   let nums = 0;
+  const release = await mutexMemoryForDB[dbName].acquire();
 
   for (const i in cookies) {
     if (
@@ -189,6 +229,8 @@ async function cleanCookiesInvalid() {
       nums++;
     }
   }
+
+  release();
 
   await write(dbName);
   return nums;
