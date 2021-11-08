@@ -1,6 +1,7 @@
 /* global command, master */
 /* eslint no-undef: "error" */
 
+import { checkAuth } from "../../utils/auth.js";
 import { hasEntrance } from "../../utils/config.js";
 import { feedback } from "./feedback.js";
 import { menu } from "./menu.js";
@@ -8,46 +9,40 @@ import { prophecy } from "./prophecy.js";
 import { quote } from "./quote.js";
 import { roll } from "./roll.js";
 
-async function Plugin(Message, bot) {
-  const msg = Message.raw_message;
-  const userID = Message.user_id;
-  const groupID = Message.group_id;
-  const type = Message.type;
-  const name = Message.sender.nickname;
-  const sendID = "group" === type ? groupID : userID;
-  const groupName = "group" === type ? Message.group_name : undefined;
-
+async function Plugin(msg) {
   switch (true) {
-    case hasEntrance(msg, "tools", "menu"):
-      menu(sendID, msg, type, userID, bot);
+    case hasEntrance(msg.text, "tools", "menu"):
+      if (false !== (await checkAuth(msg, "menu"))) {
+        menu(msg);
+      }
       break;
-    case hasEntrance(msg, "tools", "prophecy"):
-      prophecy(sendID, msg, type, userID, bot);
+    case hasEntrance(msg.text, "tools", "prophecy"):
+      if (false !== (await checkAuth(msg, "prophecy"))) {
+        prophecy(msg);
+      }
       break;
-    case hasEntrance(msg, "tools", "roll"):
-      roll(sendID, msg, type, userID, bot);
+    case hasEntrance(msg.text, "tools", "roll"):
+      if (false !== (await checkAuth(msg, "roll"))) {
+        roll(msg);
+      }
       break;
-    case hasEntrance(msg, "tools", "quote"):
-      quote(sendID, msg, type, userID, bot);
+    case hasEntrance(msg.text, "tools", "quote"):
+      if (false !== (await checkAuth(msg, "quote"))) {
+        quote(msg);
+      }
       break;
-    case hasEntrance(msg, "tools", "feedback"):
-      feedback(sendID, name, msg, type, userID, groupName, bot);
+    case hasEntrance(msg.text, "tools", "feedback"):
+      if (false !== (await checkAuth(msg, "feedback"))) {
+        feedback(msg);
+      }
       break;
-    case hasEntrance(msg, "tools", "help"):
-      await bot.sendMessage(sendID, command.usage, type, userID, "\n");
+    case hasEntrance(msg.text, "tools", "help"):
+      msg.bot.say(msg.sid, command.usage, msg.type, msg.uid, "\n");
       break;
-    case hasEntrance(msg, "tools", "master"):
-      await bot.sendMessage(sendID, master.usage, type, userID, "\n");
+    case hasEntrance(msg.text, "tools", "master"):
+      msg.bot.say(msg.sid, master.usage, msg.type, msg.uid, "\n");
       break;
   }
 }
 
-async function Wrapper(Message, bot) {
-  try {
-    await Plugin(Message, bot);
-  } catch (e) {
-    bot.logger.error(e);
-  }
-}
-
-export { Wrapper as run };
+export { Plugin as run };

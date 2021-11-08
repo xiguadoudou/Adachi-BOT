@@ -1,65 +1,15 @@
-/* global alias */
-/* eslint no-undef: "error" */
+import { checkAuth } from "../../utils/auth.js";
+import { hasEntrance } from "../../utils/config.js";
+import { doInfo } from "./info.js";
 
-import lodash from "lodash";
-import { render } from "../../utils/render.js";
-import { hasAuth, sendPrompt } from "../../utils/auth.js";
-import { getInfo } from "../../utils/api.js";
-
-async function Plugin(Message, bot) {
-  const msg = Message.raw_message;
-  const userID = Message.user_id;
-  const groupID = Message.group_id;
-  const type = Message.type;
-  const name = Message.sender.nickname;
-  const sendID = "group" === type ? groupID : userID;
-  let [text] = msg.split(/(?<=^\S+)\s/).slice(1);
-  let data;
-
-  if (
-    !(await hasAuth(userID, "overview")) ||
-    !(await hasAuth(sendID, "overview"))
-  ) {
-    await sendPrompt(sendID, userID, name, "查询游戏数据", type, bot);
-    return;
-  }
-
-  if (!text) {
-    await bot.sendMessage(sendID, "请输入名称。", type, userID);
-    return;
-  }
-
-  text = "string" === typeof text ? text.toLowerCase() : "";
-
-  try {
-    data = await getInfo(alias.all[text] || text);
-  } catch (e) {
-    const guess = lodash
-      .chain(alias.allNames)
-      .filter((c) => c.includes(text))
-      .join("、")
-      .value();
-
-    await bot.sendMessage(
-      sendID,
-      `查询失败，未知的名称${text}。${
-        guess ? "\n您要查询的是不是：\n" + guess : ""
-      }`,
-      type,
-      userID
-    );
-    return;
-  }
-
-  await render(data, "genshin-overview", sendID, type, userID, bot, 2);
-}
-
-async function Wrapper(Message, bot) {
-  try {
-    await Plugin(Message, bot);
-  } catch (e) {
-    bot.logger.error(e);
+async function Plugin(msg) {
+  switch (true) {
+    case hasEntrance(msg.text, "overview", "info"):
+      if (false !== (await checkAuth(msg, "info"))) {
+        doInfo(msg);
+      }
+      break;
   }
 }
 
-export { Wrapper as run };
+export { Plugin as run };
