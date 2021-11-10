@@ -178,7 +178,7 @@ ${data.month}月累计签到：${++signInfo.total_sign_day}天
     //    return;
     //}
     const nowTime = new Date().valueOf();
-    const crtime = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
+    const crtime = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
     const cr = crtime <= 0 ? data.max_resin : parseInt((76800 - crtime) / 60 / 8);
     let message = `[CQ:at,qq=${userID}]
 树脂${cr}/${data.max_resin} 委托${data.finished_task_num}/${data.total_task_num} 派遣${data.current_expedition_num}/${data.max_expedition_num}`;
