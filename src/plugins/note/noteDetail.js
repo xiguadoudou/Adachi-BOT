@@ -65,7 +65,7 @@ function getSignInfo(role_id, server, cookie) {
 function getReSignInfo(role_id, server, cookie) {
     const query = { region: server, act_id: "e202009291139501", uid: role_id, };
 
-    return fetch(`${__API.SIGN_INFO_URL}?${new URLSearchParams(query)}`, {
+    return fetch(`${__API.RESIGN_INFO_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         qs: query,
         headers: { ...HEADERS, DS: getDS(query), Cookie: cookie, Referer: __API.REFERER_URL },
