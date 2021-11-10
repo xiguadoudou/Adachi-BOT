@@ -94,6 +94,9 @@ async function Plugin(Message) {
                 );
                 return;
             }
+            //if (signInfo.sign_cnt_missed > 0) {
+
+            //}else
             await bot.say(
                 sendID,
                 `[CQ:at,qq=${userID}]

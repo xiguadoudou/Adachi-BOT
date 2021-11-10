@@ -93,9 +93,9 @@ card:
   enable: true
   weights: 9899
   regex:
-    - ^米游社\s*$
-    - ^米游社\s+\d+\s*$
-    - ^米游社\s*\[CQ:at,qq=.*$
+    - ^(米游社|mhy|米哈游|mys)\s*$
+    - ^(米游社|mhy|米哈游|mys)\s+\d+\s*$
+    - ^(米游社|mhy|米哈游|mys)\s*\[CQ:at,qq=.*$
   functions:
     card:
       type: command

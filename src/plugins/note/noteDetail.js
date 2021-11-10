@@ -10,6 +10,7 @@ const __API = {
     FETCH_ROLE_DAILY_NOTE: "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote",
     REFERER_URL: "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id=e202009291139501&utm_source=bbs&utm_medium=mys&utm_campaign=icon",
     SIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/info",
+    RESIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign_info",
     SIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
     REWARD_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home",
     LEDGER_URL: "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo",
@@ -52,6 +53,16 @@ function getDailyNote(role_id, server, cookie) {
 }
 
 function getSignInfo(role_id, server, cookie) {
+    const query = { region: server, act_id: "e202009291139501", uid: role_id, };
+
+    return fetch(`${__API.SIGN_INFO_URL}?${new URLSearchParams(query)}`, {
+        method: "GET",
+        qs: query,
+        headers: { ...HEADERS, DS: getDS(query), Cookie: cookie, Referer: __API.REFERER_URL },
+    }).then((res) => res.json());
+}
+
+function getReSignInfo(role_id, server, cookie) {
     const query = { region: server, act_id: "e202009291139501", uid: role_id, };
 
     return fetch(`${__API.SIGN_INFO_URL}?${new URLSearchParams(query)}`, {
@@ -174,6 +185,26 @@ async function signInfoPromise(uid, server, userID, bot) {
     return data;
 }
 
+async function resignInfoPromise(uid, server, userID, bot) {
+    const cookie = await getUserCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人cookie`);
+    bot.logger.debug(
+        `signInfo ${uid} ${server} ${cookie}`
+    );
+    const { retcode, message, data } = await getReSignInfo(
+        uid,
+        server,
+        cookie
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
 async function rewardsPromise(uid, server, userID, bot) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
@@ -233,4 +264,4 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     return data;
 }
 
-export { notePromise, signInfoPromise, rewardsPromise, signInPromise, ledgerPromise, setUserCookie };
+export { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, ledgerPromise, setUserCookie };
