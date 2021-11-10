@@ -477,7 +477,7 @@ note:
         - ^上上月札记
 
 nikename:
-  enable: false
+  enable: true
   weights: 7799
   regex:
     - ^修改昵称 +.+$

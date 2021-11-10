@@ -20,6 +20,7 @@ function initDB() {
   db.init("music", { source: [] });
   db.init("time");
   db.init("note", { user: [], cookie: [] });
+  db.init("nikename", { uid: [] });
 }
 
 async function initBrowser() {

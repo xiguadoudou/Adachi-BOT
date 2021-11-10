@@ -6,6 +6,7 @@ import { render } from "../../utils/render.js";
 import { getID, getUID } from "../../utils/id.js";
 import { guessPossibleNames } from "../../utils/tools.js";
 import { basePromise, detailPromise, characterPromise, handleDetailError } from "../../utils/detail.js";
+import { getTrueNameByNikeName } from "../nikename/nikename.js";
 
 function getCharacter(uid, character) {
   const { avatars } = db.get("info", "user", { uid }) || {};
@@ -41,6 +42,7 @@ function getName(text) {
   }
 
   character = "string" === typeof character ? character.toLowerCase() : "";
+  character = getTrueNameByNikeName(userID, character);
   character = alias.character[character] || character;
 
   return character;
