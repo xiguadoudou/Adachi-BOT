@@ -1,7 +1,7 @@
 ﻿import { hasEntrance } from "../../utils/config.js";
 import { basePromise } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
-import { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, ledgerPromise, setUserCookie } from "./noteDetail.js";
+import { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise, ledgerPromise, setUserCookie } from "./noteDetail.js";
 
 function getTime(s, offset) {
     if (s + offset < 0)
