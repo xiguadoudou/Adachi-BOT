@@ -109,6 +109,7 @@ card:
       description: 查询并更新角色信息
       entrance:
         - ^米游社
+        - ^(米哈游|mhy|mys)
 
 character:
   enable: true
