@@ -1,4 +1,4 @@
-
+Ôªø
 import moment from "moment-timezone";
 import lodash from "lodash";
 import db from "../../utils/database.js";
@@ -117,14 +117,14 @@ async function notePromise(uid, server, userID, bot) {
     //const { time: lastTime } = db.get("time", "user", { note: uid }) || {};
     const { data: dbData,time:lastTime } = db.get("note", "user", { uid }) || {};
 
-    // ≥¢ ‘ π”√ª∫¥Ê
+    // Â∞ùËØï‰ΩøÁî®ÁºìÂ≠ò
     if (dbData) {
         if (
             lastTime &&
             nowTime - lastTime < config.cacheAbyEffectTime * 60 * 60 * 1000
         ) {
             bot.logger.debug(
-                `ª∫¥Ê£∫ π”√ ${uid} ‘⁄ ${config.cacheAbyEffectTime} –° ±ƒ⁄µƒ µ ±±„º„°£`
+                `ÁºìÂ≠òÔºö‰ΩøÁî® ${uid} Âú® ${config.cacheAbyEffectTime} Â∞èÊó∂ÂÜÖÁöÑÂÆûÊó∂‰æøÁ¨∫„ÄÇ`
             );
             return [lastTime, dbData];
         }
@@ -132,7 +132,7 @@ async function notePromise(uid, server, userID, bot) {
 
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
-        return Promise.reject(`Œ¥…Ë÷√ÀΩ»Àcookie`);
+        return Promise.reject(`Êú™ËÆæÁΩÆÁßÅ‰∫∫cookie`);
 
     const { retcode, message, data } = await getDailyNote(
         uid,
@@ -141,7 +141,7 @@ async function notePromise(uid, server, userID, bot) {
     );
 
     if (retcode !== 0) {
-        return Promise.reject(`√◊”Œ…ÁΩ”ø⁄±®¥Ì: ${message}`);
+        return Promise.reject(`Á±≥Ê∏∏Á§æÊé•Âè£Êä•Èîô: ${message}`);
     }
 
     if (!db.includes("note", "user", "uid", uid)) {
@@ -152,9 +152,8 @@ async function notePromise(uid, server, userID, bot) {
     db.update("note", "user", { uid }, { data, time: nowTime });
     //db.update("time", "user", { note: uid }, { time: nowTime });
     //bot.logger.debug(
-    //    `ª∫¥Ê£∫–¬‘ˆ ${uid} µƒ µ ±±„º„£¨ª∫¥Ê ${config.cacheAbyEffectTime} –° ±°£`
+    //    `ÁºìÂ≠òÔºöÊñ∞Â¢û ${uid} ÁöÑÂÆûÊó∂‰æøÁ¨∫ÔºåÁºìÂ≠ò ${config.cacheAbyEffectTime} Â∞èÊó∂„ÄÇ`
     //);
-
     return [nowTime, data];
 }
 
@@ -162,7 +161,7 @@ async function notePromise(uid, server, userID, bot) {
 async function signInfoPromise(uid, server, userID, bot) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
-        return Promise.reject(`Œ¥…Ë÷√ÀΩ»Àcookie`);
+        return Promise.reject(`Êú™ËÆæÁΩÆÁßÅ‰∫∫cookie`);
     bot.logger.debug(
         `signInfo ${uid} ${server} ${cookie}`
     );
@@ -173,7 +172,7 @@ async function signInfoPromise(uid, server, userID, bot) {
     );
 
     if (retcode !== 0) {
-        return Promise.reject(`√◊”Œ…ÁΩ”ø⁄±®¥Ì: ${message}`);
+        return Promise.reject(`Á±≥Ê∏∏Á§æÊé•Âè£Êä•Èîô: ${message}`);
     }
 
     return data;
@@ -182,7 +181,7 @@ async function signInfoPromise(uid, server, userID, bot) {
 async function rewardsPromise(uid, server, userID, bot) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
-        return Promise.reject(`Œ¥…Ë÷√ÀΩ»Àcookie`);
+        return Promise.reject(`Êú™ËÆæÁΩÆÁßÅ‰∫∫cookie`);
     bot.logger.debug(
         `rewards ${uid} ${server} ${cookie}`
     );
@@ -191,7 +190,7 @@ async function rewardsPromise(uid, server, userID, bot) {
     );
 
     if (retcode !== 0) {
-        return Promise.reject(`√◊”Œ…ÁΩ”ø⁄±®¥Ì: ${message}`);
+        return Promise.reject(`Á±≥Ê∏∏Á§æÊé•Âè£Êä•Èîô: ${message}`);
     }
 
     return data;
@@ -200,7 +199,7 @@ async function rewardsPromise(uid, server, userID, bot) {
 async function signInPromise(uid, server, userID, bot) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
-        return Promise.reject(`Œ¥…Ë÷√ÀΩ»Àcookie`);
+        return Promise.reject(`Êú™ËÆæÁΩÆÁßÅ‰∫∫cookie`);
     bot.logger.debug(
         `signIn ${uid} ${server} ${cookie}`
     );
@@ -211,7 +210,7 @@ async function signInPromise(uid, server, userID, bot) {
     );
 
     if (retcode !== 0) {
-        return Promise.reject(`√◊”Œ…ÁΩ”ø⁄±®¥Ì: ${message}`);
+        return Promise.reject(`Á±≥Ê∏∏Á§æÊé•Âè£Êä•Èîô: ${message}`);
     }
 
     return data;
@@ -220,7 +219,7 @@ async function signInPromise(uid, server, userID, bot) {
 async function ledgerPromise(uid, server, userID, bot, month = 0) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
-        return Promise.reject(`Œ¥…Ë÷√ÀΩ»Àcookie`);
+        return Promise.reject(`Êú™ËÆæÁΩÆÁßÅ‰∫∫cookie`);
     bot.logger.debug(
         `ledger ${uid} ${server} ${cookie}`
     );
@@ -232,7 +231,7 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     );
 
     if (retcode !== 0) {
-        return Promise.reject(`√◊”Œ…ÁΩ”ø⁄±®¥Ì: ${message}`);
+        return Promise.reject(`Á±≥Ê∏∏Á§æÊé•Âè£Êä•Èîô: ${message}`);
     }
 
     return data;

@@ -1,4 +1,4 @@
-/* global alias, command */
+ï»¿/* global alias, command */
 /* eslint no-undef: "error" */
 
 //import { hasAuth, sendPrompt } from "../../utils/auth.js";
@@ -23,13 +23,8 @@ async function Plugin(Message) {
     const userID = Message.uid;
     const type = Message.type;
     const sendID = Message.sid;
-    const dbInfo = await getID(msg, userID); // Ã×ÓÎÉç ID
+    const dbInfo = await getID(msg, userID); // ç±³æ¸¸ç¤¾ ID
     let uid, data, region, baseTime;
-
-    //if (!(await hasAuth(userID, "query")) || !(await hasAuth(sendID, "query"))) {
-    //  await sendPrompt(sendID, userID, "²éÑ¯ÓÎÏ·ÄÚĞÅÏ¢", type, bot);
-    //  return;
-    //}
 
     if ("string" === typeof dbInfo) {
         await bot.say(sendID, dbInfo, type, userID);
@@ -44,18 +39,18 @@ async function Plugin(Message) {
             let cookie = msg.slice(9);
             cookie = cookie.replace(new RegExp("'", "gm"), "");
             if (cookie.indexOf("cookie_token") == -1 || cookie.indexOf("account_id") == -1) {
-                await bot.say(sendID, `Î´ÕÒµ½µÇÂ¼ĞÅÏ¢£¡ÇëµÇÂ¼²¢½øÈëÃ×¹şÓÎÍ¨ĞĞÖ¤Ò³Ãæ£¬ÔÙ´Î³¢ÊÔ»ñÈ¡Cookie¡£`, type, userID);
+                await bot.say(sendID, `æœªæ‰¾åˆ°ç™»å½•ä¿¡æ¯ï¼è¯·ç™»å½•å¹¶è¿›å…¥ç±³å“ˆæ¸¸é€šè¡Œè¯é¡µé¢ï¼Œå†æ¬¡å°è¯•è·å–Cookieã€‚`, type, userID);
                 return;
             }
             await setUserCookie(uid, cookie, bot);
-            await bot.say(sendID, `ÒÑÉèÖÃcookie`, type, userID);
+            await bot.say(sendID, `å·²è®¾ç½®cookie`, type, userID);
             return;
         } else if (hasEntrance(msg, "note", "sign_in")) {
             let signInfo = await signInfoPromise(uid, region, userID, bot);
             if (!signInfo) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] »ñÈ¡Ç©µ½ĞÅÏ¢Ê§°Ü`,
+                    `[CQ:at,qq=${userID}] è·å–ç­¾åˆ°ä¿¡æ¯å¤±è´¥`,
                     type,
                     userID
                 );
@@ -64,7 +59,7 @@ async function Plugin(Message) {
             if (signInfo.is_sign) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] ½ñÈÕÒÑÇ©µ½,±¾ÔÂÀÛ¼ÆÇ©µ½${signInfo.total_sign_day}Ìì`,
+                    `[CQ:at,qq=${userID}] ä»Šæ—¥å·²ç­¾åˆ°,æœ¬æœˆç´¯è®¡ç­¾åˆ°${signInfo.total_sign_day}å¤©`,
                     type,
                     userID
                 );
@@ -73,7 +68,7 @@ async function Plugin(Message) {
             if (signInfo.first_bind) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] ÇëÏÈÊÖ¶¯Ç©µ½Ò»´Î`,
+                    `[CQ:at,qq=${userID}] è¯·å…ˆæ‰‹åŠ¨ç­¾åˆ°ä¸€æ¬¡`,
                     type,
                     userID
                 );
@@ -83,7 +78,7 @@ async function Plugin(Message) {
             if (!sign) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] Ç©µ½Ê§°Ü`,
+                    `[CQ:at,qq=${userID}] ç­¾åˆ°å¤±è´¥`,
                     type,
                     userID
                 );
@@ -93,7 +88,7 @@ async function Plugin(Message) {
             if (!data) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] Ç©µ½Ê§°Ü`,
+                    `[CQ:at,qq=${userID}] ç­¾åˆ°å¤±è´¥`,
                     type,
                     userID
                 );
@@ -102,8 +97,8 @@ async function Plugin(Message) {
             await bot.say(
                 sendID,
                 `[CQ:at,qq=${userID}]
-${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
-½ñÈÕ½±Àø£º${data.awards[signInfo.total_sign_day - 1].name} * ${data.awards[signInfo.total_sign_day - 1].cnt}`,
+${data.month}æœˆç´¯è®¡ç­¾åˆ°ï¼š${++signInfo.total_sign_day}å¤©
+ä»Šæ—¥å¥–åŠ±ï¼š${data.awards[signInfo.total_sign_day - 1].name} * ${data.awards[signInfo.total_sign_day - 1].cnt}`,
                 type,
                 userID
             );
@@ -113,7 +108,7 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
             if (!data) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] »ñÈ¡Ôı¼ÇÊ§°Ü`,
+                    `[CQ:at,qq=${userID}] è·å–æœ­è®°å¤±è´¥`,
                     type,
                     userID
                 );
@@ -126,7 +121,7 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
             if (!data) {
                 await bot.say(
                     sendID,
-                    `[CQ:at,qq=${userID}] »ñÈ¡Ôı¼ÇÊ§°Ü`,
+                    `[CQ:at,qq=${userID}] è·å–æœ­è®°å¤±è´¥`,
                     type,
                     userID
                 );
@@ -136,11 +131,11 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
                 await bot.say(
                     sendID,
                     `[CQ:at,qq=${userID}]
-ÂÃĞĞÕß${data.data_month}ÔÂÔı¼Ç
-µ±ÔÂ¹²»ñÈ¡£º
-Ô­Ê¯£º${data.month_data.current_primogems}
-Ä¦À­£º${data.month_data.current_mora}
-ÂÃĞĞÕß½ñÈÕÒÑ»ñÈ¡${data.day_data.current_primogems}Ô­Ê¯£¬${data.day_data.current_mora}Ä¦À­£¬Ã÷ÌìÒ²ÒªºÃºÃÅ¬Á¦Å¶£¿`,
+æ—…è¡Œè€…${data.data_month}æœˆæœ­è®°
+å½“æœˆå…±è·å–ï¼š
+åŸçŸ³ï¼š${data.month_data.current_primogems}
+æ‘©æ‹‰ï¼š${data.month_data.current_mora}
+æ—…è¡Œè€…ä»Šæ—¥å·²è·å–${data.day_data.current_primogems}åŸçŸ³ï¼Œ${data.day_data.current_mora}æ‘©æ‹‰ï¼Œæ˜å¤©ä¹Ÿè¦å¥½å¥½åŠªåŠ›å“¦ï¼Ÿ`,
                     type,
                     userID
                 );
@@ -148,12 +143,12 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
                 await bot.say(
                     sendID,
                     `[CQ:at,qq=${userID}]
-ÂÃĞĞÕß${data.data_month}ÔÂÔı¼Ç
-µ±ÔÂ¹²»ñÈ¡£º
-Ô­Ê¯£º${data.month_data.current_primogems}
-Ä¦À­£º${data.month_data.current_mora}
-Ô­Ê¯ÊÕÈë${data.month_data.primogems_rate == 0 ? "¸úÉÏ¸öÔÂ²î²»¶à" : `±ÈÉÏ¸öÔÂ${data.month_data.primogems_rate > 0 ? `Ôö¼Ó${data.month_data.primogems_rate}` : `¼õÉÙ${-data.month_data.primogems_rate}`}%`},
-Ä¦À­ÊÕÈë${data.month_data.mora_rate == 0 ? "¸úÉÏ¸öÔÂ²î²»¶à" : `±ÈÉÏ¸öÔÂ${data.month_data.mora_rate > 0 ? `Ôö¼Ó${data.month_data.mora_rate}` : `¼õÉÙ${-data.month_data.mora_rate}`}%`}¡£`,
+æ—…è¡Œè€…${data.data_month}æœˆæœ­è®°
+å½“æœˆå…±è·å–ï¼š
+åŸçŸ³ï¼š${data.month_data.current_primogems}
+æ‘©æ‹‰ï¼š${data.month_data.current_mora}
+åŸçŸ³æ”¶å…¥${data.month_data.primogems_rate == 0 ? "è·Ÿä¸Šä¸ªæœˆå·®ä¸å¤š" : `æ¯”ä¸Šä¸ªæœˆ${data.month_data.primogems_rate > 0 ? `å¢åŠ ${data.month_data.primogems_rate}` : `å‡å°‘${-data.month_data.primogems_rate}`}%`},
+æ‘©æ‹‰æ”¶å…¥${data.month_data.mora_rate == 0 ? "è·Ÿä¸Šä¸ªæœˆå·®ä¸å¤š" : `æ¯”ä¸Šä¸ªæœˆ${data.month_data.mora_rate > 0 ? `å¢åŠ ${data.month_data.mora_rate}` : `å‡å°‘${-data.month_data.mora_rate}`}%`}ã€‚`,
                     type,
                     userID
                 );
@@ -165,14 +160,14 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
         if (!data) {
             await bot.say(
                 sendID,
-                `[CQ:at,qq=${userID}] »ñÈ¡ÊµÊ±±ã¼ãÊ§°Ü`,
+                `[CQ:at,qq=${userID}] è·å–å®æ—¶ä¾¿ç¬ºå¤±è´¥`,
                 type,
                 userID
             );
             return;
         }
     } catch (e) {
-        // Å×³ö¿Õ´®ÔòÊ¹ÓÃ»º´æ
+        // æŠ›å‡ºç©ºä¸²åˆ™ä½¿ç”¨ç¼“å­˜
         if ("" !== e) {
             await bot.say(sendID, `[CQ:at,qq=${userID}] ${e}`, type, userID);
             return;
@@ -184,24 +179,24 @@ ${data.month}ÔÂÀÛ¼ÆÇ©µ½£º${++signInfo.total_sign_day}Ìì
     //}
     const nowTime = new Date().valueOf();
     let message = `[CQ:at,qq=${userID}]
-Ê÷Ö¬${data.current_resin}/${data.max_resin} Î¯ÍĞ${data.finished_task_num}/${data.total_task_num} ÅÉÇ²${data.current_expedition_num}/${data.max_expedition_num}`;
+æ ‘è„‚${data.current_resin}/${data.max_resin} å§”æ‰˜${data.finished_task_num}/${data.total_task_num} æ´¾é£${data.current_expedition_num}/${data.max_expedition_num}`;
     let [day, hour, min, sec] = getTime(parseInt(data.resin_recovery_time), (baseTime - nowTime) / 1000);
     message += `
-Ê÷Ö¬»ØÂúÊ±¼ä£º${hour}Ê±${min}·Ö${sec}Ãë`;
+æ ‘è„‚å›æ»¡æ—¶é—´ï¼š${hour}æ—¶${min}åˆ†${sec}ç§’`;
     message += `
-[Ã¿ÈÕÎ¯ÍĞ]½±Àø${data.is_extra_task_reward_received ? "ÒÑÁìÈ¡" : "Î´ÁìÈ¡"}`;
+[æ¯æ—¥å§”æ‰˜]å¥–åŠ±${data.is_extra_task_reward_received ? "å·²é¢†å–" : "æœªé¢†å–"}`;
     message += `
-±¾ÖÜÊ£ÓàÏûºÄ¼õ°ë´ÎÊı${data.remain_resin_discount_num}/${data.resin_discount_num_limit}`;
+æœ¬å‘¨å‰©ä½™æ¶ˆè€—å‡åŠæ¬¡æ•°${data.remain_resin_discount_num}/${data.resin_discount_num_limit}`;
     let num = 1;
     for (var expedition of data.expeditions) {
         if (expedition)
             if (expedition.status == "Ongoing") {
                 [day, hour, min, sec] = getTime(parseInt(expedition.remained_time), (baseTime - nowTime) / 1000);
                 message += `
-ÅÉÇ²${num}£º${hour}Ê±${min}·Ö${sec}Ãë`;
+æ´¾é£${num}ï¼š${hour}æ—¶${min}åˆ†${sec}ç§’`;
             } else if (expedition.status == "Finished") {
                 message += `
-ÅÉÇ²${num}£ºÒÑÍê³É`;
+æ´¾é£${num}ï¼šå·²å®Œæˆ`;
             }
         num++;
     }
