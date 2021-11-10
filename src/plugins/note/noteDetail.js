@@ -12,6 +12,7 @@ const __API = {
     SIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/info",
     RESIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign_info",
     SIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+    RESIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign",
     REWARD_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home",
     LEDGER_URL: "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo",
 };
@@ -90,6 +91,30 @@ function mysSignIn(role_id, server, cookie) {
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
 
     return fetch(__API.SIGN_URL, {
+        method: "POST",
+        json: true,
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: __API.REFERER_URL,
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.3.0",
+            "x-rpc-app_version": "2.3.0",
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+function mysReSignIn(role_id, server, cookie) {
+    const body = { act_id: "e202009291139501", region: server, uid: role_id, };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.RESIGN_URL, {
         method: "POST",
         json: true,
         body: JSON.stringify(body),
@@ -243,6 +268,26 @@ async function signInPromise(uid, server, userID, bot) {
     return data;
 }
 
+async function resignInPromise(uid, server, userID, bot) {
+    const cookie = await getUserCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人cookie`);
+    bot.logger.debug(
+        `signIn ${uid} ${server} ${cookie}`
+    );
+    const { retcode, message, data } = await mysReSignIn(
+        uid,
+        server,
+        cookie
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
 async function ledgerPromise(uid, server, userID, bot, month = 0) {
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
@@ -264,4 +309,4 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     return data;
 }
 
-export { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, ledgerPromise, setUserCookie };
+export { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise, ledgerPromise, setUserCookie };

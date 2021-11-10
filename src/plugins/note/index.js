@@ -1,8 +1,4 @@
-﻿/* global alias, command */
-/* eslint no-undef: "error" */
-
-//import { hasAuth, sendPrompt } from "../../utils/auth.js";
-import { hasEntrance } from "../../utils/config.js";
+﻿import { hasEntrance } from "../../utils/config.js";
 import { basePromise } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
 import { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, ledgerPromise, setUserCookie } from "./noteDetail.js";
@@ -17,10 +13,44 @@ function getTime(s, offset) {
     return [day, hour % 24, min % 60, sec % 60];
 }
 
+async function doReSign(msg, uid, region) {
+    let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
+    if (!signInfo.is_sign) {
+        return `今日还未签到`;
+    }
+    if (signInfo.sign_cnt_missed == 0)
+        return `本月不需要补签`;
+    let resignInfo = await resignInfoPromise(uid, region, msg.uid, msg.bot);
+    if (resignInfo.coin_cnt < resignInfo.coin_cost)
+        return `补签需要${resignInfo.coin_cost}米游币，当前只有${resignInfo.coin_cnt}米游币`;
+    if (resignInfo.resign_cnt_monthly >= resignInfo.resign_limit_monthly)
+        return `本月补签次数已用完`;
+    if (resignInfo.resign_cnt_daily >= resignInfo.resign_limit_daily)
+        return `今日补签次数已用完`;
+    let sign = await resignInPromise(uid, region, userID, bot);
+    let data = await rewardsPromise(uid, region, userID, bot);
+    return `
+${data.month}月累计签到：${signInfo.total_sign_day + 1}天
+补签奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${resignInfo.sign_cnt_missed - 1 > 0 ? `
+本月漏签${resignInfo.sign_cnt_missed - 1}天` : `` }
+本月剩余补签次数${resignInfo.resign_limit_monthly - resignInfo.resign_cnt_monthly - 1 }`;
+}
+
+async function checkReSign(msg, uid, region) {
+    let resignInfo = await resignInfoPromise(uid, region, msg.uid, msg.bot);
+    if (resignInfo.sign_cnt_missed > 0) {
+        return `
+本月漏签${resignInfo.sign_cnt_missed}天
+米游币数量：${resignInfo.coin_cnt}
+${resignInfo.coin_cnt >= resignInfo.coin_cost && resignInfo.resign_cnt_daily < resignInfo.resign_limit_daily && resignInfo.resign_cnt_monthly < resignInfo.resign_limit_monthly ? `可以消耗${resignInfo.coin_cost}米游币进行补签`:'' }`;
+    }
+    return ``;
+}
+
 async function doSign(msg, uid, region) {
     let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
     if (signInfo.is_sign) {
-        return `今日已签到,本月累计签到${signInfo.total_sign_day}天`;
+        return `今日已签到,本月累计签到${signInfo.total_sign_day}天` + signInfo.sign_cnt_missed == 0 ? '' : await checkReSign();
     }
     if (signInfo.first_bind) {
         return `请先手动签到一次`;
@@ -28,8 +58,8 @@ async function doSign(msg, uid, region) {
     let sign = await signInPromise(uid, region, userID, bot);
     let data = await rewardsPromise(uid, region, userID, bot);
     return `
-${data.month}月累计签到：${++signInfo.total_sign_day}天
-今日奖励：${data.awards[signInfo.total_sign_day - 1].name} * ${data.awards[signInfo.total_sign_day - 1].cnt}`;
+${data.month}月累计签到：${signInfo.total_sign_day + 1}天
+今日奖励：${data.awards[signInfo.total_sign_day ].name} * ${data.awards[signInfo.total_sign_day].cnt}` + signInfo.sign_cnt_missed == 0 ? '' : await checkReSign();
 }
 
 async function doLedger(msg, uid, region) {
@@ -98,11 +128,6 @@ async function doSetCookie(msg, uid) {
 }
 
 async function Plugin(msg) {
-    //const bot = Message.bot;
-    //const msg = Message.text;
-    //const userID = Message.uid;
-    //const type = Message.type;
-    //const sendID = Message.sid;
     const dbInfo = await getID(msg.text, msg.uid); // 米游社 ID
     let uid, region ;
     let message = undefined;
@@ -117,6 +142,8 @@ async function Plugin(msg) {
         region = baseInfo[1];
         if (hasEntrance(msg.text, "note", "set_user_cookie")) {
             message = await doSetCookie(msg, uid);
+        } else if (hasEntrance(msg.text, "note", "re_sign")) {
+            message = await doReSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "sign_in")) {
             message = await doSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "ledger") || hasEntrance(msg.text, "note", "lastledger") || hasEntrance(msg.text, "note", "lastlastledger")) {

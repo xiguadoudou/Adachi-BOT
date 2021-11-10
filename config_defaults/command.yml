@@ -424,6 +424,7 @@ note:
     - ^札记\s*$
     - ^上月札记\s*$
     - ^上上月札记\s*$
+    - ^补签\s*$
   functions:
     set_user_cookie:
       weights: 9999
@@ -458,23 +459,30 @@ note:
       description:
       entrance:
         - ^签到
-    ledger:
+    re_sign:
       weights: 9699
+      name:
+      usage:
+      description:
+      entrance:
+        - ^补签
+    ledger:
+      weights: 9599
       name: 札记
       usage:
       description:
       entrance:
         - ^札记
     lastledger:
-      weights: 9599
-      name: 上月札记
+      weights: 9499
+      name:
       usage:
       description:
       entrance:
         - ^上月札记
     lastlastledger:
-      weights: 9499
-      name: 上上月札记
+      weights: 9399
+      name:
       usage:
       description:
       entrance:
