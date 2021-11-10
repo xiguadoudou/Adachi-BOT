@@ -117,7 +117,7 @@ async function notePromise(uid, server, userID, bot) {
     if (dbData) {
         if (
             lastTime &&
-            nowTime - lastTime < config.cacheAbyEffectTime * 60 * 60 * 1000
+            nowTime - lastTime < config.cacheAbyEffectTime * 16 * 60 * 1000
         ) {
             bot.logger.debug(
                 `缓存：使用 ${uid} 在 ${config.cacheAbyEffectTime} 小时内的实时便笺。`
