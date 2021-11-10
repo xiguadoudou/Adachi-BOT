@@ -211,4 +211,8 @@ function clean(dbName) {
   return 0;
 }
 
-export default { init, has, write, includes, remove, get, push, update, merge, set, clean };
+function containKey(name, key) {
+    return db[name].chain.has(key).value();
+}
+
+export default { init, has, write, includes, remove, get, push, update, merge, set, clean, containKey };
