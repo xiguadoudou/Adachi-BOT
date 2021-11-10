@@ -19,6 +19,7 @@ function initDB() {
   db.init("map");
   db.init("music", { source: [] });
   db.init("time");
+  db.init("note", { user: [], cookie: [] });
 }
 
 async function initBrowser() {
