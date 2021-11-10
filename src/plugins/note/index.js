@@ -50,7 +50,7 @@ ${resignInfo.coin_cnt >= resignInfo.coin_cost && resignInfo.resign_cnt_daily < r
 async function doSign(msg, uid, region) {
     let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
     if (signInfo.is_sign) {
-        return `今日已签到,本月累计签到${signInfo.total_sign_day}天` + signInfo.sign_cnt_missed == 0 ? '' : await checkReSign(msg,uid,region);
+        return `今日已签到,本月累计签到${signInfo.total_sign_day}天${signInfo.sign_cnt_missed == 0 ? '' : await checkReSign(msg, uid, region)}`;
     }
     if (signInfo.first_bind) {
         return `请先手动签到一次`;
@@ -59,7 +59,7 @@ async function doSign(msg, uid, region) {
     let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
     return `
 ${data.month}月累计签到：${signInfo.total_sign_day + 1}天
-今日奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}` + signInfo.sign_cnt_missed == 0 ? '' : await checkReSign(msg, uid, region);
+今日奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${signInfo.sign_cnt_missed == 0 ? '' : await checkReSign(msg, uid, region)}`;
 }
 
 async function doLedger(msg, uid, region) {
