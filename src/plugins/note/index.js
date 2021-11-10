@@ -20,39 +20,39 @@ function getTime(s, offset) {
 async function doSign(msg, uid, region) {
     let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
     if (signInfo.is_sign) {
-        return `[CQ:at,qq=${msg.uid}] 今日已签到,本月累计签到${signInfo.total_sign_day}天`;
+        return `今日已签到,本月累计签到${signInfo.total_sign_day}天`;
     }
     if (signInfo.first_bind) {
-        return `[CQ:at,qq=${msg.uid}] 请先手动签到一次`;
+        return `请先手动签到一次`;
     }
     let sign = await signInPromise(uid, region, userID, bot);
     let data = await rewardsPromise(uid, region, userID, bot);
-    return `[CQ:at,qq=${msg.uid}]
+    return `
 ${data.month}月累计签到：${++signInfo.total_sign_day}天
 今日奖励：${data.awards[signInfo.total_sign_day - 1].name} * ${data.awards[signInfo.total_sign_day - 1].cnt}`;
 }
 
 async function doLedger(msg, uid, region) {
-    let ledgerData = await ledgerPromise(uid, region, msg.uid, msg.bot);
+    let data = await ledgerPromise(uid, region, msg.uid, msg.bot);
     if (hasEntrance(msg.text, "note", "lastledger"))
-        ledgerData = await ledgerPromise(uid, region, msg.uid, msg.bot, ledgerData.data_month == 1 ? 12 : ledgerData.data_month - 1);
+        data = await ledgerPromise(uid, region, msg.uid, msg.bot, data.data_month == 1 ? 12 : data.data_month - 1);
     else if (hasEntrance(msg.text, "note", "lastlastledger"))
-        ledgerData = await ledgerPromise(uid, region, msg.uid, msg.bot, ledgerData.data_month > 2 ? ledgerData.data_month - 2 : 10 + ledgerData.data_month);
+        data = await ledgerPromise(uid, region, msg.uid, msg.bot, data.data_month > 2 ? data.data_month - 2 : 10 + data.data_month);
     if (hasEntrance(msg.text, "note", "ledger"))
-        return `[CQ:at,qq=${msg.uid}]
-旅行者${ledgerData.data_month}月札记
+        return `
+旅行者${data.data_month}月札记
 当月共获取：
-原石：${ledgerData.month_data.current_primogems}
-摩拉：${ledgerData.month_data.current_mora}
-旅行者今日已获取${ledgerData.day_data.current_primogems}原石，${ledgerData.day_data.current_mora}摩拉，明天也要好好努力哦？`;
+原石：${data.month_data.current_primogems}
+摩拉：${data.month_data.current_mora}
+旅行者今日已获取${data.day_data.current_primogems}原石，${data.day_data.current_mora}摩拉，明天也要好好努力哦？`;
     else
-        return `[CQ:at,qq=${msg.uid}]
-旅行者${ledgerData.data_month}月札记
+        return `
+旅行者${data.data_month}月札记
 当月共获取：
-原石：${ledgerData.month_data.current_primogems}
-摩拉：${ledgerData.month_data.current_mora}
-原石收入${ledgerData.month_data.primogems_rate == 0 ? "跟上个月差不多" : `比上个月${ledgerData.month_data.primogems_rate > 0 ? `增加${ledgerData.month_data.primogems_rate}` : `减少${-ledgerData.month_data.primogems_rate}`}%`},
-摩拉收入${ledgerData.month_data.mora_rate == 0 ? "跟上个月差不多" : `比上个月${ledgerData.month_data.mora_rate > 0 ? `增加${ledgerData.month_data.mora_rate}` : `减少${-ledgerData.month_data.mora_rate}`}%`}。`;
+原石：${data.month_data.current_primogems}
+摩拉：${data.month_data.current_mora}
+原石收入${data.month_data.primogems_rate == 0 ? "跟上个月差不多" : `比上个月${data.month_data.primogems_rate > 0 ? `增加${data.month_data.primogems_rate}` : `减少${-data.month_data.primogems_rate}`}%`},
+摩拉收入${data.month_data.mora_rate == 0 ? "跟上个月差不多" : `比上个月${data.month_data.mora_rate > 0 ? `增加${data.month_data.mora_rate}` : `减少${-data.month_data.mora_rate}`}%`}。`;
 }
 
 async function doNote(msg, uid, region) {
@@ -62,9 +62,9 @@ async function doNote(msg, uid, region) {
     const nowTime = new Date().valueOf();
     const crtime = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
     const cr = crtime <= 0 ? data.max_resin : parseInt((76800 - crtime) / 60 / 8);
-    let message = `[CQ:at,qq=${msg.uid}]
+    let message = `
 树脂${cr}/${data.max_resin} 委托${data.finished_task_num}/${data.total_task_num} 派遣${data.current_expedition_num}/${data.max_expedition_num}`;
-    const [day, hour, min, sec] = getTime(parseInt(data.resin_recovery_time), (baseTime - nowTime) / 1000);
+    let [day, hour, min, sec] = getTime(parseInt(data.resin_recovery_time), (baseTime - nowTime) / 1000);
     message += `
 树脂回满时间：${hour}时${min}分${sec}秒`;
     message += `
@@ -91,10 +91,10 @@ async function doSetCookie(msg, uid) {
     let cookie = msg.text.slice(9);
     cookie = cookie.replace(new RegExp("'", "gm"), "");
     if (cookie.indexOf("cookie_token") == -1 || cookie.indexOf("account_id") == -1) {
-        return `[CQ:at,qq=${msg.uid}] 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
+        return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
     }
     await setUserCookie(uid, cookie, msg.bot);
-    return `[CQ:at,qq=${msg.uid}] 已设置cookie`;
+    return ` 已设置cookie`;
 }
 
 async function Plugin(msg) {
@@ -128,7 +128,7 @@ async function Plugin(msg) {
     } catch (e) {
         // 抛出空串则使用缓存
         if ("" !== e) {
-            await msg.bot.say(msg.sid, `[CQ:at,qq=${msg.uid}] ${e}`, msg.type, msg.uid);
+            await msg.bot.say(msg.sid, ` ${e}`, msg.type, msg.uid);
             return;
         }
     }
