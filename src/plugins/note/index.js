@@ -118,11 +118,11 @@ async function Plugin(msg) {
         if (hasEntrance(msg.text, "note", "set_user_cookie")) {
             message = await doSetCookie(msg, uid);
         } else if (hasEntrance(msg.text, "note", "sign_in")) {
-            message = await doSign(Message, uid, region);
+            message = await doSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "ledger") || hasEntrance(msg.text, "note", "lastledger") || hasEntrance(msg.text, "note", "lastlastledger")) {
-            message = await doLedger(Message, uid, region);
+            message = await doLedger(msg, uid, region);
         } else {
-            message = await doNote(Message, uid, region);
+            message = await doNote(msg, uid, region);
         }
         
     } catch (e) {
