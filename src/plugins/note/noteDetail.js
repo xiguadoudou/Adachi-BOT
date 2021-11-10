@@ -113,7 +113,7 @@ async function notePromise(uid, server, userID, bot) {
     //await userInitialize(userID, uid, "", -1);
     //db.update("character", "user", { userID }, { uid });
 
-    //const nowTime = new Date().valueOf();
+    const nowTime = new Date().valueOf();
     //const { time: lastTime } = db.get("time", "user", { note: uid }) || {};
     //const { data: dbData } = db.get("note", "user", { uid }) || {};
 
