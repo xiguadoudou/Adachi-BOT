@@ -404,3 +404,90 @@ save:
       description:
       entrance:
         - ^改绑
+
+note:
+  enable: true
+  weights: 9999
+  regex:
+    - ^设置Cookie\s+.+$
+    - ^图片便笺\s*$
+    - ^(实时)?(便笺|树脂|便签)\s*$
+    - ^(实时)?(便笺|树脂|便签)\s+\d+.*$
+    - ^(实时)?(便笺|树脂|便签)\s*\[CQ:at,qq=.*$
+    - ^签到\s*$
+    - ^签到\s+\d+.*$
+    - ^签到\s*\[CQ:at,qq=.*$
+    - ^札记\s*$
+    - ^上月札记\s*$
+    - ^上上月札记\s*$
+  functions:
+    set_user_cookie:
+      weights: 9999
+      name: 设置Cookie
+      usage: <米游社Cookie>
+      description:
+      entrance:
+        - ^设置Cookie
+    get_note:
+      weights: 9899
+      name: 实时便笺
+      usage: "[游戏内UID、@群友]"
+      description:
+      entrance:
+        - ^实时便笺
+        - ^便笺
+        - ^实时树脂
+        - ^树脂
+        - ^实时便签
+        - ^便签
+    get_note_pic:
+      weights: 9399
+      name:
+      usage:
+      description:
+      entrance:
+        - ^图片便笺
+    sign_in:
+      weights: 9799
+      name: 米游社签到
+      usage: "[游戏内UID、@群友]"
+      description:
+      entrance:
+        - ^签到
+    ledger:
+      weights: 9699
+      name: 札记
+      usage:
+      description:
+      entrance:
+        - ^札记
+    lastledger:
+      weights: 9599
+      name: 上月札记
+      usage:
+      description:
+      entrance:
+        - ^上月札记
+    lastlastledger:
+      weights: 9499
+      name: 上上月札记
+      usage:
+      description:
+      entrance:
+        - ^上上月札记
+
+nikename:
+  enable: false
+  weights: 7799
+  regex:
+    - ^修改昵称 +.+$
+    - ^初始化昵称 *$
+  functions:
+    nikename:
+      weights: 9599
+      name: 修改昵称
+      usage: <角色名称> <自定义昵称>
+      description: 设置昵称
+      entrance:
+        - ^修改昵称
+        - ^初始化昵称
