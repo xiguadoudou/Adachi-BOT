@@ -27,8 +27,8 @@ async function doReSign(msg, uid, region) {
         return `本月补签次数已用完`;
     if (resignInfo.resign_cnt_daily >= resignInfo.resign_limit_daily)
         return `今日补签次数已用完`;
-    let sign = await resignInPromise(uid, region, userID, bot);
-    let data = await rewardsPromise(uid, region, userID, bot);
+    let sign = await resignInPromise(uid, region, msg.uid, msg.bot);
+    let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
     return `
 ${data.month}月累计签到：${signInfo.total_sign_day + 1}天
 补签奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${resignInfo.sign_cnt_missed - 1 > 0 ? `
@@ -55,8 +55,8 @@ async function doSign(msg, uid, region) {
     if (signInfo.first_bind) {
         return `请先手动签到一次`;
     }
-    let sign = await signInPromise(uid, region, userID, bot);
-    let data = await rewardsPromise(uid, region, userID, bot);
+    let sign = await signInPromise(uid, region, msg.uid, msg.bot);
+    let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
     return `
 ${data.month}月累计签到：${signInfo.total_sign_day + 1}天
 今日奖励：${data.awards[signInfo.total_sign_day ].name} * ${data.awards[signInfo.total_sign_day].cnt}` + signInfo.sign_cnt_missed == 0 ? '' : await checkReSign();
