@@ -115,20 +115,20 @@ async function notePromise(uid, server, userID, bot) {
 
     const nowTime = new Date().valueOf();
     //const { time: lastTime } = db.get("time", "user", { note: uid }) || {};
-    //const { data: dbData } = db.get("note", "user", { uid }) || {};
+    const { data: dbData,time:lastTime } = db.get("note", "user", { uid }) || {};
 
     // 尝试使用缓存
-    //if (dbData) {
-    //    if (
-    //        lastTime &&
-    //        nowTime - lastTime < config.cacheAbyEffectTime * 60 * 60 * 1000
-    //    ) {
-    //        bot.logger.debug(
-    //            `缓存：使用 ${uid} 在 ${config.cacheAbyEffectTime} 小时内的实时便笺。`
-    //        );
-    //        return [lastTime, dbData];
-    //    }
-    //}
+    if (dbData) {
+        if (
+            lastTime &&
+            nowTime - lastTime < config.cacheAbyEffectTime * 60 * 60 * 1000
+        ) {
+            bot.logger.debug(
+                `缓存：使用 ${uid} 在 ${config.cacheAbyEffectTime} 小时内的实时便笺。`
+            );
+            return [lastTime, dbData];
+        }
+    }
 
     const cookie = await getUserCookie(uid, bot);
     if (!cookie)
@@ -149,7 +149,7 @@ async function notePromise(uid, server, userID, bot) {
         db.push("note", "user", initData);
     }
 
-    db.update("note", "user", { uid }, { data });
+    db.update("note", "user", { uid }, { data, time: nowTime });
     //db.update("time", "user", { note: uid }, { time: nowTime });
     //bot.logger.debug(
     //    `缓存：新增 ${uid} 的实时便笺，缓存 ${config.cacheAbyEffectTime} 小时。`
