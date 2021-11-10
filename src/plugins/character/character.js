@@ -25,7 +25,7 @@ function getNotFoundText(character, isMyChar) {
   return notFoundText;
 }
 
-function getName(text) {
+function getName(text, userID) {
   if (text.match(/^\[CQ:at,qq=\d+,text=.+?\]/)) {
     text = text.replace(/\[CQ:at,qq=\d+,text=.+?\]\s*/, "");
   }
@@ -52,7 +52,7 @@ async function doCharacter(msg, isMyChar = true) {
   let uid;
   let data;
 
-  const character = getName(msg.text);
+  const character = getName(msg.text,msg.uid);
 
   if (undefined === character) {
     msg.bot.say(msg.sid, "请正确输入角色名称。", msg.type, msg.uid);
