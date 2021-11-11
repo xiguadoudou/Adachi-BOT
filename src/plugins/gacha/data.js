@@ -199,7 +199,7 @@ function gachaTimes(userID, nickname, times = 10) {
   ({ name, five, four, isUp } = getChoiceData(userID, choice));
   let result = { data: [], type: name, user: nickname };
 
-  for (let i = 0; i <= times; ++i) {
+  for (let i = 0; i < times; ++i) {
     gachaResults.push(gachaOnce(userID, choice, gachaTable));
   }
 
@@ -217,8 +217,4 @@ function gachaTimes(userID, nickname, times = 10) {
   return result;
 }
 
-function getGachaResult(userID, nickname) {
-  return gachaTimes(userID, nickname);
-}
-
-export { getGachaResult };
+export { gachaTimes };
