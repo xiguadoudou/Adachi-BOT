@@ -1,0 +1,45 @@
+/* ========================================================================== *
+ * 文件的原始版本来源于 merge-deep 。
+ * https://github.com/jonschlinkert/merge-deep/blob/11e5dd5/index.js
+ * ========================================================================== */
+
+import clone from "clone-deep";
+import kindOf from "kind-of";
+
+function isObject(o) {
+  return "object" === kindOf(o) || "function" === kindOf(o);
+}
+
+function isValidKey(k) {
+  return "__proto__" !== k && "constructor" !== k && "prototype" !== k;
+}
+
+function hasOwn(o, k) {
+  return Object.prototype.hasOwnProperty.call(o, k);
+}
+
+function merge(o1, o2) {
+  for (const k in o2) {
+    if (!isValidKey(k) || !hasOwn(o2, k)) {
+      continue;
+    }
+
+    o1[k] = isObject(o1[k]) && isObject(o2[k]) ? merge(o1[k], o2[k]) : clone(o2[k]);
+  }
+
+  return o1;
+}
+
+function mergeDeep(obj, ...rest) {
+  const t = clone(isObject(obj) || Array.isArray(obj) ? obj : {});
+
+  for (const o of rest) {
+    if (isObject(o) || Array.isArray(o)) {
+      merge(t, o);
+    }
+  }
+
+  return t;
+}
+
+export { mergeDeep };

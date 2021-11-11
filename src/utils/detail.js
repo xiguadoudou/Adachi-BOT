@@ -146,6 +146,7 @@ async function basePromise(mhyID, userID, bot) {
 
   const { game_role_id, nickname, region, level } = baseInfo;
   const uid = parseInt(game_role_id);
+
   userInitialize(userID, uid, nickname, level);
   db.update("info", "user", { uid }, { level, nickname });
 
@@ -183,7 +184,6 @@ async function detailPromise(uid, server, userID, bot) {
 
   if (retcode !== 0) {
     db.update("info", "user", { uid }, { message, retcode: parseInt(retcode) });
-
     return getDetailErrorForPossibleInvalidCookie(message, cookie);
   }
 
@@ -201,9 +201,7 @@ async function detailPromise(uid, server, userID, bot) {
   );
 
   db.update("time", "user", { uid }, { time: nowTime });
-
   bot.logger.debug(`缓存：新增 ${uid} 的玩家数据，缓存 ${config.cacheInfoEffectTime} 小时。`);
-
   const characterID = data.avatars.map((el) => el.id);
   return characterID;
 }
