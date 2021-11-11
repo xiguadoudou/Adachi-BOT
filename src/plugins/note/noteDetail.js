@@ -43,6 +43,23 @@ async function setUserCookie(user, userCookie, bot) {
     await db.update("note", "cookie", { user }, { cookie: userCookie });
 }
 
+async function getMYBCookie(user, bot) {
+    if (!(await db.includes("note", "myb", "user", user))) {
+        const initData = { user, cookie: "" };
+        await db.push("note", "myb", initData);
+    }
+    let { cookie } = await db.get("note", "myb", { user });
+    return cookie;
+}
+
+async function setMYBCookie(user, userCookie, bot) {
+    if (!(await db.includes("note", "myb", "user", user))) {
+        const initData = { user, cookie: "" };
+        await db.push("note", "myb", initData);
+    }
+    await db.update("note", "myb", { user }, { cookie: userCookie });
+}
+
 function getDailyNote(role_id, server, cookie) {
     const query = { role_id, server };
 

@@ -146,6 +146,8 @@ async function Plugin(msg) {
             message = await doReSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "sign_in")) {
             message = await doSign(msg, uid, region);
+        } else if (hasEntrance(msg.text, "note", "set_myb_cookie")) {
+            message = await doSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "ledger") || hasEntrance(msg.text, "note", "lastledger") || hasEntrance(msg.text, "note", "lastlastledger")) {
             message = await doLedger(msg, uid, region);
         } else {
