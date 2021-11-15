@@ -482,7 +482,9 @@ async function mybCookiePromise(account_id, login_ticket, userID, bot) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
 
-    return data.list[0].token;
+    return {
+        stoken: data.list[0].token, cookie_token:data.list[1].token
+    };
 }
 
 async function mybStatePromise(uid, userID, bot) {
