@@ -514,10 +514,7 @@ async function mybStatePromise(uid, userID, bot) {
     if (retcode !== 0) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
-    bot.logger.debug(
-        `MYB ${uid} ${JSON.stringify(data)}`
-    );
-    return data;
+    return data.states;
 }
 
 async function mybSignPromise(uid, fourm, userID, bot) {

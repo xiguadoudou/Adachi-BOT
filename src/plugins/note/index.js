@@ -179,7 +179,7 @@ async function doGetMYB(msg, uid) {
     let view_post_0 = false;
     let post_up_0 = false;
     let share_post_0 = false;
-    for (var state of states.states) {
+    for (var state of states) {
         if (state.mission_key == "continuous_sign") {
             continuous_sign = state.is_get_award;
         } else if (state.mission_key == "view_post_0") {
