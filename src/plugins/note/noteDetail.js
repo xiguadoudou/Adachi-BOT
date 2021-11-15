@@ -563,7 +563,9 @@ async function sharePostPromise(uid, post_id, userID, bot) {
         cookie,
         post_id
     );
-
+    bot.logger.debug(
+        `share ${uid} ${cookie} ${post_id}`
+    );
     return { retcode, message, data };
 }
 
