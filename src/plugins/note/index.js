@@ -161,16 +161,42 @@ async function doSetMYBCookie(msg, uid) {
     return ` 已设置米游币cookie`;
 }
 
-function getRandomArrayElements(arr, count) {
-    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
-    while (i-- > min) {
-        index = Math.floor((i + 1) * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
+function unique(array) {
+    let arr = [];
+
+    for (let i in array) {
+        if (arr.indexOf(array[i] < 0)) {
+            arr.push(array[i]);
+        }
     }
-    return shuffled.slice(min);
+    return arr;
 }
+
+function getRandomArrayElements(origin, number) {
+    // 1.先将数据去重，如果没有重复的，就跳过这一步
+    let uniqueArr = unique(origin);
+
+    // 2、number个数肯定要小于或者等于去重后数组的个数
+    if (number > uniqueArr) {
+        return;
+    }
+
+    let arr = [];
+
+    let random, tempData;
+    for (let i = 0; i < number; i++) {
+        // 产生随机数
+        random = parseInt(Math.random() * (uniqueArr.length - 1));
+        // 将挑选的单个数据从uniqueArr这个样本中剥离出去，所以length会逐渐减小
+        tempData = uniqueArr.splice(uniqueArr[random], 1);
+        // 因为tempData是一个length为1的数组，所以，里面的数据有可能是字符串，数字，对象，数组
+        // 注意，不要直接写成arr.push(tempData);  因为你这样你产生的arr其实是一个数组里面嵌套数组的  就像这样 [["a"],["b"]....]
+        arr.push(tempData[0]);
+    }
+
+    return arr;
+}
+
 
 async function doGetMYB(msg, uid) {
     const forums = ['崩坏3', '原神', '崩坏2', '未定事件簿', '大别野'];
