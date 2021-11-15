@@ -165,13 +165,13 @@ function getLedger(bind_uid, bind_region, cookie, month = 0) {
     }).then((res) => res.json());
 }
 
-function getMybCookie(login_ticket, account_id) {
+function getMybCookie(login_ticket, account_id, cookie) {
     const query = { login_ticket, uid: account_id, token_types: 3 };
 
     return fetch(`${__API.GET_TOKEN_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         qs: query,
-        headers: { ...HEADERS, DS: getDS(query) },
+        headers: { ...HEADERS, DS: getDS(query), Cookie: cookie },
     }).then((res) => res.json());
 }
 
@@ -484,13 +484,14 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     return data;
 }
 
-async function mybCookiePromise(account_id, login_ticket, userID, bot) {
+async function mybCookiePromise(account_id, login_ticket,cookie, userID, bot) {
     bot.logger.debug(
         `MYB ${account_id} ${login_ticket}`
     );
     const { retcode, message, data } = await getMybCookie(
         login_ticket,
-        account_id
+        account_id,
+        cookie
     );
 
     if (retcode !== 0) {
@@ -509,6 +510,24 @@ async function mybStatePromise(uid, userID, bot) {
     );
     const { retcode, message, data } = await getMybState(
         cookie
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function mybSignPromise(uid, fourm, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie}`
+    );
+    const { retcode, message, data } = await mybSignIn(
+        cookie, fourm
     );
 
     if (retcode !== 0) {
@@ -597,5 +616,5 @@ async function sharePostPromise(uid, post_id, userID, bot) {
 export {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
-    upVotePostPromise, sharePostPromise, setMYBCookie
+    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise
 };

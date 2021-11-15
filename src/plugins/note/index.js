@@ -4,7 +4,7 @@ import { getID } from "../../utils/id.js";
 import {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
-    upVotePostPromise, sharePostPromise, setMYBCookie } from "./noteDetail.js";
+    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise } from "./noteDetail.js";
 
 function getTime(s, offset) {
     if (s + offset < 0)
