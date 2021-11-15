@@ -205,6 +205,9 @@ ${forums[i]}:${message}`;
         const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
         let post_ids = [];
         for (let post of posts) {
+            msg.bot.logger.debug(
+                `push post_id ${post.post.post_id}`
+            );
             post_ids.push(parseInt(post.post.post_id));
         }
         if (!view_post_0) {
