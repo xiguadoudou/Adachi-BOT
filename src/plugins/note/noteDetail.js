@@ -519,9 +519,6 @@ async function getPostListPromise(uid, fourm, userID, bot) {
     const cookie = await getMYBCookie(uid, bot);
     if (!cookie)
         return Promise.reject(`未设置私人米游币cookie`);
-    bot.logger.debug(
-        `posts ${uid} ${cookie} ${fourm}`
-    );
     const { retcode, message, data } = await mybPostList(
         cookie,
         fourm
@@ -538,9 +535,6 @@ async function getPostFullPromise(uid, post_id, userID, bot) {
     const cookie = await getMYBCookie(uid, bot);
     if (!cookie)
         return Promise.reject(`未设置私人米游币cookie`);
-    bot.logger.debug(
-        `post ${uid} ${cookie} ${post_id}`
-    );
     const { retcode, message, data } = await mybPostFull(
         cookie,
         post_id
@@ -553,9 +547,6 @@ async function upVotePostPromise(uid, post_id, userID, bot) {
     const cookie = await getMYBCookie(uid, bot);
     if (!cookie)
         return Promise.reject(`未设置私人米游币cookie`);
-    bot.logger.debug(
-        `upVote ${uid} ${cookie} ${post_id}`
-    );
     const { retcode, message, data } = await mybUpVote(
         cookie,
         post_id
@@ -568,9 +559,6 @@ async function sharePostPromise(uid, post_id, userID, bot) {
     const cookie = await getMYBCookie(uid, bot);
     if (!cookie)
         return Promise.reject(`未设置私人米游币cookie`);
-    bot.logger.debug(
-        `share ${uid} ${cookie} ${post_id}`
-    );
     const { retcode, message, data } = await mybSharePost(
         cookie,
         post_id

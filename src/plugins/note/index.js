@@ -214,7 +214,7 @@ ${forums[i]}:${message}`;
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 3)) {
                 let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
-                if (retcode == 0)
+                if ("OK" == message)
                     n++;
             }
             message += `
@@ -224,21 +224,21 @@ ${forums[i]}:${message}`;
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 10)) {
                 let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
-                if (retcode == 0)
+                if ("OK" == message)
                     n++;
             }
             message += `
-点赞（${n}/3）`;
+点赞（${n}/10）`;
         }
         if (!share_post_0) {
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 1)) {
                 let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
-                if (retcode == 0)
+                if ("OK" == message)
                     n++;
             }
             message += `
-分享（${n}/3）`;
+分享（${n}/1）`;
         }
     }
     return message;
