@@ -196,7 +196,7 @@ async function doGetMYB(msg, uid) {
         for (let i = 1; i < 6; i++) {
             let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
             ret += `
-${forums[i]}:${message}`;
+${forums[i-1]}:${message}`;
         }
     } else {
         ret += `今日已签到`;

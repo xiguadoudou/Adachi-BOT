@@ -176,7 +176,7 @@ function getMybCookieByTicket(login_ticket, account_id) {
 }
 
 function getMybState(cookie) {
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const n = "dmq2p7ka6nsu0d3ev6nex4k1ndzrnfiy";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
@@ -188,9 +188,9 @@ function getMybState(cookie) {
             Cookie: cookie,
             Referer: "https://app.mihoyo.com",
             "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
+            "x-rpc-app_version": "2.8.0",
             'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
+            "x-rpc-client_type": 2,
             "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
         },
     }).then((res) => res.json());
@@ -199,7 +199,7 @@ function getMybState(cookie) {
 //1: '崩坏3', 2: '原神', 3: '崩坏2', 4: '未定事件簿', 5: '大别野'
 function mybSignIn(cookie, forum) {
     const body = { gids: forum };
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const n = "dmq2p7ka6nsu0d3ev6nex4k1ndzrnfiy";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
@@ -214,9 +214,9 @@ function mybSignIn(cookie, forum) {
             Cookie: cookie,
             Referer: "https://app.mihoyo.com",
             "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
+            "x-rpc-app_version": "2.8.0",
             'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
+            "x-rpc-client_type": 2,
             "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
         },
     }).then((res) => res.json());
@@ -234,7 +234,7 @@ function mybPostList(cookie, forum_id) {
 
 function mybPostFull(cookie, post_id) {
     const query = { post_id };
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const n = "dmq2p7ka6nsu0d3ev6nex4k1ndzrnfiy";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
@@ -249,9 +249,9 @@ function mybPostFull(cookie, post_id) {
             Cookie: cookie,
             Referer: "https://app.mihoyo.com",
             "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
+            "x-rpc-app_version": "2.8.0",
             'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
+            "x-rpc-client_type": 2,
             "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
         },
     }).then((res) => res.json());
@@ -259,7 +259,7 @@ function mybPostFull(cookie, post_id) {
 
 function mybUpVote(cookie, post_id) {
     const body = { post_id, is_cancel: false };
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const n = "dmq2p7ka6nsu0d3ev6nex4k1ndzrnfiy";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
@@ -274,9 +274,9 @@ function mybUpVote(cookie, post_id) {
             Cookie: cookie,
             Referer: "https://app.mihoyo.com",
             "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
+            "x-rpc-app_version": "2.8.0",
             'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
+            "x-rpc-client_type": 2,
             "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
         },
     }).then((res) => res.json());
@@ -284,7 +284,7 @@ function mybUpVote(cookie, post_id) {
 
 function mybSharePost(cookie, post_id) {
     const query = { entity_id: post_id, entity_type:1 };
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const n = "dmq2p7ka6nsu0d3ev6nex4k1ndzrnfiy";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
@@ -299,9 +299,9 @@ function mybSharePost(cookie, post_id) {
             Cookie: cookie,
             Referer: "https://app.mihoyo.com",
             "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
+            "x-rpc-app_version": "2.8.0",
             'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
+            "x-rpc-client_type": 2,
             "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
         },
     }).then((res) => res.json());
