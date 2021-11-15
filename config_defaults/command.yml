@@ -450,8 +450,8 @@ note:
         - ^便签
     set_myb_cookie:
       weights: 9299
-      name:
-      usage:
+      name: 米游币Cookie
+      usage: <登录通行证页面的Cookie，需要包含login_ticket>
       description:
       entrance:
         - ^米游币Cookie
