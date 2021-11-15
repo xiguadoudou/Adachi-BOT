@@ -165,13 +165,13 @@ function getLedger(bind_uid, bind_region, cookie, month = 0) {
     }).then((res) => res.json());
 }
 
-function getMybCookie(login_ticket, account_id, cookie) {
+function getMybCookie(login_ticket, account_id,) {
     const query = { login_ticket, uid: account_id, token_types: 3 };
 
     return fetch(`${__API.GET_TOKEN_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         qs: query,
-        headers: { ...HEADERS, DS: getDS(query), Cookie: cookie },
+        headers: { ...HEADERS, DS: getDS(query) },
     }).then((res) => res.json());
 }
 
@@ -484,14 +484,13 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     return data;
 }
 
-async function mybCookiePromise(account_id, login_ticket,cookie, userID, bot) {
+async function mybCookiePromise(account_id, login_ticket, userID, bot) {
     bot.logger.debug(
         `MYB ${account_id} ${login_ticket}`
     );
     const { retcode, message, data } = await getMybCookie(
         login_ticket,
-        account_id,
-        cookie
+        account_id
     );
 
     if (retcode !== 0) {
