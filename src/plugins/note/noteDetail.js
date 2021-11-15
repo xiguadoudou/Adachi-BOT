@@ -239,7 +239,7 @@ function mybPostFull(cookie, post_id) {
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
 
-    return fetch(__API.MYB_POST_FULL_URL, {
+    return fetch(`${__API.MYB_POST_FULL_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         json: true,
         qs: query,
@@ -289,7 +289,7 @@ function mybSharePost(cookie, post_id) {
     const r = randomString(6);
     const c = md5(`salt=${n}&t=${i}&r=${r}`);
 
-    return fetch(__API.MYB_SHARE_URL, {
+    return fetch(`${__API.MYB_SHARE_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         json: true,
         qs: query,

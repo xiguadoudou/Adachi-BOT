@@ -226,6 +226,9 @@ ${message}`;
                 let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
                 if ("OK" == message)
                     n++;
+                else
+                    ret += `
+${message}`;
             }
             ret += `
 点赞（${n}/10）`;
@@ -236,6 +239,9 @@ ${message}`;
                 let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
                 if ("OK" == message)
                     n++;
+                else
+                    ret += `
+${message}`;
             }
             ret += `
 分享（${n}/1）`;
