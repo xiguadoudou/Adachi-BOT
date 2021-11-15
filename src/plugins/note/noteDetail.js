@@ -15,6 +15,13 @@ const __API = {
     RESIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign",
     REWARD_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home",
     LEDGER_URL: "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo",
+    GET_TOKEN_URL: "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket",
+    MISSION_STATE_URL: "https://bbs-api.mihoyo.com/apihub/sapi/getUserMissionsState",
+    MYB_SIGN_URL: "https://bbs-api.mihoyo.com/apihub/sapi/signIn",
+    MYB_POST_LIST_URL: "https://bbs-api.mihoyo.com/post/api/getForumPostList",
+    MYB_POST_FULL_URL: "https://bbs-api.mihoyo.com/post/api/getPostFull",
+    MYB_UPVOTE_URL: "https://bbs-api.mihoyo.com/apihub/sapi/upvotePost",
+    MYB_SHARE_URL: "https://bbs-api.mihoyo.com/apihub/api/getShareConf",
 };
 const HEADERS = {
     "User-Agent":
@@ -158,12 +165,167 @@ function getLedger(bind_uid, bind_region, cookie, month = 0) {
     }).then((res) => res.json());
 }
 
-async function notePromise(uid, server, userID, bot) {
-    //await userInitialize(userID, uid, "", -1);
-    //db.update("character", "user", { userID }, { uid });
+function getMybCookie(login_ticket, account_id) {
+    const query = { login_ticket, uid: account_id, token_types: 3 };
 
+    return fetch(`${__API.GET_TOKEN_URL}?${new URLSearchParams(query)}`, {
+        method: "GET",
+        qs: query,
+        headers: { ...HEADERS, DS: getDS(query), Referer: "https://app.mihoyo.com" },
+    }).then((res) => res.json());
+}
+
+function getMybState(cookie) {
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+    return fetch(`${__API.MISSION_STATE_URL}`, {
+        method: "GET",
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+//1: '崩坏3', 2: '原神', 3: '崩坏2', 4: '未定事件簿', 5: '大别野'
+function mybSignIn(cookie, forum) {
+    const body = { gids: forum };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.MYB_SIGN_URL, {
+        method: "POST",
+        json: true,
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+function mybPostList(cookie, forum_id) {
+    const query = { forum_id, is_good: false, is_hot: false, page_size: 20, sort_type:1 };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.MYB_POST_LIST_URL, {
+        method: "GET",
+        json: true,
+        qs: query,
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+function mybPostFull(cookie, post_id) {
+    const query = { post_id };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.MYB_POST_FULL_URL, {
+        method: "GET",
+        json: true,
+        qs: query,
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+function mybUpVote(cookie, post_id) {
+    const body = { post_id, is_cancel: false };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.MYB_UPVOTE_URL, {
+        method: "POST",
+        json: true,
+        body: JSON.stringify(body),
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+function mybSharePost(cookie, post_id) {
+    const query = { post_id };
+    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
+    const i = (Date.now() / 1000) | 0;
+    const r = randomString(6);
+    const c = md5(`salt=${n}&t=${i}&r=${r}`);
+
+    return fetch(__API.MYB_SHARE_URL, {
+        method: "GET",
+        json: true,
+        qs: query,
+        headers: {
+            ...HEADERS,
+            DS: `${i},${r},${c}`,
+            Cookie: cookie,
+            Referer: "https://app.mihoyo.com",
+            "User-Agent": "okhttp/4.8.0",
+            "x-rpc-app_version": "2.3.0",
+            'x-rpc-channel': 'miyousheluodi',
+            "x-rpc-client_type": 5,
+            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
+        },
+    }).then((res) => res.json());
+}
+
+
+
+async function notePromise(uid, server, userID, bot) {
     const nowTime = new Date().valueOf();
-    //const { time: lastTime } = db.get("time", "user", { note: uid }) || {};
     const { data: dbData,time:lastTime } = db.get("note", "user", { uid }) || {};
 
     // 尝试使用缓存
@@ -199,10 +361,6 @@ async function notePromise(uid, server, userID, bot) {
     }
 
     db.update("note", "user", { uid }, { data, time: nowTime });
-    //db.update("time", "user", { note: uid }, { time: nowTime });
-    //bot.logger.debug(
-    //    `缓存：新增 ${uid} 的实时便笺，缓存 ${config.cacheAbyEffectTime} 小时。`
-    //);
     return [nowTime, data];
 }
 
@@ -326,4 +484,137 @@ async function ledgerPromise(uid, server, userID, bot, month = 0) {
     return data;
 }
 
-export { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise, ledgerPromise, setUserCookie };
+async function mybCookiePromise(account_id, login_ticket, userID, bot) {
+    bot.logger.debug(
+        `MYB ${account_id} ${login_ticket}`
+    );
+    const { retcode, message, data } = await getMybCookie(
+        login_ticket,
+        account_id
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function mybStatePromise(uid, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie}`
+    );
+    const { retcode, message, data } = await getMybState(
+        cookie
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function mybStatePromise(uid, fourm, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie} ${fourm}`
+    );
+    const { retcode, message, data } = await mybSignIn(
+        cookie,
+        fourm
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function getPostListPromise(uid, fourm, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie} ${fourm}`
+    );
+    const { retcode, message, data } = await mybPostList(
+        cookie,
+        fourm
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function getPostFullPromise(uid, post_id, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie} ${post_id}`
+    );
+    const { retcode, message, data } = await mybPostFull(
+        cookie,
+        post_id
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function upVotePostPromise(uid, post_id, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie} ${post_id}`
+    );
+    const { retcode, message, data } = await mybUpVote(
+        cookie,
+        post_id
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+async function sharePostPromise(uid, post_id, userID, bot) {
+    const cookie = await getMYBCookie(uid, bot);
+    if (!cookie)
+        return Promise.reject(`未设置私人米游币cookie`);
+    bot.logger.debug(
+        `ledger ${uid} ${cookie} ${post_id}`
+    );
+    const { retcode, message, data } = await mybSharePost(
+        cookie,
+        post_id
+    );
+
+    if (retcode !== 0) {
+        return Promise.reject(`米游社接口报错: ${message}`);
+    }
+
+    return data;
+}
+
+export {
+    notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
+    ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
+    upVotePostPromise, sharePostPromise, setMYBCookie
+};

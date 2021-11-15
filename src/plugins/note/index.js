@@ -1,7 +1,10 @@
 ﻿import { hasEntrance } from "../../utils/config.js";
 import { basePromise } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
-import { notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise, ledgerPromise, setUserCookie } from "./noteDetail.js";
+import {
+    notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
+    ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
+    upVotePostPromise, sharePostPromise, setMYBCookie } from "./noteDetail.js";
 
 function getTime(s, offset) {
     if (s + offset < 0)
@@ -127,6 +130,42 @@ async function doSetCookie(msg, uid) {
     return ` 已设置cookie`;
 }
 
+function getCookieValue(loginCookie, key) {
+    let s = loginCookie.indexOf(key);
+    if (s == -1)
+        return undefined;
+    s += key.length + 1;
+    let e = loginCookie.indexOf(';', s);
+    if (e == -1)
+        return loginCookie.substring(s);
+    return loginCookie.substring(s, e);
+}
+
+async function doSetMYBCookie(msg, uid) {
+    let cookie = msg.text.slice(9);
+    cookie = cookie.replace(new RegExp("'", "gm"), "");
+    if (cookie.indexOf("stuid") == -1 || cookie.indexOf("stoken") == -1 || cookie.indexOf("login_ticket") == -1) {
+        let login_ticket = getCookieValue(cookie, "login_ticket");
+        let account_id = getCookieValue(cookie, "login_uid");
+        if (account_id == undefined)
+            account_id = getCookieValue(cookie, account_id);
+        if (login_ticket == undefined || account_id == undefined)
+            return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
+        else {
+            const mybToken = mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
+            cookie = `stuid=${account_id}; stoken=${mybToken.list[0].token}; login_ticket=${login_ticket}`;
+        }
+    }
+
+    await setUserCookie(uid, cookie, msg.bot);
+    return ` 已设置cookie`;
+}
+
+async function doGetMYB(msg, uid) {
+    
+    return ` 米游币签到开发中……`;
+}
+
 async function Plugin(msg) {
     const dbInfo = await getID(msg.text, msg.uid); // 米游社 ID
     let uid, region ;
@@ -147,7 +186,9 @@ async function Plugin(msg) {
         } else if (hasEntrance(msg.text, "note", "sign_in")) {
             message = await doSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "set_myb_cookie")) {
-            message = await doSign(msg, uid, region);
+            message = await doSetMYBCookie(msg, uid, region);
+        } else if (hasEntrance(msg.text, "note", "get_myb")) {
+            message = await doGetMYB(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "ledger") || hasEntrance(msg.text, "note", "lastledger") || hasEntrance(msg.text, "note", "lastlastledger")) {
             message = await doLedger(msg, uid, region);
         } else {
