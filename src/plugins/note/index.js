@@ -152,7 +152,7 @@ async function doSetMYBCookie(msg, uid) {
         if (login_ticket == undefined || account_id == undefined)
             return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
         else {
-            const token = mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
+            const token = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
             cookie = `stuid=${account_id}; stoken=${token}; login_ticket=${login_ticket}`;
         }
     }
