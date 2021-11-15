@@ -173,8 +173,8 @@ function getRandomArrayElements(arr, count) {
 }
 
 async function doGetMYB(msg, uid) {
-    const forums = [ '崩坏3', '原神', '崩坏2', '未定事件簿', '大别野' ];
-    const states = mybStatePromise(uid, msg.uid, msg.bot);
+    const forums = ['崩坏3', '原神', '崩坏2', '未定事件簿', '大别野'];
+    const states = await mybStatePromise(uid, msg.uid, msg.bot);
     let continuous_sign = false;
     let view_post_0 = false;
     let post_up_0 = false;
@@ -193,7 +193,7 @@ async function doGetMYB(msg, uid) {
     let message = ` `;
     if (!continuous_sign) {
         for (let i = 1; i < 6; i++) {
-            let { retcode, message, data } = mybSignPromise(uid, i, msg.uid, msg.bot);
+            let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
             message += `
 ${forums[i]}:${message}`;
         }
@@ -205,7 +205,7 @@ ${forums[i]}:${message}`;
         if (!view_post_0) {
             let n = 0;
             for (var post of getRandomArrayElements(posts, 3)) {
-                let { retcode, message, data } = getPostFullPromise(uid, post.post.post_id);
+                let { retcode, message, data } = await getPostFullPromise(uid, post.post.post_id);
                 if (retcode == 0)
                     n++;
             }
@@ -215,7 +215,7 @@ ${forums[i]}:${message}`;
         if (!post_up_0) {
             let n = 0;
             for (var post of getRandomArrayElements(posts, 10)) {
-                let { retcode, message, data } = upVotePostPromise(uid, post.post.post_id);
+                let { retcode, message, data } = await upVotePostPromise(uid, post.post.post_id);
                 if (retcode == 0)
                     n++;
             }
@@ -225,7 +225,7 @@ ${forums[i]}:${message}`;
         if (!share_post_0) {
             let n = 0;
             for (var post of getRandomArrayElements(posts, 1)) {
-                let { retcode, message, data } = sharePostPromise(uid, post.post.post_id);
+                let { retcode, message, data } = await sharePostPromise(uid, post.post.post_id);
                 if (retcode == 0)
                     n++;
             }
