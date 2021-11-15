@@ -199,7 +199,7 @@ async function doGetMYB(msg, uid) {
 ${forums[i-1]}:${message}`;
         }
     } else {
-        ret += `今日已签到`;
+        ret += `米游币已签到`;
     }
     if (!view_post_0 || !post_up_0 || !share_post_0) {
         const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
@@ -271,7 +271,7 @@ async function Plugin(msg) {
             message = await doSign(msg, uid, region);
             if (getMYBCookie(uid, msg.bot)) {
                 message += `
-米游币签到：${await doGetMYB(msg, uid, region)}`;
+${await doGetMYB(msg, uid, region)}`;
             }
         } else if (hasEntrance(msg.text, "note", "set_myb_cookie")) {
             message = await doSetMYBCookie(msg, uid, region);
