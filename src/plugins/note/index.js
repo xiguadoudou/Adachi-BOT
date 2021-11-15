@@ -161,40 +161,15 @@ async function doSetMYBCookie(msg, uid) {
     return ` 已设置米游币cookie`;
 }
 
-function unique(array) {
-    let arr = [];
-
-    for (let i in array) {
-        if (arr.indexOf(array[i] < 0)) {
-            arr.push(array[i]);
-        }
+function getRandomArrayElements(arr, count) {
+    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
     }
-    return arr;
-}
-
-function getRandomArrayElements(origin, number) {
-    // 1.先将数据去重，如果没有重复的，就跳过这一步
-    let uniqueArr = unique(origin);
-
-    // 2、number个数肯定要小于或者等于去重后数组的个数
-    if (number > uniqueArr) {
-        return;
-    }
-
-    let arr = [];
-
-    let random, tempData;
-    for (let i = 0; i < number; i++) {
-        // 产生随机数
-        random = parseInt(Math.random() * (uniqueArr.length - 1));
-        // 将挑选的单个数据从uniqueArr这个样本中剥离出去，所以length会逐渐减小
-        tempData = uniqueArr.splice(uniqueArr[random], 1);
-        // 因为tempData是一个length为1的数组，所以，里面的数据有可能是字符串，数字，对象，数组
-        // 注意，不要直接写成arr.push(tempData);  因为你这样你产生的arr其实是一个数组里面嵌套数组的  就像这样 [["a"],["b"]....]
-        arr.push(tempData[0]);
-    }
-
-    return arr;
+    return shuffled.slice(min);
 }
 
 
@@ -228,10 +203,14 @@ ${forums[i]}:${message}`;
     }
     if (!view_post_0 || !post_up_0 || !share_post_0) {
         const posts = getPostListPromise(uid, 26, msg.uid, msg.bot);
+        let post_ids = [];
+        for (let post of posts) {
+            post_ids.push(post.post.post_id);
+        }
         if (!view_post_0) {
             let n = 0;
-            for (var post of getRandomArrayElements(posts, 3)) {
-                let { retcode, message, data } = await getPostFullPromise(uid, post.post.post_id);
+            for (var post_id of getRandomArrayElements(post_ids, 3)) {
+                let { retcode, message, data } = await getPostFullPromise(uid, post_id);
                 if (retcode == 0)
                     n++;
             }
@@ -240,8 +219,8 @@ ${forums[i]}:${message}`;
         }
         if (!post_up_0) {
             let n = 0;
-            for (var post of getRandomArrayElements(posts, 10)) {
-                let { retcode, message, data } = await upVotePostPromise(uid, post.post.post_id);
+            for (var post_id of getRandomArrayElements(post_ids, 10)) {
+                let { retcode, message, data } = await upVotePostPromise(uid, post_id);
                 if (retcode == 0)
                     n++;
             }
@@ -250,8 +229,8 @@ ${forums[i]}:${message}`;
         }
         if (!share_post_0) {
             let n = 0;
-            for (var post of getRandomArrayElements(posts, 1)) {
-                let { retcode, message, data } = await sharePostPromise(uid, post.post.post_id);
+            for (var post_id of getRandomArrayElements(post_ids, 1)) {
+                let { retcode, message, data } = await sharePostPromise(uid, post_id);
                 if (retcode == 0)
                     n++;
             }
