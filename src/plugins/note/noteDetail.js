@@ -518,25 +518,6 @@ async function mybStatePromise(uid, userID, bot) {
     return data;
 }
 
-async function mybStatePromise(uid, fourm, userID, bot) {
-    const cookie = await getMYBCookie(uid, bot);
-    if (!cookie)
-        return Promise.reject(`未设置私人米游币cookie`);
-    bot.logger.debug(
-        `ledger ${uid} ${cookie} ${fourm}`
-    );
-    const { retcode, message, data } = await mybSignIn(
-        cookie,
-        fourm
-    );
-
-    if (retcode !== 0) {
-        return Promise.reject(`米游社接口报错: ${message}`);
-    }
-
-    return data;
-}
-
 async function getPostListPromise(uid, fourm, userID, bot) {
     const cookie = await getMYBCookie(uid, bot);
     if (!cookie)
