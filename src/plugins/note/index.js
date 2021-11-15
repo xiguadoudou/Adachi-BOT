@@ -134,9 +134,9 @@ async function doSetCookie(msg, uid) {
             const { stoken, cookie_token } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
             cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket}`;
             await setMYBCookie(uid, cookie, msg.bot);
-            cookie = `cookie_token=${cookie_token}; account_id=${account_id}`;
+            cookie = `cookie_token=${cookie_token}; account_id=${account_id};`;
         }
-        //return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
+        return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
 
     }
     await setUserCookie(uid, cookie, msg.bot);
