@@ -171,7 +171,7 @@ function getMybCookie(login_ticket, account_id) {
     return fetch(`${__API.GET_TOKEN_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
         qs: query,
-        headers: { ...HEADERS, DS: getDS(query), Referer: "https://app.mihoyo.com" },
+        headers: { ...HEADERS, DS: getDS(query) },
     }).then((res) => res.json());
 }
 
