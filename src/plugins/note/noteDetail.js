@@ -496,9 +496,7 @@ async function mybCookiePromise(account_id, login_ticket, userID, bot) {
     if (retcode !== 0) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
-    bot.logger.debug(
-        `MYB ${account_id} ${data}`
-    );
+
     return data.list[0].token;
 }
 
@@ -516,7 +514,9 @@ async function mybStatePromise(uid, userID, bot) {
     if (retcode !== 0) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
-
+    bot.logger.debug(
+        `MYB ${account_id} ${JSON.stringify(data)}`
+    );
     return data;
 }
 
