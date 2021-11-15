@@ -283,7 +283,7 @@ function mybUpVote(cookie, post_id) {
 }
 
 function mybSharePost(cookie, post_id) {
-    const query = { post_id };
+    const query = { entity_id: post_id, entity_type=1 };
     const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
     const i = (Date.now() / 1000) | 0;
     const r = randomString(6);
@@ -490,7 +490,7 @@ async function mybStatePromise(uid, userID, bot) {
     if (!cookie)
         return Promise.reject(`未设置私人米游币cookie`);
     bot.logger.debug(
-        `ledger ${uid} ${cookie}`
+        `state ${uid} ${cookie}`
     );
     const { retcode, message, data } = await getMybState(
         cookie
