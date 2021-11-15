@@ -515,7 +515,7 @@ async function mybStatePromise(uid, userID, bot) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
     bot.logger.debug(
-        `MYB ${account_id} ${JSON.stringify(data)}`
+        `MYB ${uid} ${JSON.stringify(data)}`
     );
     return data;
 }
