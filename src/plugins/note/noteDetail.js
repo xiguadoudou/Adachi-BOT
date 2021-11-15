@@ -224,26 +224,11 @@ function mybSignIn(cookie, forum) {
 
 function mybPostList(cookie, forum_id) {
     const query = { forum_id, is_good: false, is_hot: false, page_size: 20, sort_type:1 };
-    const n = "h8w582wxwgqvahcdkpvdhbh2w9casgfl";
-    const i = (Date.now() / 1000) | 0;
-    const r = randomString(6);
-    const c = md5(`salt=${n}&t=${i}&r=${r}`);
 
-    return fetch(__API.MYB_POST_LIST_URL, {
+    return fetch(`${__API.MYB_POST_LIST_URL}?${new URLSearchParams(query)}`, {
         method: "GET",
-        json: true,
         qs: query,
-        headers: {
-            ...HEADERS,
-            DS: `${i},${r},${c}`,
-            Cookie: cookie,
-            Referer: "https://app.mihoyo.com",
-            "User-Agent": "okhttp/4.8.0",
-            "x-rpc-app_version": "2.3.0",
-            'x-rpc-channel': 'miyousheluodi',
-            "x-rpc-client_type": 5,
-            "x-rpc-device_id": uuidv3(cookie, uuidv3.URL).replace("-", ""),
-        },
+        headers: { ...HEADERS, DS: getDS(query) },
     }).then((res) => res.json());
 }
 
