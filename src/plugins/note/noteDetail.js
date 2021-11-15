@@ -499,7 +499,7 @@ async function mybCookiePromise(account_id, login_ticket, userID, bot) {
     bot.logger.debug(
         `MYB ${account_id} ${data}`
     );
-    return data;
+    return data.list[0].token;
 }
 
 async function mybStatePromise(uid, userID, bot) {
