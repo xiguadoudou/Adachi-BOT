@@ -572,5 +572,5 @@ async function sharePostPromise(uid, post_id, userID, bot) {
 export {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
-    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise
+    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise, getMYBCookie
 };

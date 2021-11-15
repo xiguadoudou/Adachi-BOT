@@ -4,7 +4,7 @@ import { getID } from "../../utils/id.js";
 import {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
-    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise } from "./noteDetail.js";
+    upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise, getMYBCookie } from "./noteDetail.js";
 
 function getTime(s, offset) {
     if (s + offset < 0)
@@ -269,6 +269,10 @@ async function Plugin(msg) {
             message = await doReSign(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "sign_in")) {
             message = await doSign(msg, uid, region);
+            if (getMYBCookie(uid, msg.bot)) {
+                message += `
+米游币签到：${await doGetMYB(msg, uid, region)}`;
+            }
         } else if (hasEntrance(msg.text, "note", "set_myb_cookie")) {
             message = await doSetMYBCookie(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "get_myb")) {
