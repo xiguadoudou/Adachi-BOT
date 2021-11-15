@@ -165,7 +165,7 @@ function getLedger(bind_uid, bind_region, cookie, month = 0) {
     }).then((res) => res.json());
 }
 
-function getMybCookie(login_ticket, account_id,) {
+function getMybCookieByTicket(login_ticket, account_id) {
     const query = { login_ticket, uid: account_id, token_types: 3 };
 
     return fetch(`${__API.GET_TOKEN_URL}?${new URLSearchParams(query)}`, {
@@ -488,7 +488,7 @@ async function mybCookiePromise(account_id, login_ticket, userID, bot) {
     bot.logger.debug(
         `MYB ${account_id} ${login_ticket}`
     );
-    const { retcode, message, data } = await getMybCookie(
+    const { retcode, message, data } = await getMybCookieByTicket(
         login_ticket,
         account_id
     );
@@ -496,7 +496,9 @@ async function mybCookiePromise(account_id, login_ticket, userID, bot) {
     if (retcode !== 0) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
-
+    bot.logger.debug(
+        `MYB ${account_id} ${data}`
+    );
     return data;
 }
 
