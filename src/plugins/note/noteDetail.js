@@ -530,12 +530,7 @@ async function mybSignPromise(uid, fourm, userID, bot) {
     const { retcode, message, data } = await mybSignIn(
         cookie, fourm
     );
-
-    if (retcode !== 0) {
-        return Promise.reject(`米游社接口报错: ${message}`);
-    }
-
-    return data;
+    return { retcode, message, data };
 }
 
 async function getPostListPromise(uid, fourm, userID, bot) {
@@ -554,7 +549,7 @@ async function getPostListPromise(uid, fourm, userID, bot) {
         return Promise.reject(`米游社接口报错: ${message}`);
     }
 
-    return data;
+    return data.list;
 }
 
 async function getPostFullPromise(uid, post_id, userID, bot) {
@@ -569,11 +564,7 @@ async function getPostFullPromise(uid, post_id, userID, bot) {
         post_id
     );
 
-    if (retcode !== 0) {
-        return Promise.reject(`米游社接口报错: ${message}`);
-    }
-
-    return data;
+    return { retcode, message, data };
 }
 
 async function upVotePostPromise(uid, post_id, userID, bot) {
@@ -588,11 +579,7 @@ async function upVotePostPromise(uid, post_id, userID, bot) {
         post_id
     );
 
-    if (retcode !== 0) {
-        return Promise.reject(`米游社接口报错: ${message}`);
-    }
-
-    return data;
+    return { retcode, message, data };
 }
 
 async function sharePostPromise(uid, post_id, userID, bot) {
@@ -607,11 +594,7 @@ async function sharePostPromise(uid, post_id, userID, bot) {
         post_id
     );
 
-    if (retcode !== 0) {
-        return Promise.reject(`米游社接口报错: ${message}`);
-    }
-
-    return data;
+    return { retcode, message, data };
 }
 
 export {

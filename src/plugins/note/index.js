@@ -158,12 +158,82 @@ async function doSetMYBCookie(msg, uid) {
     }
 
     await setMYBCookie(uid, cookie, msg.bot);
-    return ` 已设置cookie`;
+    return ` 已设置米游币cookie`;
+}
+
+function getRandomArrayElements(arr, count) {
+    var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+    while (i-- > min) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+    }
+    return shuffled.slice(min);
 }
 
 async function doGetMYB(msg, uid) {
-    
-    return ` 米游币签到开发中……`;
+    const forums = [ '崩坏3', '原神', '崩坏2', '未定事件簿', '大别野' ];
+    const states = mybStatePromise(uid, msg.uid, msg.bot);
+    let continuous_sign = false;
+    let view_post_0 = false;
+    let post_up_0 = false;
+    let share_post_0 = false;
+    for (var state of states.states) {
+        if (state.mission_key == "continuous_sign") {
+            continuous_sign = state.is_get_award;
+        } else if (state.mission_key == "view_post_0") {
+            view_post_0 = state.is_get_award;
+        } else if (state.mission_key == "post_up_0") {
+            post_up_0 = state.is_get_award;
+        } else if (state.mission_key == "share_post_0") {
+            share_post_0 = state.is_get_award;
+        }
+    }
+    let message = ` `;
+    if (!continuous_sign) {
+        for (let i = 1; i < 6; i++) {
+            let { retcode, message, data } = mybSignPromise(uid, i, msg.uid, msg.bot);
+            message += `
+${forums[i]}:${message}`;
+        }
+    } else {
+        message += `今日已签到`;
+    }
+    if (!view_post_0 || !post_up_0 || !share_post_0) {
+        const posts = getPostListPromise(uid, 26, msg.uid, msg.bot);
+        if (!view_post_0) {
+            let n = 0;
+            for (var post of getRandomArrayElements(posts, 3)) {
+                let { retcode, message, data } = getPostFullPromise(uid, post.post.post_id);
+                if (retcode == 0)
+                    n++;
+            }
+            message += `
+浏览（${n}/3）`;
+        }
+        if (!post_up_0) {
+            let n = 0;
+            for (var post of getRandomArrayElements(posts, 10)) {
+                let { retcode, message, data } = upVotePostPromise(uid, post.post.post_id);
+                if (retcode == 0)
+                    n++;
+            }
+            message += `
+点赞（${n}/3）`;
+        }
+        if (!share_post_0) {
+            let n = 0;
+            for (var post of getRandomArrayElements(posts, 1)) {
+                let { retcode, message, data } = sharePostPromise(uid, post.post.post_id);
+                if (retcode == 0)
+                    n++;
+            }
+            message += `
+分享（${n}/3）`;
+        }
+    }
+    return message;
 }
 
 async function Plugin(msg) {
