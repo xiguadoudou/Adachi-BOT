@@ -210,7 +210,7 @@ ${forums[i]}:${message}`;
         if (!view_post_0) {
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 3)) {
-                let { retcode, message, data } = await getPostFullPromise(uid, post_id);
+                let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
                 if (retcode == 0)
                     n++;
             }
@@ -220,7 +220,7 @@ ${forums[i]}:${message}`;
         if (!post_up_0) {
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 10)) {
-                let { retcode, message, data } = await upVotePostPromise(uid, post_id);
+                let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
                 if (retcode == 0)
                     n++;
             }
@@ -230,7 +230,7 @@ ${forums[i]}:${message}`;
         if (!share_post_0) {
             let n = 0;
             for (var post_id of getRandomArrayElements(post_ids, 1)) {
-                let { retcode, message, data } = await sharePostPromise(uid, post_id);
+                let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
                 if (retcode == 0)
                     n++;
             }
