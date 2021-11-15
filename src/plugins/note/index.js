@@ -191,23 +191,20 @@ async function doGetMYB(msg, uid) {
             share_post_0 = state.is_get_award;
         }
     }
-    let message = ` `;
+    let ret = ` `;
     if (!continuous_sign) {
         for (let i = 1; i < 6; i++) {
             let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
-            message += `
+            ret += `
 ${forums[i]}:${message}`;
         }
     } else {
-        message += `今日已签到`;
+        ret += `今日已签到`;
     }
     if (!view_post_0 || !post_up_0 || !share_post_0) {
         const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
         let post_ids = [];
         for (let post of posts) {
-            msg.bot.logger.debug(
-                `push post_id ${post.post.post_id}`
-            );
             post_ids.push(parseInt(post.post.post_id));
         }
         if (!view_post_0) {
@@ -216,8 +213,11 @@ ${forums[i]}:${message}`;
                 let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
                 if ("OK" == message)
                     n++;
+                else
+                    ret += `
+${message}`;
             }
-            message += `
+            ret += `
 浏览（${n}/3）`;
         }
         if (!post_up_0) {
@@ -227,7 +227,7 @@ ${forums[i]}:${message}`;
                 if ("OK" == message)
                     n++;
             }
-            message += `
+            ret += `
 点赞（${n}/10）`;
         }
         if (!share_post_0) {
@@ -237,11 +237,11 @@ ${forums[i]}:${message}`;
                 if ("OK" == message)
                     n++;
             }
-            message += `
+            ret += `
 分享（${n}/1）`;
         }
     }
-    return message;
+    return ret;
 }
 
 async function Plugin(msg) {
