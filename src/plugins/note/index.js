@@ -157,7 +157,7 @@ async function doSetMYBCookie(msg, uid) {
         }
     }
 
-    await setUserCookie(uid, cookie, msg.bot);
+    await setMYBCookie(uid, cookie, msg.bot);
     return ` 已设置cookie`;
 }
 
