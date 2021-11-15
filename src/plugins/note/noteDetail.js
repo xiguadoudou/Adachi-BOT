@@ -56,6 +56,8 @@ async function getMYBCookie(user, bot) {
         await db.push("note", "myb", initData);
     }
     let { cookie } = await db.get("note", "myb", { user });
+    if (!cookie)
+        return undefined;
     return cookie;
 }
 
