@@ -202,7 +202,7 @@ ${forums[i]}:${message}`;
         message += `今日已签到`;
     }
     if (!view_post_0 || !post_up_0 || !share_post_0) {
-        const posts = getPostListPromise(uid, 26, msg.uid, msg.bot);
+        const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
         let post_ids = [];
         for (let post of posts) {
             post_ids.push(post.post.post_id);
