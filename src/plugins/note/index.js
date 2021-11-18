@@ -151,12 +151,11 @@ async function doPicNote(msg, uid, region) {
         }
         num++;
     }
-    
     let base64;
     try {
         const page = await browser.newPage();
         await page.setViewport({
-            width: 948,
+            width: 1024,
             height: 900,
             deviceScaleFactor: 1,
         });
@@ -171,7 +170,7 @@ async function doPicNote(msg, uid, region) {
         });
         await page.close();
     } catch (e) {
-        msg.bot.logger.error(`genshin-note 功能绘图失败：${e}`, msg.uid);
+        msg.bot.logger.error(`genshin-note 功能绘图失败：${e} ${params}`, msg.uid);
     }
 
     if (base64) {
