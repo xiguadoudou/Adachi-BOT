@@ -138,7 +138,7 @@ async function doPicNote(msg, uid, region) {
     for (var expedition of data.expeditions) {
         if (expedition) {
             img = expedition.avatar_side_icon;
-            img.replace(new RegExp("https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_", "gm"), "")
+            img = img.replace(new RegExp("https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_", "gm"), "")
                 .replace(new RegExp(".png", "gm"), "");
             if (expedition.status == "Ongoing") {
                 e = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
