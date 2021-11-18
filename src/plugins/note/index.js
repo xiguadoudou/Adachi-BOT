@@ -151,14 +151,14 @@ async function doPicNote(msg, uid, region) {
         }
         num++;
     }
-        
+    
     let base64;
     try {
         const page = await browser.newPage();
         await page.setViewport({
             width: await page.evaluate(() => document.body.clientWidth),
             height: await page.evaluate(() => document.body.clientHeight),
-            deviceScaleFactor: scale,
+            deviceScaleFactor: 1.5,
         });
         await page.goto(`http://localhost:9934/src/views/genshin-note.html?${params}`);
 
