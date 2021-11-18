@@ -418,6 +418,7 @@ note:
     - ^(实时)?(便笺|树脂|便签)\s*$
     - ^(实时)?(便笺|树脂|便签)\s+\d+.*$
     - ^(实时)?(便笺|树脂|便签)\s*\[CQ:at,qq=.*$
+    - ^图片便签
     - ^签到\s*$
     - ^签到\s+\d+.*$
     - ^签到\s*\[CQ:at,qq=.*$
@@ -448,6 +449,13 @@ note:
         - ^树脂
         - ^实时便签
         - ^便签
+    get_pic_note:
+      weights: 9899
+      name:
+      usage:
+      description:
+      entrance:
+        - ^图片便签
     set_myb_cookie:
       weights: 9299
       name: 米游币Cookie

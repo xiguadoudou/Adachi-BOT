@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8" />
+    <title>genshin-note</title>
+    <style type="text/css">
+        .app {
+            background: url(component/note/background.png);
+            width: 948px;
+            height: 900px;
+        }
+
+        #date {
+            position: absolute;
+            width: 180px;
+            height: 58px;
+            left: 234px;
+            top: 64px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 22px;
+        }
+
+        #rrt {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 180px;
+            top: 157px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #resin {
+            position: absolute;
+            width: 200px;
+            height: 40px;
+            left: 240px;
+            top: 200px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        #task {
+            position: absolute;
+            width: 228px;
+            height: 26px;
+            left: 240px;
+            top: 335px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        #rrd {
+            position: absolute;
+            width: 228px;
+            height: 26px;
+            left: 240px;
+            top: 460px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 30px;
+        }
+
+        #ert {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 610px;
+            top: 80px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        #e1 {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 622px;
+            top: 145px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e2 {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 622px;
+            top: 217px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e3 {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 622px;
+            top: 289px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e4 {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 622px;
+            top: 361px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e5 {
+            position: absolute;
+            width: 258px;
+            height: 26px;
+            left: 622px;
+            top: 433px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e1_img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 530px;
+            top: 115px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e2_img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 530px;
+            top: 187px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e3_img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 530px;
+            top: 259px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e4_img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 530px;
+            top: 331px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        #e5_img {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            left: 530px;
+            top: 403px;
+            color: #7B8386;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div id="date">
+            11月18日<br />
+            10:44:56
+        </div>
+        <div id="rrt">
+            将于明天10:10:10回满
+        </div>
+        <div id="resin">
+            43/160
+        </div>
+        <div id="task">
+            完成
+        </div>
+        <div id="rrd">
+            完成
+        </div>
+        <div id="ert">
+        </div>
+        <div id="e1">
+        </div>
+        <div id="e2">
+        </div>
+        <div id="e3">
+        </div>
+        <div id="e4">
+        </div>
+        <div id="e5">
+        </div>
+        <img id="e1_img" />
+        <img id="e2_img" />
+        <img id="e3_img" />
+        <img id="e4_img" />
+        <img id="e5_img" />
+    </div>
+    <script type="text/javascript">
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+        function getTime(s) {
+            if (s < 0)
+                return [0, 0, 0, 0];
+            const sec = parseInt(s);
+            const min = parseInt(sec / 60);
+            const hour = parseInt(min / 60);
+            const day = parseInt(hour / 24);
+            return [day, hour % 24, min % 60, sec % 60];
+        };
+        function getUrlParameter(name){
+            name = name.replace(/[]/,"\[").replace(/[]/,"\[").replace(/[]/,"\\\]");
+            var regexS = "[\\?&]"+name+"=([^&#]*)";
+            var regex = new RegExp( regexS );
+            var results = regex.exec(window.parent.location.href );
+            if( results == null ) return null; else {
+                return results[1];
+            }
+        };
+        function loadData(){
+            var myDate = new Date();
+            document.getElementById("date").innerHTML = (myDate.getMonth()+1)+"月"+myDate.getDate()+"日<br/>"+myDate.Format("hh:mm:ss");
+            var rrt = getUrlParameter("rrt");
+            if(rrt != null){
+                if(rrt == 0){
+                    document.getElementById("rrt").innerHTML = "树脂已回满";
+                    document.getElementById("resin").innerHTML = "160/160";
+                }else{
+                    let [day, hour, min, sec] = getTime(parseInt(rrt));
+                    document.getElementById("rrt").innerHTML = "树脂将于"+hour+"小时"+min+"分"+sec+"秒后回满";
+                    document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8)+"/160";
+                }
+            }
+            var task = getUrlParameter("task");
+            if(task == -1){
+                document.getElementById("task").innerHTML = "完成";
+            }else if(task != null)
+                document.getElementById("task").innerHTML = task+"/4";
+            var rrd = getUrlParameter("rrd");
+            if(rrd == 0)
+                document.getElementById("rrd").innerHTML = "完成";
+            else if(rrd != null)
+                document.getElementById("rrd").innerHTML = rrd+"/3";
+            var minTime = 0;
+            var e1 = getUrlParameter("e1");
+            if(e1 != null){
+                minTime = e1;
+                if(e1 == 0)
+                    document.getElementById("e1").innerHTML = "已完成";
+                else{
+                    let [day, hour, min, sec] = getTime(parseInt(e1));
+                    document.getElementById("e1").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+                }
+            }
+            e1 = getUrlParameter("e2");
+            if(e1 != null){
+                if(e1 < minTime)
+                    minTime = e1;
+                if(e1 == 0)
+                    document.getElementById("e2").innerHTML = "已完成";
+                else{
+                    let [day, hour, min, sec] = getTime(parseInt(e1));
+                    document.getElementById("e2").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+                }
+            }
+            e1 = getUrlParameter("e3");
+            if(e1 != null){
+                if(e1 < minTime)
+                    minTime = e1;
+                if(e1 == 0)
+                    document.getElementById("e3").innerHTML = "已完成";
+                else{
+                    let [day, hour, min, sec] = getTime(parseInt(e1));
+                    document.getElementById("e3").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+                }
+            }
+            e1 = getUrlParameter("e4");
+            if(e1 != null){
+                if(e1 < minTime)
+                    minTime = e1;
+                if(e1 == 0)
+                    document.getElementById("e4").innerHTML = "已完成";
+                else{
+                    let [day, hour, min, sec] = getTime(parseInt(e1));
+                    document.getElementById("e4").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+                }
+            }
+            e1 = getUrlParameter("e5");
+            if(e1 != null){
+                if(e1 < minTime)
+                    minTime = e1;
+                if(e1 == 0)
+                    document.getElementById("e5").innerHTML = "已完成";
+                else{
+                    let [day, hour, min, sec] = getTime(parseInt(e1));
+                    document.getElementById("e5").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+                }
+            }
+            if(minTime == 0)
+                document.getElementById("ert").innerHTML = "";
+            else{
+                let [day, hour, min, sec] = getTime(parseInt(minTime));
+                document.getElementById("ert").innerHTML = "最快"+hour+"小时"+min+"分"+sec+"秒后完成派遣";
+            }
+
+            var e_img = getUrlParameter("e1i");
+            if(e_img != null){
+                document.getElementById("e1_img").src = "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_"+e_img+".png";
+            }else{
+                document.getElementById("e1_img").style.visibility= "hidden";
+            }
+
+            e_img = getUrlParameter("e2i");
+            if(e_img != null){
+                document.getElementById("e2_img").src = "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_"+e_img+".png";
+            }else{
+                document.getElementById("e2_img").style.visibility= "hidden";
+            }
+
+            e_img = getUrlParameter("e3i");
+            if(e_img != null){
+                document.getElementById("e3_img").src = "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_"+e_img+".png";
+            }else{
+                document.getElementById("e3_img").style.visibility= "hidden";
+            }
+
+            e_img = getUrlParameter("e4i");
+            if(e_img != null){
+                document.getElementById("e4_img").src = "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_"+e_img+".png";
+            }else{
+                document.getElementById("e4_img").style.visibility= "hidden";
+            }
+
+            e_img = getUrlParameter("e5i");
+            if(e_img != null){
+                document.getElementById("e5_img").src = "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_"+e_img+".png";
+            }else{
+                document.getElementById("e5_img").style.visibility= "hidden";
+            }
+        };
+        loadData();
+    </script>
+</body>
+</html>
+

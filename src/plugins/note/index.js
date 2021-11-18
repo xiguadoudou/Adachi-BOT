@@ -120,6 +120,68 @@ async function doNote(msg, uid, region) {
     return message;
 }
 
+async function doPicNote(msg, uid, region) {
+    const noteInfo = await notePromise(uid, region, msg.uid, msg.bot);
+    const data = noteInfo[1];
+    const baseTime = noteInfo[0];
+    const nowTime = new Date().valueOf();
+    let rrt = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
+    if (rrt < 0)
+        rrt = 0;
+    const task = data.is_extra_task_reward_received ? -1 : data.finished_task_num;
+    const rrd = data.remain_resin_discount_num;
+
+    let params = `rrt=${rrt}&task=${task}&rrd=${rrd}`;
+    let num = 1;
+    let e = 0;
+    let img = undefined;
+    for (var expedition of data.expeditions) {
+        if (expedition) {
+            img = expedition.avatar_side_icon;
+            img.replace(new RegExp("https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_", "gm"), "")
+                .replace(new RegExp(".png", "gm"), "");
+            if (expedition.status == "Ongoing") {
+                e = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
+                if (e < 0)
+                    e = 0;
+            } else if (expedition.status == "Finished") {
+                e = 0;
+            }
+            params += `e${num}=${e}&e${num}i=${img}`;
+        }
+        num++;
+    }
+        
+    let base64;
+    try {
+        const page = await browser.newPage();
+        await page.setViewport({
+            width: await page.evaluate(() => document.body.clientWidth),
+            height: await page.evaluate(() => document.body.clientHeight),
+            deviceScaleFactor: scale,
+        });
+        await page.goto(`http://localhost:9934/src/views/genshin-note.html?${params}`);
+
+        const html = await page.$("body", { waitUntil: "networkidle0" });
+        base64 = await html.screenshot({
+            encoding: "base64",
+            type: "jpeg",
+            quality: 100,
+            omitBackground: true,
+        });
+        await page.close();
+    } catch (e) {
+        msg.bot.logger.error(`${name} 功能绘图失败：${e}`, msg.uid);
+    }
+
+    if (base64) {
+        const imageCQ = `[CQ:image,file=base64://${base64}]`;
+        msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, "\n");
+    }
+    return undefined;
+}
+
+
 async function doSetCookie(msg, uid) {
     let cookie = msg.text.slice(9);
     cookie = cookie.replace(new RegExp("'", "gm"), "");
@@ -292,6 +354,8 @@ ${await doGetMYB(msg, uid, region)}`;
             message = await doGetMYB(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "ledger") || hasEntrance(msg.text, "note", "lastledger") || hasEntrance(msg.text, "note", "lastlastledger")) {
             message = await doLedger(msg, uid, region);
+        } else if (hasEntrance(msg.text, "note", "get_pic_note")){
+            message = await doPicNote(msg, uid, region);
         } else {
             message = await doNote(msg, uid, region);
         }
