@@ -152,7 +152,7 @@ async function doPicNote(msg, uid, region) {
         num++;
     }
     let base64;
-    msg.bot.logger.debug(`${params}`);
+    //msg.bot.logger.debug(`${params}`);
     try {
         const page = await browser.newPage();
         await page.setViewport({
@@ -357,7 +357,7 @@ ${await doGetMYB(msg, uid, region)}`;
         } else if (hasEntrance(msg.text, "note", "get_pic_note")){
             message = await doPicNote(msg, uid, region);
         } else {
-            message = await doNote(msg, uid, region);
+            message = await doPicNote(msg, uid, region);
         }
         
     } catch (e) {
