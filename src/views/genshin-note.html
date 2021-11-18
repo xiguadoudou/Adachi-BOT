@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
     <meta charset="UTF-8" />
@@ -191,20 +191,20 @@
 <body>
     <div class="app">
         <div id="date">
-            11ÔÂ18ÈÕ<br />
+            11æœˆ18æ—¥<br />
             10:44:56
         </div>
         <div id="rrt">
-            ½«ÓÚÃ÷Ìì10:10:10»ØÂú
+            å°†äºæ˜å¤©10:10:10å›æ»¡
         </div>
         <div id="resin">
             43/160
         </div>
         <div id="task">
-            Íê³É
+            å®Œæˆ
         </div>
         <div id="rrd">
-            Íê³É
+            å®Œæˆ
         </div>
         <div id="ert">
         </div>
@@ -227,13 +227,13 @@
     <script type="text/javascript">
         Date.prototype.Format = function (fmt) { //author: meizz
             var o = {
-                "M+": this.getMonth() + 1, //ÔÂ·İ
-                "d+": this.getDate(), //ÈÕ
-                "h+": this.getHours(), //Ğ¡Ê±
-                "m+": this.getMinutes(), //·Ö
-                "s+": this.getSeconds(), //Ãë
-                "q+": Math.floor((this.getMonth() + 3) / 3), //¼¾¶È
-                "S": this.getMilliseconds() //ºÁÃë
+                "M+": this.getMonth() + 1, //æœˆä»½
+                "d+": this.getDate(), //æ—¥
+                "h+": this.getHours(), //å°æ—¶
+                "m+": this.getMinutes(), //åˆ†
+                "s+": this.getSeconds(), //ç§’
+                "q+": Math.floor((this.getMonth() + 3) / 3), //å­£åº¦
+                "S": this.getMilliseconds() //æ¯«ç§’
             };
             if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
             for (var k in o)
@@ -260,26 +260,26 @@
         };
         function loadData(){
             var myDate = new Date();
-            document.getElementById("date").innerHTML = (myDate.getMonth()+1)+"ÔÂ"+myDate.getDate()+"ÈÕ<br/>"+myDate.Format("hh:mm:ss");
+            document.getElementById("date").innerHTML = (myDate.getMonth()+1)+"æœˆ"+myDate.getDate()+"æ—¥<br/>"+myDate.Format("hh:mm:ss");
             var rrt = getUrlParameter("rrt");
             if(rrt != null){
                 if(rrt == 0){
-                    document.getElementById("rrt").innerHTML = "Ê÷Ö¬ÒÑ»ØÂú";
+                    document.getElementById("rrt").innerHTML = "æ ‘è„‚å·²å›æ»¡";
                     document.getElementById("resin").innerHTML = "160/160";
                 }else{
                     let [day, hour, min, sec] = getTime(parseInt(rrt));
-                    document.getElementById("rrt").innerHTML = "Ê÷Ö¬½«ÓÚ"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãëºó»ØÂú";
+                    document.getElementById("rrt").innerHTML = "æ ‘è„‚å°†äº"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’åå›æ»¡";
                     document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8)+"/160";
                 }
             }
             var task = getUrlParameter("task");
             if(task == -1){
-                document.getElementById("task").innerHTML = "Íê³É";
+                document.getElementById("task").innerHTML = "å®Œæˆ";
             }else if(task != null)
                 document.getElementById("task").innerHTML = task+"/4";
             var rrd = getUrlParameter("rrd");
             if(rrd == 0)
-                document.getElementById("rrd").innerHTML = "Íê³É";
+                document.getElementById("rrd").innerHTML = "å®Œæˆ";
             else if(rrd != null)
                 document.getElementById("rrd").innerHTML = rrd+"/3";
             var minTime = 0;
@@ -287,10 +287,10 @@
             if(e1 != null){
                 minTime = e1;
                 if(e1 == 0)
-                    document.getElementById("e1").innerHTML = "ÒÑÍê³É";
+                    document.getElementById("e1").innerHTML = "å·²å®Œæˆ";
                 else{
                     let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e1").innerHTML = "Ê£Óà"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãë";
+                    document.getElementById("e1").innerHTML = "å‰©ä½™"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’";
                 }
             }
             e1 = getUrlParameter("e2");
@@ -298,10 +298,10 @@
                 if(e1 < minTime)
                     minTime = e1;
                 if(e1 == 0)
-                    document.getElementById("e2").innerHTML = "ÒÑÍê³É";
+                    document.getElementById("e2").innerHTML = "å·²å®Œæˆ";
                 else{
                     let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e2").innerHTML = "Ê£Óà"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãë";
+                    document.getElementById("e2").innerHTML = "å‰©ä½™"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’";
                 }
             }
             e1 = getUrlParameter("e3");
@@ -309,10 +309,10 @@
                 if(e1 < minTime)
                     minTime = e1;
                 if(e1 == 0)
-                    document.getElementById("e3").innerHTML = "ÒÑÍê³É";
+                    document.getElementById("e3").innerHTML = "å·²å®Œæˆ";
                 else{
                     let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e3").innerHTML = "Ê£Óà"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãë";
+                    document.getElementById("e3").innerHTML = "å‰©ä½™"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’";
                 }
             }
             e1 = getUrlParameter("e4");
@@ -320,10 +320,10 @@
                 if(e1 < minTime)
                     minTime = e1;
                 if(e1 == 0)
-                    document.getElementById("e4").innerHTML = "ÒÑÍê³É";
+                    document.getElementById("e4").innerHTML = "å·²å®Œæˆ";
                 else{
                     let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e4").innerHTML = "Ê£Óà"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãë";
+                    document.getElementById("e4").innerHTML = "å‰©ä½™"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’";
                 }
             }
             e1 = getUrlParameter("e5");
@@ -331,17 +331,17 @@
                 if(e1 < minTime)
                     minTime = e1;
                 if(e1 == 0)
-                    document.getElementById("e5").innerHTML = "ÒÑÍê³É";
+                    document.getElementById("e5").innerHTML = "å·²å®Œæˆ";
                 else{
                     let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e5").innerHTML = "Ê£Óà"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"Ãë";
+                    document.getElementById("e5").innerHTML = "å‰©ä½™"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’";
                 }
             }
             if(minTime == 0)
                 document.getElementById("ert").innerHTML = "";
             else{
                 let [day, hour, min, sec] = getTime(parseInt(minTime));
-                document.getElementById("ert").innerHTML = "×î¿ì"+hour+"Ğ¡Ê±"+min+"·Ö"+sec+"ÃëºóÍê³ÉÅÉÇ²";
+                document.getElementById("ert").innerHTML = "æœ€å¿«"+hour+"å°æ—¶"+min+"åˆ†"+sec+"ç§’åå®Œæˆæ´¾é£";
             }
 
             var e_img = getUrlParameter("e1i");
@@ -379,6 +379,7 @@
                 document.getElementById("e5_img").style.visibility= "hidden";
             }
         };
+
         loadData();
     </script>
 </body>
