@@ -171,7 +171,7 @@ async function doPicNote(msg, uid, region) {
         });
         await page.close();
     } catch (e) {
-        msg.bot.logger.error(`${name} 功能绘图失败：${e}`, msg.uid);
+        msg.bot.logger.error(`genshin-note 功能绘图失败：${e}`, msg.uid);
     }
 
     if (base64) {
