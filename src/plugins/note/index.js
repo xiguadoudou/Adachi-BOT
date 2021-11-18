@@ -156,7 +156,7 @@ async function doPicNote(msg, uid, region) {
     try {
         const page = await browser.newPage();
         await page.setViewport({
-            width: 980,
+            width: 965,
             height: 900,
             deviceScaleFactor: 1,
         });
