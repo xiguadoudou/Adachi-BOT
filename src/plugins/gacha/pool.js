@@ -1,11 +1,12 @@
-/* global all */
+/* global all, command */
 /* eslint no-undef: "error" */
 
 import db from "../../utils/database.js";
+import { filterWordsByRegex, getWordByRegex } from "../../utils/tools.js";
 import { init } from "./init.js";
 
 function doPool(msg) {
-  const [cmd] = msg.text.split(/(?<=^\S+)\s/).slice(1);
+  const [cmd] = getWordByRegex(filterWordsByRegex(msg.text, ...command.functions.entrance.pool), /\S+/);
   let choice = 301;
 
   switch (cmd) {
@@ -25,7 +26,7 @@ function doPool(msg) {
 
   init(msg.uid);
   db.update("gacha", "user", { userID: msg.uid }, { choice });
-  msg.bot.say(msg.sid, `您的卡池已切换至：${all.functions.options.pool[choice]}。`, msg.type, msg.uid);
+  msg.bot.say(msg.sid, `您的卡池已切换至：${all.functions.options.pool[choice]}。`, msg.type, msg.uid, true);
 }
 
 export { doPool };

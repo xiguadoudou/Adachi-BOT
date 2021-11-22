@@ -3,14 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <title>genshin-card</title>
-    <script src="../../data/js/vue.min.js"></script>
+    <script src="../../data/js/vue2.js"></script>
     <script src="./component/card/card.js"></script>
     <link rel="stylesheet" href="./component/card/card.css" />
   </head>
 
   <body>
     <div id="app">
+      <div
+        style="
+          position: absolute;
+          top: 474px;
+          left: 792px;
+          color: transparent;
+          text-shadow: 0 0 0.5px #404040;
+          font-size: 30px;
+        "
+      >
+        解锁传送点
+      </div>
       <upper
+        :qqid="qqid"
         :uid="uid"
         :nickname="nickname"
         :level="level"
@@ -33,7 +46,7 @@
         <div class="background">
           <img src="http://localhost:9934/resources/Version2/module/mys-upper-v2-2.png" alt="ERROR" />
         </div>
-        <img :src="Picture" alt="ERROR" class="profile" />
+        <img :src="Picture" alt="ERROR" class="qq-avatar" />
         <div class="base-info">
           <p class="nickname">{{nickname}}</p>
           <p class="uid">UID: {{uid}}</p>
@@ -60,6 +73,7 @@
           <p class="stats">{{stats.anemoculus_number}}</p>
           <p class="stats">{{stats.geoculus_number}}</p>
           <p class="stats">{{stats.electroculus_number}}</p>
+          <p class="stats">{{stats.way_point_number}}</p>
         </div>
 
         <div class="exploration">
@@ -160,6 +174,7 @@
       new Vue({
         el: "#app",
         data: {
+          qqid: undefined,
           retcode: 1,
           nickname: "",
           uid: 0,
@@ -180,47 +195,43 @@
         },
         methods: {
           cutArray(array, step) {
-            let newArray = [];
-            let index = 0,
-              len = array.length;
-            while (index < len) {
+            const newArray = [];
+            let index = 0;
+
+            while (index < array.length) {
               newArray.push(array.slice(index, (index += step)));
             }
+
             return newArray;
-          },
-          readJSON(file, callback) {
-            fetch(file).then((res) => {
-              return res.json().then((data) => {
-                callback(data);
-              });
-            });
           },
         },
         mounted() {
-          this.readJSON("../../data/record/genshin-card.json", (res) => {
-            this.nickname = res.nickname;
-            this.uid = res.uid;
-            this.level = res.level;
+          const params = JSON.parse(
+            decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
+          );
+          const avatarsList = params.avatars || [];
 
-            let avatarsList = res.avatars;
-            this.stats = res.stats;
-            this.explorations = res.explorations;
-            this.homes = res.homes;
-            this.avatar_number = avatarsList.length;
-            this.profile = avatarsList[Math.floor(Math.random() * this.avatar_number)].id;
+          this.qqid = params.qqid;
+          this.nickname = params.nickname;
+          this.uid = params.uid;
+          this.level = params.level;
+          this.stats = params.stats;
+          this.homes = params.homes;
+          this.avatar_number = avatarsList.length;
+          this.explorations = params.explorations;
+          this.profile = avatarsList[Math.floor(Math.random() * this.avatar_number)].id;
 
-            avatarsList.sort((x, y) => {
-              if (x.level === y.level) {
-                return y.fetter - x.fetter;
-              } else {
-                return y.level - x.level;
-              }
-            });
-            this.avatarsData = this.cutArray(avatarsList, 7);
-
-            this.homeslevel = res.homes[0].level !== 0 ? res.homes[0].level : 0;
-            this.maxcomfort = res.homes[0].comfort_num !== 0 ? res.homes[0].comfort_num : 0;
+          avatarsList.sort((x, y) => {
+            if (x.level === y.level) {
+              return y.fetter - x.fetter;
+            } else {
+              return y.level - x.level;
+            }
           });
+
+          this.avatarsData = this.cutArray(avatarsList, 7);
+          this.homeslevel = params.homes[0].level !== 0 ? params.homes[0].level : 0;
+          this.maxcomfort = params.homes[0].comfort_num !== 0 ? params.homes[0].comfort_num : 0;
         },
       });
     </script>

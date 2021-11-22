@@ -1,13 +1,18 @@
+/* global command */
+/* eslint no-undef: "error" */
+
 import db from "../../utils/database.js";
 import { render } from "../../utils/render.js";
-import { basePromise, detailPromise, characterPromise, handleDetailError } from "../../utils/detail.js";
+import { basePromise, characterPromise, detailPromise, handleDetailError } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
+import { filterWordsByRegex } from "../../utils/tools.js";
 
 async function doPackage(msg) {
   let dbInfo = getID(msg.text, msg.uid, false); // UID
+  const args = filterWordsByRegex(msg.text, ...command.functions.entrance.package);
 
   if ("string" === typeof dbInfo) {
-    msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid);
+    msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
     return;
   }
 
@@ -17,7 +22,7 @@ async function doPackage(msg) {
       dbInfo = getID(msg.text, msg.uid); // 米游社 ID
 
       if ("string" === typeof dbInfo) {
-        msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid);
+        msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
         return;
       }
 
@@ -26,7 +31,7 @@ async function doPackage(msg) {
       dbInfo = getID(uid, msg.uid, false); // UID
 
       if ("string" === typeof dbInfo) {
-        msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid);
+        msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
         return;
       }
     }
@@ -42,14 +47,20 @@ async function doPackage(msg) {
     }
 
     if (Array.isArray(ret)) {
-      ret[0] && msg.bot.say(msg.sid, ret[0], msg.type, msg.uid);
+      ret[0] && msg.bot.say(msg.sid, ret[0], msg.type, msg.uid, true);
       ret[1] && msg.bot.sayMaster(msg.sid, ret[1], msg.type, msg.uid);
       return;
     }
   }
 
   const data = db.get("info", "user", { uid: dbInfo[0] });
-  render(msg, data, "genshin-info", 1.5, true);
+  const qqid = "" === args ? msg.uid : msg.text.includes("[CQ:at") ? parseInt(msg.text.match(/\d+/g)[0]) : undefined;
+
+  if (undefined !== qqid) {
+    data.qqid = qqid;
+  }
+
+  render(msg, data, "genshin-package");
 }
 
 export { doPackage };

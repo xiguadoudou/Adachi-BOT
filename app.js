@@ -15,7 +15,15 @@ function login() {
       log_level: "debug",
     });
 
-    bot.say = async (id, msg, type = "private", sender = undefined, delimiter = " ", atSender = true) => {
+    bot.say = async (
+      id,
+      msg,
+      type = "private",
+      sender = undefined,
+      tryDelete = false,
+      delimiter = " ",
+      atSender = true
+    ) => {
       if (msg && "" !== msg) {
         switch (type) {
           case "group": {
@@ -30,7 +38,7 @@ function login() {
                 : "admin" === (await bot.getGroupMemberInfo(id, bot.uin)).data.role;
             const { message_id: mid } = (await bot.sendGroupMsg(id, msg)).data || {};
 
-            if (undefined !== mid && config.deleteGroupMsgTime > 0 && permissionOK) {
+            if (true === tryDelete && undefined !== mid && config.deleteGroupMsgTime > 0 && permissionOK) {
               setTimeout(bot.deleteMsg.bind(bot), config.deleteGroupMsgTime * 1000, mid);
             }
             break;
@@ -49,7 +57,9 @@ function login() {
       }
     };
     // 属性 sendMessage 和 sendMessage 为了兼容可能存在的旧插件
-    bot.sendMessage = bot.say;
+    bot.sendMessage = async (id, msg, type = "private", sender = undefined, delimiter = " ", atSender = true) => {
+      await bot.say(id, msg, type, sender, true, delimiter, atSender);
+    };
     bot.sendMaster = bot.sayMaster;
 
     bots.push(bot);
@@ -99,6 +109,7 @@ function report() {
   log(`玩家信息将缓存 ${config.cacheInfoEffectTime} 小时。`);
   log(`清理数据库 aby 中超过 ${config.dbAbyEffectTime} 小时的记录。`);
   log(`清理数据库 info 中超过 ${config.dbInfoEffectTime} 小时的记录。`);
+  log(`${config.viewDebug ? "" : "不"}使用前端调试模式。`);
 }
 
 async function run() {
@@ -122,7 +133,8 @@ async function main() {
   readConfig();
   login();
   report();
-  await init().then(async () => await run());
+  await init();
+  await run();
 }
 
 main();

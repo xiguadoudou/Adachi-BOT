@@ -5,8 +5,8 @@ import db from "../../utils/database.js";
 import { render } from "../../utils/render.js";
 import { getID, getUID } from "../../utils/id.js";
 import { guessPossibleNames } from "../../utils/tools.js";
-import { basePromise, detailPromise, characterPromise, handleDetailError } from "../../utils/detail.js";
-import { getTrueNameByNikeName } from "../nikename/nikename.js";
+import { basePromise, characterPromise, detailPromise, handleDetailError } from "../../utils/detail.js";
+import { getName } from "./name.js";
 
 function getCharacter(uid, character) {
   const { avatars } = db.get("info", "user", { uid }) || {};
@@ -19,43 +19,20 @@ function getNotFoundText(character, isMyChar) {
   const text = config.characterTryGetDetail
     ? `看上去${isMyChar ? "您" : "他"}尚未拥有该角色`
     : `如果${isMyChar ? "您" : "他"}拥有该角色，使用${cmdStr}更新游戏角色后再次查询`;
-  const guess = guessPossibleNames(character, alias.characterNames);
-  const notFoundText = `查询失败，${text}。${guess ? "\n您要查询的是不是：\n" + guess : ""}`;
+  const guess = guessPossibleNames(character, Object.keys(alias.characterNames));
+  const notFoundText = `查询失败，${text}。${guess.length > 0 ? "\n您要查询的是不是：\n" + guess.join("、") : ""}`;
 
   return notFoundText;
 }
 
-function getName(text, userID) {
-  if (text.match(/^\[CQ:at,qq=\d+,text=.+?\]/)) {
-    text = text.replace(/\[CQ:at,qq=\d+,text=.+?\]\s*/, "");
-  }
-
-  const textParts = text.split(/\s+/);
-  let character = textParts[1];
-
-  if (text.match(/^\d+\s+/)) {
-    character = textParts[2];
-  }
-
-  if (!character) {
-    return undefined;
-  }
-
-  character = "string" === typeof character ? character.toLowerCase() : "";
-  character = getTrueNameByNikeName(userID, character);
-  character = alias.character[character] || character;
-
-  return character;
-}
-
-async function doCharacter(msg, isMyChar = true) {
+async function doCharacter(msg, isMyChar = true, name = undefined) {
   let uid;
   let data;
 
-  const character = getName(msg.text,msg.uid);
+  const character = name || getName(msg.text);
 
   if (undefined === character) {
-    msg.bot.say(msg.sid, "请正确输入角色名称。", msg.type, msg.uid);
+    msg.bot.say(msg.sid, "请正确输入角色名称。", msg.type, msg.uid, true);
     return;
   }
 
@@ -68,7 +45,7 @@ async function doCharacter(msg, isMyChar = true) {
     }
 
     if ("string" === typeof dbInfo) {
-      msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid);
+      msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
       return;
     }
 
@@ -84,7 +61,7 @@ async function doCharacter(msg, isMyChar = true) {
 
     if (!data) {
       if (!config.characterTryGetDetail) {
-        msg.bot.say(msg.sid, getNotFoundText(character, isMyChar), msg.type, msg.uid);
+        msg.bot.say(msg.sid, getNotFoundText(character, isMyChar), msg.type, msg.uid, true);
         return;
       } else {
         const detailInfo = await detailPromise(...baseInfo, msg.uid, msg.bot);
@@ -101,14 +78,14 @@ async function doCharacter(msg, isMyChar = true) {
     }
 
     if (Array.isArray(ret)) {
-      ret[0] && msg.bot.say(msg.sid, ret[0], msg.type, msg.uid);
+      ret[0] && msg.bot.say(msg.sid, ret[0], msg.type, msg.uid, true);
       ret[1] && msg.bot.sayMaster(msg.sid, ret[1], msg.type, msg.uid);
       return;
     }
   }
 
   if (!data) {
-    msg.bot.say(msg.sid, getNotFoundText(character, isMyChar), msg.type, msg.uid);
+    msg.bot.say(msg.sid, getNotFoundText(character, isMyChar), msg.type, msg.uid, true);
     return;
   }
 

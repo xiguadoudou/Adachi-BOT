@@ -10,7 +10,7 @@
 # plugin:                       # 插件名称（全局唯一、禁止修改、忽略大小写）
 #   enable: boolean             # 是否加载插件
 #   weights: number             # 权重越高，帮助信息里显示越靠前
-#   regex:                      # 插件入口（正则、全局唯一、忽略大小写、忽略行首空格）
+#   regex:                      # 插件入口（匹配整条命令的正则、全局唯一、忽略大小写、忽略行首空格）
 #     - string
 #   functions:
 #     function:                 # 功能代号（全局唯一、禁止修改、忽略大小写）
@@ -20,7 +20,7 @@
 #       name: string            # 呈现给用户的功能名称（忽略大小写）
 #       usage: string           # 呈现给用户的功能格式
 #       description: string     # 呈现给用户的功能说明
-#       entrance:               # 功能入口（正则 、插件唯一、忽略大小写）
+#       entrance:               # 功能入口（*只*匹配功能名称的正则 、插件唯一、忽略大小写）
 #         - string
 #       options:                # 候选项列表，插件自由使用， switch 约定 on 和 off 为开关选项
 #         option_name: string   # 候选项（键禁止修改，功能唯一）
@@ -31,7 +31,7 @@ aby:
   weights: 9699
   regex:
     - ^(上期)?深渊\s*$
-    - ^(上期)?深渊\s+\d+.*$
+    - ^(上期)?深渊\s*\d+.*$
     - ^(上期)?深渊\s*\[CQ:at,qq=.*$
   functions:
     aby:
@@ -58,7 +58,7 @@ artifacts:
   weights: 9299
   regex:
     - ^圣遗物\s*$
-    - ^圣遗物\s+\S+\s*$
+    - ^圣遗物\s*\S+\s*$
     - ^(强化|副本)\s*$
   functions:
     artifacts:
@@ -94,7 +94,7 @@ card:
   weights: 9899
   regex:
     - ^米游社\s*$
-    - ^米游社\s+\d+\s*$
+    - ^米游社\s*\d+\s*$
     - ^米游社\s*\[CQ:at,qq=.*$
     - ^(米哈游|mhy|mys)\s*$
     - ^(米哈游|mhy|mys)\s+\d+\s*$
@@ -115,8 +115,9 @@ character:
   enable: true
   weights: 9599
   regex:
-    - ^我的\s+\S+\s*$
-    - ^((\[CQ:at,qq=.*?\])|(\d+))\s*的\s+\S+\s*$
+    - ^我的\s*\S+\s*$
+    # XXX 如果 ../src/utils/id.js 中的 getUID 变更，这里需要同步改动
+    - ^((\[CQ:at,qq=.*?\])|([125]\d{8}))\s*的\s*\S+\s*$
   functions:
     character:
       type: command
@@ -142,7 +143,7 @@ gacha:
   weights: 9399
   regex:
     - ^(十连|定轨)\s*$
-    - ^(卡池|定轨)\s+\S+\s*$
+    - ^(卡池|定轨)\s*\S+\s*$
     - ^(查看|取消)定轨\s*$
   functions:
     gacha:
@@ -202,8 +203,8 @@ tools:
   regex:
     - ^(help|roll|菜单|管理(命令|功能)|伟大的升华|求签|占卜)\s*$
     - ^(今天)?吃什么\s*$
-    - ^roll\s+[+-]?\d+\s*$
-    - ^带(个)?话\s+.+$
+    - ^roll\s*[+-]?\d+\s*$
+    - ^带(个)?话\s*.+$
   functions:
     menu:
       type: command
@@ -308,8 +309,8 @@ music:
   enable: true
   weights: 8999
   regex:
-    - ^点歌\s+.+$
-    - ^音乐源\s+\S+\s*$
+    - ^点歌\s*.+$
+    - ^音乐源\s*\S+\s*$
   functions:
     music:
       type: command
@@ -337,7 +338,7 @@ overview:
   enable: true
   weights: 9499
   regex:
-    - ^(角色|武器|信息)\s+\S+\s*$
+    - ^(角色|武器|信息)\s*\S+\s*$
   functions:
     info:
       type: command
@@ -354,7 +355,7 @@ package:
   weights: 9799
   regex:
     - ^uid\s*$
-    - ^uid\s+\d+\s*$
+    - ^uid\s*\d+\s*$
     - ^uid\s*\[CQ:at,qq=.*$
   functions:
     package:
@@ -371,7 +372,6 @@ rating:
   enable: true
   weights: 9199
   regex:
-    # https://github.com/Arondight/Adachi-BOT/issues/54
     - ^评分\s*\[CQ:image,file=.*$
   functions:
     rating:
@@ -388,7 +388,7 @@ save:
   enable: true
   weights: 9999
   regex:
-    - ^(绑定|改绑)\s+\d+\s*$
+    - ^(绑定|改绑)\s*\d+\s*$
   functions:
     save:
       type: command
