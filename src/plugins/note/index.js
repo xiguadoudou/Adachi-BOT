@@ -10,18 +10,6 @@ import fs from "fs";
 import path from "path";
 import puppeteer from "puppeteer";
 
-const settings = {
-    hello: {
-        "genshin-note": true,
-    },
-    scale: {
-        "genshin-note": 1,
-    },
-    delete: {
-        "genshin-note": false,
-    },
-};
-const settingsDefault = { hello: false, scale: 1.5, delete: false };
 let browser;
 
 async function launch() {
@@ -209,8 +197,7 @@ async function doPicNote(msg, uid, region) {
 
     if (base64) {
         const imageCQ = `[CQ:image,file=base64://${base64}]`;
-        const toDelete = undefined === settings.delete[name] ? settingsDefault.delete : settings.delete[name];
-        msg.bot && msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, toDelete, "\n");
+        msg.bot && msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, false, "\n");
     }
     return undefined;
 }
