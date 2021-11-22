@@ -6,6 +6,35 @@ import {
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
     upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise, getMYBCookie } from "./noteDetail.js";
 
+import fs from "fs";
+import path from "path";
+import puppeteer from "puppeteer";
+
+const settings = {
+    hello: {
+        "genshin-note": true,
+    },
+    scale: {
+        "genshin-note": 1,
+    },
+    delete: {
+        "genshin-note": false,
+    },
+};
+const settingsDefault = { hello: false, scale: 1.5, delete: false };
+let browser;
+
+async function launch() {
+    if (undefined === browser) {
+        browser = await puppeteer.launch({
+            defaultViewport: null,
+            headless: 0 === config.viewDebug,
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
+    }
+}
+
+
 function getTime(s, offset) {
     if (s + offset < 0)
         return [0, 0, 0, 0];
@@ -138,8 +167,6 @@ async function doPicNote(msg, uid, region) {
     for (var expedition of data.expeditions) {
         if (expedition) {
             img = expedition.avatar_side_icon;
-            img = img.replace(new RegExp("https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_", "gm"), "")
-                .replace(new RegExp(".png", "gm"), "");
             if (expedition.status == "Ongoing") {
                 e = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
                 if (e < 0)
@@ -154,6 +181,7 @@ async function doPicNote(msg, uid, region) {
     let base64;
     //msg.bot.logger.debug(`${params}`);
     try {
+        await launch();
         const page = await browser.newPage();
         await page.setViewport({
             width: 965,
@@ -169,14 +197,20 @@ async function doPicNote(msg, uid, region) {
             quality: 100,
             omitBackground: true,
         });
-        await page.close();
+
+        if (0 === config.viewDebug) {
+            await page.close();
+        }
     } catch (e) {
-        msg.bot.logger.error(`genshin-note 功能绘图失败：${e}`, msg.uid);
+        msg.bot && msg.bot.logger.error(`render： ${name} 功能绘图失败：${e}`, msg.uid);
+        msg.bot && msg.bot.say(msg.sid, "绘图失败。", msg.type, msg.uid, true);
+        return;
     }
 
     if (base64) {
         const imageCQ = `[CQ:image,file=base64://${base64}]`;
-        msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, "\n");
+        const toDelete = undefined === settings.delete[name] ? settingsDefault.delete : settings.delete[name];
+        msg.bot && msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, toDelete, "\n");
     }
     return undefined;
 }

@@ -29,7 +29,7 @@ async function doCharacter(msg, isMyChar = true, name = undefined) {
   let uid;
   let data;
 
-  const character = name || getName(msg.text);
+  const character = name || getName(msg.text, msg.uid);
 
   if (undefined === character) {
     msg.bot.say(msg.sid, "请正确输入角色名称。", msg.type, msg.uid, true);

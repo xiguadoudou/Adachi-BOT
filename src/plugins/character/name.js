@@ -2,8 +2,9 @@
 /* eslint no-undef: "error" */
 
 import { filterWordsByRegex, getWordByRegex } from "../../utils/tools.js";
+import { getTrueNameByNikeName } from "../nikename/nikename.js";
 
-function getName(text) {
+function getName(text, userID) {
   let character = filterWordsByRegex(
     text,
     ...[...command.functions.entrance.character, ...command.functions.entrance.others_character]
@@ -19,6 +20,7 @@ function getName(text) {
   }
 
   character = "string" === typeof character ? character.toLowerCase() : "";
+  character = getTrueNameByNikeName(userID, character);
   character = alias.character[character] || character;
 
   return character;
