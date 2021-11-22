@@ -10,7 +10,7 @@ import { getName } from "./name.js";
 async function Plugin(msg) {
   switch (true) {
     case hasEntrance(msg.text, "character", "character"): {
-      const name = getName(msg.text);
+      const name = getName(msg.text, msg.uid);
       if (isPossibleName(name, Object.values(alias.characterNames)) && false !== checkAuth(msg, "character")) {
         doCharacter(msg, true, name);
       }

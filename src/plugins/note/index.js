@@ -5,9 +5,6 @@ import {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
     upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise, getMYBCookie } from "./noteDetail.js";
-
-import fs from "fs";
-import path from "path";
 import puppeteer from "puppeteer";
 
 let browser;
