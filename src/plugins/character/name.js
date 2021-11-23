@@ -4,7 +4,7 @@
 import { filterWordsByRegex, getWordByRegex } from "../../utils/tools.js";
 import { getTrueNameByNikeName } from "../nikename/nikename.js";
 
-function getName(text, userID) {
+function getName(text, userID = undefined) {
   let character = filterWordsByRegex(
     text,
     ...[...command.functions.entrance.character, ...command.functions.entrance.others_character]
