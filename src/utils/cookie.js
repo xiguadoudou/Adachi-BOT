@@ -62,17 +62,20 @@ function getEffectiveCookie(uid, s, use_cookie) {
   return cookie;
 }
 
-function getUCookie(user) {
+function getUCookie(user,bot) {
     if (!(db.includes("note", "cookie", "user", user))) {
         const initData = { user, cookie: "" };
         db.push("note", "cookie", initData);
     }
     let { cookie } = db.get("note", "cookie", { user });
+    bot.logger.debug(
+        `UCookie ${user} ${cookie}`
+    );
     return cookie;
 }
 
 function getCookie(uid, use_cookie, bot) {
-  let userCookie = getUCookie(uid);
+  let userCookie = getUCookie(uid,bot);
   if (userCookie != undefined)
     return userCookie;
 
