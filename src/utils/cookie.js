@@ -63,13 +63,13 @@ function getEffectiveCookie(uid, s, use_cookie) {
 }
 
 function getCookie(uid, use_cookie, bot) {
-    if (!(await db.includes("note", "cookie", "user", uid))) {
-        const initData = { user: uid, cookie: "" };
-        await db.push("note", "cookie", initData);
-    }
-    let { cookie: pCookie } = await db.get("note", "cookie", { user: uid });
-    if (pCookie)
-        return pCookie;
+    //if (!(await db.includes("note", "cookie", "user", uid))) {
+    //    const initData = { user: uid, cookie: "" };
+    //    await db.push("note", "cookie", initData);
+    //}
+    //let { cookie: pCookie } = await db.get("note", "cookie", { user: uid });
+    //if (pCookie)
+    //    return pCookie;
 
   const dbName = "cookies";
 
