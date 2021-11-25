@@ -1,6 +1,3 @@
-/* global all, alias, artifacts, command, config, eggs, master, rootdir */
-/* eslint no-undef: "error" */
-
 /* ==========================================================================
  *                            以下为数据结构
  * ==========================================================================
@@ -12,6 +9,11 @@
  * '/path/to/Adachi-BOT'
  * ==========================================================================
  *
+ * ==========================================================================
+ * package
+ * --------------------------------------------------------------------------
+ * context of this project's package.json
+ * ==========================================================================
  *
  * ==========================================================================
  * global.all
@@ -168,12 +170,12 @@
  *
  *
  * ==========================================================================
- * global.alias
+ * global.names
  * --------------------------------------------------------------------------
  * {
- *   character: { '猫': '迪奥娜', dio: '迪奥娜', '迪奥娜': '迪奥娜' },
- *   weapon: { '柴火棍': '护摩之杖', homo: '护摩之杖', '护摩之杖': '护摩之杖' },
- *   all: {
+ *   characterAlias: { '猫': '迪奥娜', dio: '迪奥娜', '迪奥娜': '迪奥娜' },
+ *   weaponAlias: { '柴火棍': '护摩之杖', homo: '护摩之杖', '护摩之杖': '护摩之杖' },
+ *   allAlias: {
  *     '猫': '迪奥娜',
  *     dio: '迪奥娜',
  *     '迪奥娜': '迪奥娜',
@@ -181,27 +183,12 @@
  *     homo: '护摩之杖',
  *     '护摩之杖': '护摩之杖'
  *   },
- *   characterNames: {
- *     '猫': '0000101110010000100001000000100000000010000000000000100000000000',
- *     '迪奥娜': '1010111110111001110000000100110010000110100000011010100000000000',
- *     dio: '1100101010101000001000110001100011110100011011100011000000000000'
- *   },
- *   weaponNames: {
- *     '柴火棍': '1010111110000001110000000100110010000110000000101001000000000000',
- *     '护摩之杖': '1010111110000111000001000100110010000110001111110101000000000000',
- *     homo: '0100000000101101000100011100110001111110011011111000110000000000'
- *   },
- *   allNames: {
- *     '猫': '0000101110010000100001000000100000000010000000000000100000000000',
- *     '迪奥娜': '1010111110111001110000000100110010000110100000011010100000000000',
- *     dio: '1100101010101000001000110001100011110100011011100011000000000000',
- *     '柴火棍': '1010111110000001110000000100110010000110000000101001000000000000',
- *     '护摩之杖': '1010111110000111000001000100110010000110001111110101000000000000',
- *     homo: '0100000000101101000100011100110001111110011011111000110000000000'
- *   }
+ *   character: [ '猫', '迪奥娜', 'dio' ],
+ *   weapon: [ '柴火棍', '护摩之杖', 'homo' ],
+ *   all: [ '猫', '迪奥娜', 'dio', '柴火棍', '护摩之杖', 'homo' ]
  * }
  * --------------------------------------------------------------------------
- * ../../config/alias.yml
+ * ../../config/names.yml
  * --------------------------------------------------------------------------
  * character:
  *   迪奥娜: [ 猫, dio ]
@@ -297,27 +284,25 @@
  *                            以上为数据结构
  * ========================================================================== */
 
-import url from "url";
-import path from "path";
 import fs from "fs";
+import path from "path";
+import url from "url";
 import lodash from "lodash";
-import { mkdir } from "./file.js";
-import { simhash } from "./tools.js";
 import { loadYML } from "./yaml.js";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-global.alias = {};
 global.all = {};
 global.artifacts = {};
 global.command = {};
 global.config = {};
 global.eggs = {};
 global.master = {};
+global.names = {};
 global.rootdir = path.resolve(__dirname, "..", "..");
+global.package = JSON.parse(fs.readFileSync(path.resolve(global.rootdir, "package.json")));
 
-const Alias = loadYML("alias");
 const Artifacts = loadYML("artifacts");
 const Command = loadYML("command");
 const Cookies = loadYML("cookies");
@@ -325,6 +310,7 @@ const Eggs = loadYML("pool_eggs");
 const Greeting = loadYML("greeting");
 const Master = loadYML("command_master");
 const Menu = loadYML("menu");
+const Names = loadYML("names");
 const Setting = loadYML("setting");
 
 // global[key].enable                -> plugin (lowercase):    is_enabled (boolean)
@@ -475,9 +461,9 @@ function getCommand(obj, key) {
   }
 }
 
-// obj: command or master
+// obj: global.command or global.master
 function makeUsage(obj) {
-  if (!(obj === command || obj === master)) {
+  if (!(obj === global.command || obj === global.master)) {
     return "";
   }
 
@@ -600,9 +586,9 @@ function readSettingCookiesGreetingMenu() {
         const val = p[prop];
 
         if (undefined === defaultConfig[prop]) {
-          config[prop] = val;
+          global.config[prop] = val;
         }
-        config[prop] = val || defaultConfig[prop];
+        global.config[prop] = val || defaultConfig[prop];
       });
   };
 
@@ -636,7 +622,7 @@ function readSettingCookiesGreetingMenu() {
   );
 
   // 设置每个 QQ 账户的登录选项默认值
-  for (const option of config.accounts) {
+  for (const option of global.config.accounts) {
     // 1:安卓手机、 2:aPad 、 3:安卓手表、 4:MacOS 、 5:iPad
     if (![1, 2, 3, 4, 5].includes(option.platform)) {
       option.platform = defaultConfig.platform;
@@ -644,33 +630,38 @@ function readSettingCookiesGreetingMenu() {
   }
 
   // 转化每个不为 null 的命令前缀的数据类型为 string
-  for (const i in config.prefixes) {
-    if (config.prefixes[i]) {
-      config.prefixes[i] = config.prefixes[i].toString();
+  for (const i in global.config.prefixes) {
+    if (global.config.prefixes[i]) {
+      global.config.prefixes[i] = global.config.prefixes[i].toString();
     }
   }
 
   // 设置选项 atMe 的默认值
-  if (![0, 1, 2].includes(config.atMe)) {
-    config.atMe = defaultConfig.atMe;
+  if (![0, 1, 2].includes(global.config.atMe)) {
+    global.config.atMe = defaultConfig.atMe;
   }
 
   // menu 中每个值均为数组
-  Object.keys(config.menu).forEach(
-    (k) => (config.menu[k] = Array.isArray(config.menu[k]) ? config.menu[k] : config.menu[k] ? [config.menu[k]] : [])
+  Object.keys(global.config.menu).forEach(
+    (k) =>
+      (global.config.menu[k] = Array.isArray(global.config.menu[k])
+        ? global.config.menu[k]
+        : global.config.menu[k]
+        ? [global.config.menu[k]]
+        : [])
   );
 }
 
-// global.alias.character       ->  alias (lowercase): character (string, lowercase)
-// global.alias.weapon          ->  alias (lowercase): weapon (string, lowercase)
-// global.alias.all             ->  alias (lowercase): name (string, lowercase)
-// global.alias.characterNames  ->  { name: simhash } (name lowercase)
-// global.alias.weaponNames     ->  { name: simhash } (name lowercase)
-// global.alias.allNames        ->  { name: simhash } (name lowercase)
-function readAlias() {
+// global.names.character       ->  names (lowercase): character (string, lowercase)
+// global.names.weapon          ->  names (lowercase): weapon (string, lowercase)
+// global.names.all             ->  names (lowercase): name (string, lowercase)
+// global.names.characterNames  ->  { name: simhash } (name lowercase)
+// global.names.weaponNames     ->  { name: simhash } (name lowercase)
+// global.names.allNames        ->  { name: simhash } (name lowercase)
+function readNames() {
   const getSection = (s) =>
     lodash.reduce(
-      Alias[s] || {},
+      Names[s] || {},
       (p, v, k) => {
         (v || (v = [])).push(k);
         v.forEach((c) => (p["string" === typeof c ? c.toLowerCase() : c] = k));
@@ -678,51 +669,43 @@ function readAlias() {
       },
       {}
     );
-  const getNames = (o) =>
-    lodash
-      .chain(o)
-      .toPairs()
-      .flatten()
-      .uniq()
-      .map((c) => [c, simhash(c)])
-      .fromPairs()
-      .value();
+  const getNames = (o) => lodash.chain(o).toPairs().flatten().uniq().value();
 
-  alias.character = getSection("character");
-  alias.weapon = getSection("weapon");
-  alias.all = lodash.assign({}, alias.character, alias.weapon);
-  alias.characterNames = getNames(alias.character);
-  alias.weaponNames = getNames(alias.weapon);
-  alias.allNames = getNames(alias.all);
+  global.names.characterAlias = getSection("character");
+  global.names.weaponAlias = getSection("weapon");
+  global.names.allAlias = lodash.assign({}, global.names.characterAlias, global.names.weaponAlias);
+  global.names.character = getNames(global.names.characterAlias);
+  global.names.weapon = getNames(global.names.weaponAlias);
+  global.names.all = getNames(global.names.allAlias);
 }
 
-// eggs.type: name -> type (string)
-// eggs.star: name -> type (string)
+// global.eggs.type: name -> type (string)
+// global.eggs.star: name -> type (string)
 function readEggs() {
-  eggs.type = {};
-  eggs.star = {};
+  global.eggs.type = {};
+  global.eggs.star = {};
 
   Array.isArray(Eggs.items) &&
     Eggs.items.forEach((c) => {
       if (Array.isArray(c.names)) {
         const star = parseInt(c.star) || 5;
-        c.type && c.names.forEach((n) => (eggs.type[n] = c.type));
-        c.names.forEach((n) => (eggs.star[n] = star));
+        c.type && c.names.forEach((n) => (global.eggs.type[n] = c.type));
+        c.names.forEach((n) => (global.eggs.star[n] = star));
       }
     });
 }
 
-// artifacts.weights          -> weights (array of array of number)
-// artifacts.values           -> values (array of array of number)
-// artifacts.artifacts.id     -> suit (lowercase):  id (number)
-// artifacts.artifacts.rarity -> id:                rarity (number)
-// artifacts.artifacts.suit   -> id:                suit (string, lowercase)
-// artifacts.artifacts.names  -> id:                names (array of string, lowercase)
-// artifacts.domains.id       -> name (lowercase):  id (number)
-// artifacts.domains.name     -> id:                name (string, lowercase)
-// artifacts.domains.alias    -> alias (lowercase): name (string, lowercase)
-// artifacts.domains.aliasOf  -> id:                alias (array of string, lowercase)
-// artifacts.domains.product  -> id:                product (array of number)
+// global.artifacts.weights          -> weights (array of array of number)
+// global.artifacts.values           -> values (array of array of number)
+// global.artifacts.artifacts.id     -> suit (lowercase):  id (number)
+// global.artifacts.artifacts.rarity -> id:                rarity (number)
+// global.artifacts.artifacts.suit   -> id:                suit (string, lowercase)
+// global.artifacts.artifacts.names  -> id:                names (array of string, lowercase)
+// global.artifacts.domains.id       -> name (lowercase):  id (number)
+// global.artifacts.domains.name     -> id:                name (string, lowercase)
+// global.artifacts.domains.alias    -> alias (lowercase): name (string, lowercase)
+// global.artifacts.domains.aliasOf  -> id:                alias (array of string, lowercase)
+// global.artifacts.domains.product  -> id:                product (array of number)
 function readArtifacts() {
   const reduce = (prop, key = [undefined, undefined], lowercase = [false, false]) =>
     key.includes(undefined) ||
@@ -769,22 +752,22 @@ function readArtifacts() {
       {}
     );
 
-  artifacts.weights = Artifacts.weights;
+  global.artifacts.weights = Artifacts.weights;
 
-  artifacts.values = Artifacts.values;
+  global.artifacts.values = Artifacts.values;
 
-  artifacts.artifacts = {};
-  artifacts.artifacts.id = reduce("artifacts", ["suit", "id"], [true, false]);
-  artifacts.artifacts.rarity = reduce("artifacts", ["id", "rarity"], [false, false]);
-  artifacts.artifacts.suit = reduce("artifacts", ["id", "suit"], [false, true]);
-  artifacts.artifacts.names = reduce("artifacts", ["id", "names"], [false, true]);
+  global.artifacts.artifacts = {};
+  global.artifacts.artifacts.id = reduce("artifacts", ["suit", "id"], [true, false]);
+  global.artifacts.artifacts.rarity = reduce("artifacts", ["id", "rarity"], [false, false]);
+  global.artifacts.artifacts.suit = reduce("artifacts", ["id", "suit"], [false, true]);
+  global.artifacts.artifacts.names = reduce("artifacts", ["id", "names"], [false, true]);
 
-  artifacts.domains = {};
-  artifacts.domains.id = reduce("domains", ["name", "id"], [true, false]);
-  artifacts.domains.name = reduce("domains", ["id", "name"], [false, true]);
-  artifacts.domains.alias = deepReduce("domains", ["alias", "name"], [true, true]);
-  artifacts.domains.aliasOf = reduce("domains", ["id", "alias"], [false, true]);
-  artifacts.domains.product = reduce("domains", ["id", "product"], [false, false]);
+  global.artifacts.domains = {};
+  global.artifacts.domains.id = reduce("domains", ["name", "id"], [true, false]);
+  global.artifacts.domains.name = reduce("domains", ["id", "name"], [false, true]);
+  global.artifacts.domains.alias = deepReduce("domains", ["alias", "name"], [true, true]);
+  global.artifacts.domains.aliasOf = reduce("domains", ["id", "alias"], [false, true]);
+  global.artifacts.domains.product = reduce("domains", ["id", "product"], [false, false]);
 }
 
 // global.command
@@ -808,51 +791,42 @@ function getAll() {
     }
   };
 
-  all.functions = {};
-  all.functions.options = lodash.assign({}, command.functions.options, master.functions.options);
-  merge(all, "function", command.function, master.function);
-  merge(all.functions, "entrance", command.functions.entrance, master.functions.entrance);
+  global.all.functions = {};
+  global.all.functions.options = lodash.assign({}, global.command.functions.options, global.master.functions.options);
+  merge(global.all, "function", global.command.function, global.master.function);
+  merge(global.all.functions, "entrance", global.command.functions.entrance, global.master.functions.entrance);
 }
 
 // global.command.usage
 // global.master.usage
 function getUsage() {
-  makeUsage(command);
-  makeUsage(master);
-}
-
-// For /src/views/*
-function writeViewsConfig() {
-  const dir = path.join(rootdir, "data", "config");
-  const data = { rootdir };
-
-  fs.writeFileSync(path.resolve(mkdir(dir), "views.json"), JSON.stringify(data), "utf8");
+  makeUsage(global.command);
+  makeUsage(global.master);
 }
 
 function readConfig() {
   readSettingCookiesGreetingMenu();
-  readAlias();
+  readNames();
   readEggs();
   readArtifacts();
   readCommand();
   getAll();
   getUsage();
-  writeViewsConfig();
 }
 
 function hasEntrance(message, plugin, ...entrance) {
   const messageu = message.toLowerCase(); // 忽略大小写
 
-  if (all.function[plugin]) {
+  if (global.all.function[plugin]) {
     for (const e of entrance) {
       // 验证 entrance 是否在插件中
-      if (!all.function[plugin].includes(e)) {
+      if (!global.all.function[plugin].includes(e)) {
         continue;
       }
 
       // 验证 message 是否以 entrance 对应的字符串开始
-      if (Array.isArray(all.functions.entrance[e])) {
-        for (const t of all.functions.entrance[e]) {
+      if (Array.isArray(global.all.functions.entrance[e])) {
+        for (const t of global.all.functions.entrance[e]) {
           if (t) {
             if (new RegExp(t, "i").test(messageu)) {
               return true;

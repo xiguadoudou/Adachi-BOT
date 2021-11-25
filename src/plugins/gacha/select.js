@@ -13,6 +13,7 @@ function doSelect(msg, name) {
   }
 
   const table = db.get("gacha", "data", { gacha_type: 302 }) || {};
+  name = global.names.weaponAlias[name] || name;
 
   if (name && lodash.find(table.upFiveStar, { item_name: name })) {
     msg.bot.say(msg.sid, `定轨${name}成功，命定值已清零。`, msg.type, msg.uid, true);
