@@ -67,9 +67,9 @@ function getCookie(uid, use_cookie, bot) {
         const initData = { user: uid, cookie: "" };
         await db.push("note", "cookie", initData);
     }
-    let { cookie } = await db.get("note", "cookie", { user: uid });
-    if (cookie)
-        return cookie;
+    let { cookie: pCookie } = await db.get("note", "cookie", { user: uid });
+    if (pCookie)
+        return pCookie;
 
   const dbName = "cookies";
 
