@@ -72,8 +72,8 @@ function getUserCookie(user) {
 }
 
 function getCookie(uid, use_cookie, bot) {
-  const userCookie = getUserCookie(uid);
-  if (userCookie)
+  let userCookie = getUserCookie(uid);
+  if (userCookie != undefined)
     return userCookie;
 
   const dbName = "cookies";
