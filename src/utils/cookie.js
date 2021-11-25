@@ -68,6 +68,8 @@ function getUCookie(user,bot) {
         db.push("note", "cookie", initData);
     }
     let { cookie } = db.get("note", "cookie", { user });
+    if (!cookie)
+        return undefined;
     bot.logger.debug(
         `UCookie ${user} ${cookie}`
     );
