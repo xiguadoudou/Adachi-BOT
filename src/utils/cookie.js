@@ -2,8 +2,7 @@ import path from "path";
 import lodash from "lodash";
 import db from "./database.js";
 
-const COOKIE_TIMES_INVALID_MARK = 0xabadcafe;
-const cookies = global.config.cookies || [];
+const cookies = global.cookies || [];
 let index = 0;
 
 function increaseIndex() {
@@ -110,7 +109,7 @@ function markCookieUnusable(cookie) {
     let { times } = db.get(dbName, "cookie", { cookie }) || {};
 
     // Cookie 标记为无效
-    db.update(dbName, "cookie", { cookie }, { times: COOKIE_TIMES_INVALID_MARK });
+    db.update(dbName, "cookie", { cookie }, { times: Number.MAX_SAFE_INTEGER });
 
     // 删除最后一个绑定关系
     if (times) {
