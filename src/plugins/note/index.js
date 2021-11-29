@@ -202,23 +202,25 @@ async function doPicNote(msg, uid, region) {
 
 async function doSetCookie(msg, uid) {
     let cookie = msg.text.slice(9);
-    cookie = cookie.replace(new RegExp("'", "gm"), "");
-    if (cookie.indexOf("cookie_token") == -1 || cookie.indexOf("account_id") == -1) {
+    //cookie = cookie.replace(new RegExp("'", "gm"), "");
+    let cookie_token = getCookieValue(cookie, "cookie_token");
+    let account_id = getCookieValue(cookie, "account_id");
+    if (account_id == undefined || cookie_token == undefined) {
         let login_ticket = getCookieValue(cookie, "login_ticket");
-        let account_id = getCookieValue(cookie, "login_uid");
+        account_id = getCookieValue(cookie, "login_uid");
         if (account_id == undefined)
-            account_id = getCookieValue(cookie, account_id);
+            account_id = getCookieValue(cookie, "account_id");
         if (login_ticket == undefined || account_id == undefined)
             return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
         else {
-            const { stoken, cookie_token } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
+            const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
             cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket}`;
             await setMYBCookie(uid, cookie, msg.bot);
-            cookie = `cookie_token=${cookie_token}; account_id=${account_id};`;
         }
         return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
 
     }
+    cookie = `cookie_token=${cookie_token}; account_id=${account_id};`;
     await setUserCookie(uid, cookie, msg.bot);
     return ` 已设置cookie`;
 }
@@ -245,7 +247,7 @@ async function doSetMYBCookie(msg, uid) {
         if (login_ticket == undefined || account_id == undefined)
             return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
         else {
-            const { stoken, cookie_token } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
+            const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
             cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket}`;
         }
     }
