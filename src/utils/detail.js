@@ -1,23 +1,18 @@
 import moment from "moment-timezone";
+import pLimit from "p-limit";
 import lodash from "lodash";
 import db from "./database.js";
 import { getCookie, tryToWarnInvalidCookie } from "./cookie.js";
-import { getAbyDetail, getBase, getCharacters, getDetail } from "./api.js";
+import { getAbyDetail, getBase, getCharacters, getIndex } from "./api.js";
 
 function detailError(message, cache = false, master = false, message_master = "") {
-  return Promise.reject({
-    detail: true,
-    message,
-    cache,
-    master,
-    message_master,
-  });
+  return { detail: true, message, cache, master, message_master };
 }
 
 function getDetailErrorForPossibleInvalidCookie(message, cookie) {
   const warnInvalidCookie = tryToWarnInvalidCookie(message, cookie);
   const masterArgs = warnInvalidCookie ? [true, warnInvalidCookie] : [false, ""];
-  return detailError(`米游社接口报错: ${message}`, false, ...masterArgs);
+  throw detailError(`米游社接口报错: ${message}`, false, ...masterArgs);
 }
 
 // return true if we use cache
@@ -72,7 +67,7 @@ function userInitialize(userID, uid, nickname, level) {
   }
 }
 
-async function abyPromise(uid, server, userID, schedule_type, bot) {
+async function abyDetail(uid, server, userID, schedule_type, bot) {
   userInitialize(userID, uid, "", -1);
   db.update("character", "user", { userID }, { uid });
 
@@ -106,7 +101,7 @@ async function abyPromise(uid, server, userID, schedule_type, bot) {
       nowTime - lastTime < global.config.cacheAbyEffectTime * 60 * 60 * 1000
     ) {
       bot.logger.debug(`缓存：使用 ${uid} 在 ${global.config.cacheAbyEffectTime} 小时内的深渊记录缓存。`);
-      return detailError("", true);
+      throw detailError("", true);
     }
   }
 
@@ -117,7 +112,7 @@ async function abyPromise(uid, server, userID, schedule_type, bot) {
     cookie = getCookie(uid, true, bot);
     response = await getAbyDetail(uid, schedule_type, server, cookie);
   } catch (e) {
-    return detailError(e);
+    throw detailError(e);
   }
 
   const { retcode, message, data } = response;
@@ -137,7 +132,7 @@ async function abyPromise(uid, server, userID, schedule_type, bot) {
   return data;
 }
 
-async function basePromise(mhyID, userID, bot) {
+async function baseDetail(mhyID, userID, bot) {
   let cookie;
   let response;
 
@@ -145,7 +140,7 @@ async function basePromise(mhyID, userID, bot) {
     cookie = getCookie("MHY" + mhyID, false, bot);
     response = await getBase(mhyID, cookie);
   } catch (e) {
-    return detailError(e);
+    throw detailError(e);
   }
 
   const { retcode, message, data } = response;
@@ -154,13 +149,13 @@ async function basePromise(mhyID, userID, bot) {
   if (retcode !== 0) {
     return getDetailErrorForPossibleInvalidCookie(message, cookie);
   } else if (!data.list || 0 === data.list.length) {
-    return detailError(errInfo);
+    throw detailError(errInfo);
   }
 
   const baseInfo = data.list.find((el) => 2 === el.game_id);
 
   if (!baseInfo) {
-    return detailError(errInfo);
+    throw detailError(errInfo);
   }
 
   const { game_role_id, nickname, region, level } = baseInfo;
@@ -176,7 +171,7 @@ async function basePromise(mhyID, userID, bot) {
   return [uid, region];
 }
 
-async function detailPromise(uid, server, userID, bot) {
+async function indexDetail(uid, server, userID, bot) {
   userInitialize(userID, uid, "", -1);
   db.update("character", "user", { userID }, { uid });
 
@@ -191,10 +186,10 @@ async function detailPromise(uid, server, userID, bot) {
       const { retcode, message } = db.get("info", "user", { uid }) || {};
 
       if (retcode !== 0) {
-        return detailError(`米游社接口报错: ${message}`);
+        throw detailError(`米游社接口报错: ${message}`);
       }
 
-      return detailError("", true);
+      throw detailError("", true);
     }
   }
 
@@ -203,9 +198,9 @@ async function detailPromise(uid, server, userID, bot) {
 
   try {
     cookie = getCookie(uid, true, bot);
-    response = await getDetail(uid, server, cookie);
+    response = await getIndex(uid, server, cookie);
   } catch (e) {
-    return detailError(e);
+    throw detailError(e);
   }
 
   const { retcode, message, data } = response;
@@ -234,7 +229,8 @@ async function detailPromise(uid, server, userID, bot) {
   return characterID;
 }
 
-async function characterPromise(uid, server, character_ids, bot) {
+// 如果 guess 为 true 则猜测所有除了 character_ids 之外可能的角色，适应米游社 API 改版 https://github.com/Arondight/Adachi-BOT/issues/436
+async function characterDetail(uid, server, character_ids, guess = false, bot) {
   let cookie;
   let response;
 
@@ -242,7 +238,7 @@ async function characterPromise(uid, server, character_ids, bot) {
     cookie = getCookie(uid, true, bot);
     response = await getCharacters(uid, server, character_ids, cookie);
   } catch (e) {
-    return detailError(e);
+    throw detailError(e);
   }
 
   const { retcode, message, data } = response;
@@ -251,12 +247,24 @@ async function characterPromise(uid, server, character_ids, bot) {
     return getDetailErrorForPossibleInvalidCookie(message, cookie);
   }
 
-  let avatars = [];
-  const characterList = data.avatars;
+  if (true === guess) {
+    // 每次最多同时查询 8 个
+    const limit = pLimit(8);
+    const promises = global.info.character
+      .map((c) => c.id)
+      .filter((c) => !character_ids.includes(c))
+      .map((c) => limit(() => getCharacters(uid, server, [c], cookie)));
+    const results = await Promise.allSettled(promises);
+    results.forEach(
+      (c) => "fulfilled" === c.status && 0 === c.value.retcode && data.avatars.push(c.value.data.avatars[0])
+    );
+  }
 
-  for (const i in characterList) {
-    if (characterList[i]) {
-      const el = characterList[i];
+  const avatars = [];
+
+  for (const i in data.avatars) {
+    if (data.avatars[i]) {
+      const el = data.avatars[i];
       const base = lodash.omit(el, ["image", "weapon", "reliquaries", "constellations"]);
       const weapon = lodash.omit(el.weapon, ["id", "type", "promote_level", "type_name"]);
       let artifact = [];
@@ -287,4 +295,4 @@ async function characterPromise(uid, server, character_ids, bot) {
   return;
 }
 
-export { abyPromise, basePromise, characterPromise, detailPromise, handleDetailError };
+export { abyDetail, baseDetail, characterDetail, handleDetailError, indexDetail };
