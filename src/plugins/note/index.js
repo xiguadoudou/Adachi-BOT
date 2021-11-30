@@ -1,5 +1,5 @@
 ﻿import { hasEntrance } from "../../utils/config.js";
-import { basePromise } from "../../utils/detail.js";
+import { baseDetail } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
 import {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
@@ -238,7 +238,7 @@ function getCookieValue(loginCookie, key) {
 
 async function doSetMYBCookie(msg, uid) {
     let cookie = msg.text.slice(9);
-    cookie = cookie.replace(new RegExp("'", "gm"), "");
+    //cookie = cookie.replace(new RegExp("'", "gm"), "");
     if (cookie.indexOf("stuid") == -1 || cookie.indexOf("stoken") == -1 || cookie.indexOf("login_ticket") == -1) {
         let login_ticket = getCookieValue(cookie, "login_ticket");
         let account_id = getCookieValue(cookie, "login_uid");
@@ -355,7 +355,7 @@ async function Plugin(msg) {
     }
 
     try {
-        const baseInfo = await basePromise(dbInfo, msg.uid, msg.bot);
+        const baseInfo = await baseDetail(dbInfo, msg.uid, msg.bot);
         uid = baseInfo[0];
         region = baseInfo[1];
         if (hasEntrance(msg.text, "note", "set_user_cookie")) {
