@@ -143,7 +143,7 @@ function writeInvalidCookie(cookie) {
 
 function textOfInvalidCookies() {
   const dbName = "cookies_invalid";
-  const config = path.join("config", "cookies.yml");
+  const config = path.resolve("config", "cookies.yml");
   const data = db.get(dbName, "cookie") || [];
   let text = "";
 
