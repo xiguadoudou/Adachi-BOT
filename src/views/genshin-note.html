@@ -241,15 +241,6 @@
                 if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
             return fmt;
         }
-        function getTime(s) {
-            if (s < 0)
-                return [0, 0, 0, 0];
-            const sec = parseInt(s);
-            const min = parseInt(sec / 60);
-            const hour = parseInt(min / 60);
-            const day = parseInt(hour / 24);
-            return [day, hour % 24, min % 60, sec % 60];
-        };
 
         function getDayTime(nowTime, offset) {
             const newTime = new Date(parseInt(nowTime.valueOf() + offset * 1000));
@@ -270,8 +261,6 @@
                 document.getElementById("rrt").innerHTML = "树脂已回满";
                 document.getElementById("resin").innerHTML = "160/160";
             } else {
-                let [day, hour, min, sec] = getTime(parseInt(rrt));
-                //document.getElementById("rrt").innerHTML = "树脂将于" + hour + "小时" + min + "分" + sec + "秒后回满";
                 document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
                 document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate,rrt) + " 回满";
             }
@@ -292,7 +281,7 @@
 
             let num = 1;
             let e = 0;
-            let minTime = 0;
+            let minTime = 76800;
             for (var expedition of params.note.expeditions) {
                 if (expedition) {
                     document.getElementById(`e${num}_img`).src = expedition.avatar_side_icon;
@@ -303,25 +292,21 @@
                             document.getElementById(`e${num}`).innerHTML = "已完成";
                             minTime = 0;
                         } else {
-                            if (e < minTime)
+                            if (num == 1 || e < minTime)
                                 minTime = e;
-                            let [day, hour, min, sec] = getTime(e);
-                            //document.getElementById(`e${num}`).innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
                             document.getElementById(`e${num}`).innerHTML = getDayTime(myDate, e) + "完成";
                         }
                     } else if (expedition.status == "Finished") {
                         document.getElementById(`e${num}`).innerHTML = "已完成";
                         minTime = 0;
                     }
-                    //params += `&e${num}=${e}&e${num}i=${img}`;
                 }
                 num++;
             }
             if (minTime == 0)
                 document.getElementById("ert").innerHTML = "";
             else {
-                let [day, hour, min, sec] = getTime(parseInt(minTime));
-                document.getElementById("ert").innerHTML = "最快" + hour + "小时" + min + "分" + sec + "秒后完成派遣";
+                document.getElementById("ert").innerHTML = "最快" + getDayTime(myDate, minTime) + "完成派遣";
             }
         };
 
