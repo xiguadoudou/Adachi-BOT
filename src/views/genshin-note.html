@@ -6,7 +6,7 @@
     <style type="text/css">
         .app {
             background: url(component/note/background.png);
-            width: 948px;
+            width: 1000px;
             height: 900px;
         }
 
@@ -289,11 +289,9 @@
             let num = 1;
             let e = 0;
             let minTime = 0;
-
             for (var expedition of params.note.expeditions) {
                 if (expedition) {
-                    img = expedition.avatar_side_icon;
-                    document.getElementById(`e${num}_img`).src = e_img;
+                    document.getElementById(`e${num}_img`).src = expedition.avatar_side_icon;
                     document.getElementById(`e${num}_img`).style.visibility = "visible";
                     if (expedition.status == "Ongoing") {
                         e = parseInt(parseInt(expedition.remained_time) + (params.baseTime - nowTime) / 1000);

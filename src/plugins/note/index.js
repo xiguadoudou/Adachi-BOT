@@ -167,7 +167,7 @@ async function doPicNote(msg, uid, region) {
     //    num++;
     //}
 
-    let params = `rrt=${rrt}&task=${task}&rrd=${rrd}`;
+    //let params = `rrt=${rrt}&task=${task}&rrd=${rrd}`;
     //let base64;
     ////msg.bot.logger.debug(`${params}`);
     //try {
