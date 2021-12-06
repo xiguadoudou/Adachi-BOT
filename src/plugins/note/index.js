@@ -1,23 +1,24 @@
 ﻿import { hasEntrance } from "../../utils/config.js";
 import { baseDetail } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
+import { render } from "../../utils/render.js";
 import {
     notePromise, signInfoPromise, resignInfoPromise, rewardsPromise, signInPromise, resignInPromise,
     ledgerPromise, setUserCookie, mybCookiePromise, mybStatePromise, getPostListPromise, getPostFullPromise,
     upVotePostPromise, sharePostPromise, setMYBCookie, mybSignPromise, getMYBCookie } from "./noteDetail.js";
-import puppeteer from "puppeteer";
+//import puppeteer from "puppeteer";
 
-let browser;
+//let browser;
 
-async function launch() {
-    if (undefined === browser) {
-        browser = await puppeteer.launch({
-            defaultViewport: null,
-            headless: 0 === config.viewDebug,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
-    }
-}
+//async function launch() {
+//    if (undefined === browser) {
+//        browser = await puppeteer.launch({
+//            defaultViewport: null,
+//            headless: 0 === config.viewDebug,
+//            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+//        });
+//    }
+//}
 
 
 function getTime(s, offset) {
@@ -136,66 +137,70 @@ async function doNote(msg, uid, region) {
 
 async function doPicNote(msg, uid, region) {
     const noteInfo = await notePromise(uid, region, msg.uid, msg.bot);
-    const data = noteInfo[1];
+    const note = noteInfo[1];
     const baseTime = noteInfo[0];
-    const nowTime = new Date().valueOf();
-    let rrt = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
-    if (rrt < 0)
-        rrt = 0;
-    const task = data.is_extra_task_reward_received ? -1 : data.finished_task_num;
-    const rrd = data.remain_resin_discount_num;
+    //const nowTime = new Date().valueOf();
+    //const offset = (baseTime - nowTime) / 1000;
+    render(msg, { baseTime,note}, "genshin-note");
+    //let rrt = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
+    //if (rrt < 0)
+    //    rrt = 0;
+    //const task = data.is_extra_task_reward_received ? -1 : data.finished_task_num;
+    //const rrd = data.remain_resin_discount_num;
+
+    //let num = 1;
+    //let e = 0;
+    //let img = undefined;
+    //let params = { task: task, rrt: rrt, rrd: rrd, }
+    //for (var expedition of data.expeditions) {
+    //    if (expedition) {
+    //        img = expedition.avatar_side_icon;
+    //        if (expedition.status == "Ongoing") {
+    //            e = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
+    //            if (e < 0)
+    //                e = 0;
+    //        } else if (expedition.status == "Finished") {
+    //            e = 0;
+    //        }
+    //        params += `&e${num}=${e}&e${num}i=${img}`;
+    //    }
+    //    num++;
+    //}
 
     let params = `rrt=${rrt}&task=${task}&rrd=${rrd}`;
-    let num = 1;
-    let e = 0;
-    let img = undefined;
-    for (var expedition of data.expeditions) {
-        if (expedition) {
-            img = expedition.avatar_side_icon;
-            if (expedition.status == "Ongoing") {
-                e = parseInt(expedition.remained_time) + (baseTime - nowTime) / 1000;
-                if (e < 0)
-                    e = 0;
-            } else if (expedition.status == "Finished") {
-                e = 0;
-            }
-            params += `&e${num}=${e}&e${num}i=${img}`;
-        }
-        num++;
-    }
-    let base64;
-    //msg.bot.logger.debug(`${params}`);
-    try {
-        await launch();
-        const page = await browser.newPage();
-        await page.setViewport({
-            width: 965,
-            height: 900,
-            deviceScaleFactor: 1,
-        });
-        await page.goto(`http://localhost:9934/src/views/genshin-note.html?${params}`);
+    //let base64;
+    ////msg.bot.logger.debug(`${params}`);
+    //try {
+    //    await launch();
+    //    const page = await browser.newPage();
+    //    await page.setViewport({
+    //        width: 965,
+    //        height: 900,
+    //        deviceScaleFactor: 1,
+    //    });
+    //    await page.goto(`http://localhost:9934/src/views/genshin-note.html?${params}`);
 
-        const html = await page.$("body", { waitUntil: "networkidle0" });
-        base64 = await html.screenshot({
-            encoding: "base64",
-            type: "jpeg",
-            quality: 100,
-            omitBackground: true,
-        });
+    //    const html = await page.$("body", { waitUntil: "networkidle0" });
+    //    base64 = await html.screenshot({
+    //        encoding: "base64",
+    //        type: "jpeg",
+    //        quality: 100,
+    //        omitBackground: true,
+    //    });
 
-        if (0 === config.viewDebug) {
-            await page.close();
-        }
-    } catch (e) {
-        msg.bot && msg.bot.logger.error(`render： ${name} 功能绘图失败：${e}`, msg.uid);
-        msg.bot && msg.bot.say(msg.sid, "绘图失败。", msg.type, msg.uid, true);
-        return;
-    }
+    //    if (0 === config.viewDebug) {
+    //        await page.close();
+    //    }
+    //} catch (e) {
+    //    msg.bot && msg.bot.logger.error(`render： ${name} 功能绘图失败：${e}`, msg.uid);
+    //    msg.bot && msg.bot.say(msg.sid, "绘图失败。", msg.type, msg.uid, true);
+    //    return;
+    //}
 
-    if (base64) {
-        const imageCQ = `[CQ:image,file=base64://${base64}]`;
-        msg.bot && msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, false, "\n");
-    }
+    //if (base64) {
+    //    const imageCQ = `[CQ:image,file=base64://${base64}]`;
+    //    msg.bot && msg.bot.say(msg.sid, imageCQ, msg.type, msg.uid, false, "\n");
+    //}
     return undefined;
 }
 

@@ -212,11 +212,11 @@
         </div>
         <div id="e5">
         </div>
-        <img id="e1_img" />
-        <img id="e2_img" />
-        <img id="e3_img" />
-        <img id="e4_img" />
-        <img id="e5_img" />
+        <img id="e1_img" style="visibility:hidden" />
+        <img id="e2_img" style="visibility:hidden" />
+        <img id="e3_img" style="visibility:hidden" />
+        <img id="e4_img" style="visibility:hidden" />
+        <img id="e5_img" style="visibility:hidden" />
     </div>
     <script type="text/javascript">
         Date.prototype.Format = function (fmt) { //author: meizz
@@ -252,126 +252,195 @@
                 return results[1];
             }
         };
-        function loadData(){
-            var myDate = new Date();
-            document.getElementById("date").innerHTML = (myDate.getMonth()+1)+"月"+myDate.getDate()+"日<br/>"+myDate.Format("hh:mm:ss");
-            var rrt = getUrlParameter("rrt");
-            if(rrt != null){
-                if(rrt == 0){
-                    document.getElementById("rrt").innerHTML = "树脂已回满";
-                    document.getElementById("resin").innerHTML = "160/160";
-                }else{
-                    let [day, hour, min, sec] = getTime(parseInt(rrt));
-                    document.getElementById("rrt").innerHTML = "树脂将于"+hour+"小时"+min+"分"+sec+"秒后回满";
-                    document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8)+"/160";
-                }
+        function loadData() {
+            const params = JSON.parse(
+                decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
+            );
+            //params.note;
+            const myDate = new Date();
+            const nowTime = myDate.valueOf();
+            document.getElementById("date").innerHTML = (myDate.getMonth() + 1) + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
+
+            const rrt = parseInt(params.note.resin_recovery_time) + (params.baseTime - nowTime) / 1000;
+
+            if (rrt <= 0) {
+                document.getElementById("rrt").innerHTML = "树脂已回满";
+                document.getElementById("resin").innerHTML = "160/160";
+            } else {
+                let [day, hour, min, sec] = getTime(parseInt(rrt));
+                document.getElementById("rrt").innerHTML = "树脂将于" + hour + "小时" + min + "分" + sec + "秒后回满";
+                document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
             }
-            var task = getUrlParameter("task");
-            if(task == -1){
+
+            const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
+
+            if (task == -1) {
                 document.getElementById("task").innerHTML = "完成";
-            }else if(task != null)
-                document.getElementById("task").innerHTML = task+"/4";
-            var rrd = getUrlParameter("rrd");
-            if(rrd == 0)
+            } else if (task != null)
+                document.getElementById("task").innerHTML = task + "/4";
+
+            const rrd = params.note.remain_resin_discount_num;
+
+            if (rrd == 0)
                 document.getElementById("rrd").innerHTML = "完成";
-            else if(rrd != null)
-                document.getElementById("rrd").innerHTML = rrd+"/3";
-            var minTime = 0;
-            var e1 = getUrlParameter("e1");
-            if(e1 != null){
-                minTime = e1;
-                if(e1 == 0)
-                    document.getElementById("e1").innerHTML = "已完成";
-                else{
-                    let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e1").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
+            else if (rrd != null)
+                document.getElementById("rrd").innerHTML = (3 - rrd) + "/3";
+
+            let num = 1;
+            let e = 0;
+            let minTime = 0;
+
+            for (var expedition of params.note.expeditions) {
+                if (expedition) {
+                    img = expedition.avatar_side_icon;
+                    document.getElementById(`e${num}_img`).src = e_img;
+                    document.getElementById(`e${num}_img`).style.visibility = "visible";
+                    if (expedition.status == "Ongoing") {
+                        e = parseInt(parseInt(expedition.remained_time) + (params.baseTime - nowTime) / 1000);
+                        if (e <= 0) {
+                            document.getElementById(`e${num}`).innerHTML = "已完成";
+                            minTime = 0;
+                        } else {
+                            if (e < minTime)
+                                minTime = e;
+                            let [day, hour, min, sec] = getTime(e);
+                            document.getElementById(`e${num}`).innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+                        }
+                    } else if (expedition.status == "Finished") {
+                        document.getElementById(`e${num}`).innerHTML = "已完成";
+                        minTime = 0;
+                    }
+                    //params += `&e${num}=${e}&e${num}i=${img}`;
                 }
+                num++;
             }
-            e1 = getUrlParameter("e2");
-            if(e1 != null){
-                if(e1 < minTime)
-                    minTime = e1;
-                if(e1 == 0)
-                    document.getElementById("e2").innerHTML = "已完成";
-                else{
-                    let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e2").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
-                }
-            }
-            e1 = getUrlParameter("e3");
-            if(e1 != null){
-                if(e1 < minTime)
-                    minTime = e1;
-                if(e1 == 0)
-                    document.getElementById("e3").innerHTML = "已完成";
-                else{
-                    let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e3").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
-                }
-            }
-            e1 = getUrlParameter("e4");
-            if(e1 != null){
-                if(e1 < minTime)
-                    minTime = e1;
-                if(e1 == 0)
-                    document.getElementById("e4").innerHTML = "已完成";
-                else{
-                    let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e4").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
-                }
-            }
-            e1 = getUrlParameter("e5");
-            if(e1 != null){
-                if(e1 < minTime)
-                    minTime = e1;
-                if(e1 == 0)
-                    document.getElementById("e5").innerHTML = "已完成";
-                else{
-                    let [day, hour, min, sec] = getTime(parseInt(e1));
-                    document.getElementById("e5").innerHTML = "剩余"+hour+"小时"+min+"分"+sec+"秒";
-                }
-            }
-            if(minTime == 0)
+            if (minTime == 0)
                 document.getElementById("ert").innerHTML = "";
-            else{
+            else {
                 let [day, hour, min, sec] = getTime(parseInt(minTime));
-                document.getElementById("ert").innerHTML = "最快"+hour+"小时"+min+"分"+sec+"秒后完成派遣";
+                document.getElementById("ert").innerHTML = "最快" + hour + "小时" + min + "分" + sec + "秒后完成派遣";
             }
 
-            var e_img = getUrlParameter("e1i");
-            if(e_img != null){
-                document.getElementById("e1_img").src = e_img;
-            }else{
-                document.getElementById("e1_img").style.visibility= "hidden";
-            }
 
-            e_img = getUrlParameter("e2i");
-            if(e_img != null){
-                document.getElementById("e2_img").src = e_img;
-            }else{
-                document.getElementById("e2_img").style.visibility= "hidden";
-            }
+            //var myDate = new Date();
+            //document.getElementById("date").innerHTML = (myDate.getMonth() + 1) + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
+            //var rrt = getUrlParameter("rrt");
+            //if (rrt != null) {
+            //    if (rrt == 0) {
+            //        document.getElementById("rrt").innerHTML = "树脂已回满";
+            //        document.getElementById("resin").innerHTML = "160/160";
+            //    } else {
+            //        let [day, hour, min, sec] = getTime(parseInt(rrt));
+            //        document.getElementById("rrt").innerHTML = "树脂将于" + hour + "小时" + min + "分" + sec + "秒后回满";
+            //        document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
+            //    }
+            //}
+            //var task = getUrlParameter("task");
+            //if (task == -1) {
+            //    document.getElementById("task").innerHTML = "完成";
+            //} else if (task != null)
+            //    document.getElementById("task").innerHTML = task + "/4";
+            //var rrd = getUrlParameter("rrd");
+            //if (rrd == 0)
+            //    document.getElementById("rrd").innerHTML = "完成";
+            //else if (rrd != null)
+            //    document.getElementById("rrd").innerHTML = rrd + "/3";
+            //var minTime = 0;
+            //var e1 = getUrlParameter("e1");
+            //if (e1 != null) {
+            //    minTime = e1;
+            //    if (e1 == 0)
+            //        document.getElementById("e1").innerHTML = "已完成";
+            //    else {
+            //        let [day, hour, min, sec] = getTime(parseInt(e1));
+            //        document.getElementById("e1").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+            //    }
+            //}
+            //e1 = getUrlParameter("e2");
+            //if (e1 != null) {
+            //    if (e1 < minTime)
+            //        minTime = e1;
+            //    if (e1 == 0)
+            //        document.getElementById("e2").innerHTML = "已完成";
+            //    else {
+            //        let [day, hour, min, sec] = getTime(parseInt(e1));
+            //        document.getElementById("e2").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+            //    }
+            //}
+            //e1 = getUrlParameter("e3");
+            //if (e1 != null) {
+            //    if (e1 < minTime)
+            //        minTime = e1;
+            //    if (e1 == 0)
+            //        document.getElementById("e3").innerHTML = "已完成";
+            //    else {
+            //        let [day, hour, min, sec] = getTime(parseInt(e1));
+            //        document.getElementById("e3").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+            //    }
+            //}
+            //e1 = getUrlParameter("e4");
+            //if (e1 != null) {
+            //    if (e1 < minTime)
+            //        minTime = e1;
+            //    if (e1 == 0)
+            //        document.getElementById("e4").innerHTML = "已完成";
+            //    else {
+            //        let [day, hour, min, sec] = getTime(parseInt(e1));
+            //        document.getElementById("e4").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+            //    }
+            //}
+            //e1 = getUrlParameter("e5");
+            //if (e1 != null) {
+            //    if (e1 < minTime)
+            //        minTime = e1;
+            //    if (e1 == 0)
+            //        document.getElementById("e5").innerHTML = "已完成";
+            //    else {
+            //        let [day, hour, min, sec] = getTime(parseInt(e1));
+            //        document.getElementById("e5").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+            //    }
+            //}
+            //if (minTime == 0)
+            //    document.getElementById("ert").innerHTML = "";
+            //else {
+            //    let [day, hour, min, sec] = getTime(parseInt(minTime));
+            //    document.getElementById("ert").innerHTML = "最快" + hour + "小时" + min + "分" + sec + "秒后完成派遣";
+            //}
 
-            e_img = getUrlParameter("e3i");
-            if(e_img != null){
-                document.getElementById("e3_img").src = e_img;
-            }else{
-                document.getElementById("e3_img").style.visibility= "hidden";
-            }
+            //var e_img = getUrlParameter("e1i");
+            //if (e_img != null) {
+            //    document.getElementById("e1_img").src = e_img;
+            //} else {
+            //    document.getElementById("e1_img").style.visibility = "hidden";
+            //}
 
-            e_img = getUrlParameter("e4i");
-            if(e_img != null){
-                document.getElementById("e4_img").src = e_img;
-            }else{
-                document.getElementById("e4_img").style.visibility= "hidden";
-            }
+            //e_img = getUrlParameter("e2i");
+            //if (e_img != null) {
+            //    document.getElementById("e2_img").src = e_img;
+            //} else {
+            //    document.getElementById("e2_img").style.visibility = "hidden";
+            //}
 
-            e_img = getUrlParameter("e5i");
-            if(e_img != null){
-                document.getElementById("e5_img").src = e_img;
-            }else{
-                document.getElementById("e5_img").style.visibility= "hidden";
-            }
+            //e_img = getUrlParameter("e3i");
+            //if (e_img != null) {
+            //    document.getElementById("e3_img").src = e_img;
+            //} else {
+            //    document.getElementById("e3_img").style.visibility = "hidden";
+            //}
+
+            //e_img = getUrlParameter("e4i");
+            //if (e_img != null) {
+            //    document.getElementById("e4_img").src = e_img;
+            //} else {
+            //    document.getElementById("e4_img").style.visibility = "hidden";
+            //}
+
+            //e_img = getUrlParameter("e5i");
+            //if (e_img != null) {
+            //    document.getElementById("e5_img").src = e_img;
+            //} else {
+            //    document.getElementById("e5_img").style.visibility = "hidden";
+            //}
         };
 
         loadData();
