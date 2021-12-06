@@ -273,7 +273,7 @@
                 let [day, hour, min, sec] = getTime(parseInt(rrt));
                 //document.getElementById("rrt").innerHTML = "树脂将于" + hour + "小时" + min + "分" + sec + "秒后回满";
                 document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
-                document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate,rrt) + " 后回满";
+                document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate,rrt) + " 回满";
             }
 
             const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
