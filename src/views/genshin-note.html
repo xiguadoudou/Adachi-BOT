@@ -253,7 +253,7 @@
 
         function getDayTime(nowTime, offset) {
             const newTime = new Date(parseInt(nowTime.valueOf() + offset));
-            return `${nowTime.getDate() != newTime.getDate() ? "明天" : "今天"}${myDate.Format("hh:mm:ss")}`;
+            return `${nowTime.getDate() != newTime.getDate() ? "明天" : "今天"}${newTime.Format("hh:mm:ss")}`;
         }
 
         function loadData() {
