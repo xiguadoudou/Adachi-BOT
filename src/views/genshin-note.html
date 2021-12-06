@@ -306,7 +306,8 @@
                             if (e < minTime)
                                 minTime = e;
                             let [day, hour, min, sec] = getTime(e);
-                            document.getElementById(`e${num}`).innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+                            //document.getElementById(`e${num}`).innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
+                            document.getElementById(`e${num}`).innerHTML = getDayTime(myDate, e) + "完成";
                         }
                     } else if (expedition.status == "Finished") {
                         document.getElementById(`e${num}`).innerHTML = "已完成";
