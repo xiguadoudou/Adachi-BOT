@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <title>genshin-note</title>
     <style type="text/css">
+        html {
+            width: 1454px;
+            height: 100%;
+            font-family: GenshinUsedFont, monospace;
+        }
+
         .app {
             background: url(component/note/background.png);
             width: 1000px;
@@ -243,20 +249,10 @@
             const day = parseInt(hour / 24);
             return [day, hour % 24, min % 60, sec % 60];
         };
-        function getUrlParameter(name){
-            name = name.replace(/[]/,"\[").replace(/[]/,"\[").replace(/[]/,"\\\]");
-            var regexS = "[\\?&]"+name+"=([^&#]*)";
-            var regex = new RegExp( regexS );
-            var results = regex.exec(window.parent.location.href );
-            if( results == null ) return null; else {
-                return results[1];
-            }
-        };
         function loadData() {
             const params = JSON.parse(
                 decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
             );
-            //params.note;
             const myDate = new Date();
             const nowTime = myDate.valueOf();
             document.getElementById("date").innerHTML = (myDate.getMonth() + 1) + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
@@ -318,127 +314,6 @@
                 let [day, hour, min, sec] = getTime(parseInt(minTime));
                 document.getElementById("ert").innerHTML = "最快" + hour + "小时" + min + "分" + sec + "秒后完成派遣";
             }
-
-
-            //var myDate = new Date();
-            //document.getElementById("date").innerHTML = (myDate.getMonth() + 1) + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
-            //var rrt = getUrlParameter("rrt");
-            //if (rrt != null) {
-            //    if (rrt == 0) {
-            //        document.getElementById("rrt").innerHTML = "树脂已回满";
-            //        document.getElementById("resin").innerHTML = "160/160";
-            //    } else {
-            //        let [day, hour, min, sec] = getTime(parseInt(rrt));
-            //        document.getElementById("rrt").innerHTML = "树脂将于" + hour + "小时" + min + "分" + sec + "秒后回满";
-            //        document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
-            //    }
-            //}
-            //var task = getUrlParameter("task");
-            //if (task == -1) {
-            //    document.getElementById("task").innerHTML = "完成";
-            //} else if (task != null)
-            //    document.getElementById("task").innerHTML = task + "/4";
-            //var rrd = getUrlParameter("rrd");
-            //if (rrd == 0)
-            //    document.getElementById("rrd").innerHTML = "完成";
-            //else if (rrd != null)
-            //    document.getElementById("rrd").innerHTML = rrd + "/3";
-            //var minTime = 0;
-            //var e1 = getUrlParameter("e1");
-            //if (e1 != null) {
-            //    minTime = e1;
-            //    if (e1 == 0)
-            //        document.getElementById("e1").innerHTML = "已完成";
-            //    else {
-            //        let [day, hour, min, sec] = getTime(parseInt(e1));
-            //        document.getElementById("e1").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
-            //    }
-            //}
-            //e1 = getUrlParameter("e2");
-            //if (e1 != null) {
-            //    if (e1 < minTime)
-            //        minTime = e1;
-            //    if (e1 == 0)
-            //        document.getElementById("e2").innerHTML = "已完成";
-            //    else {
-            //        let [day, hour, min, sec] = getTime(parseInt(e1));
-            //        document.getElementById("e2").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
-            //    }
-            //}
-            //e1 = getUrlParameter("e3");
-            //if (e1 != null) {
-            //    if (e1 < minTime)
-            //        minTime = e1;
-            //    if (e1 == 0)
-            //        document.getElementById("e3").innerHTML = "已完成";
-            //    else {
-            //        let [day, hour, min, sec] = getTime(parseInt(e1));
-            //        document.getElementById("e3").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
-            //    }
-            //}
-            //e1 = getUrlParameter("e4");
-            //if (e1 != null) {
-            //    if (e1 < minTime)
-            //        minTime = e1;
-            //    if (e1 == 0)
-            //        document.getElementById("e4").innerHTML = "已完成";
-            //    else {
-            //        let [day, hour, min, sec] = getTime(parseInt(e1));
-            //        document.getElementById("e4").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
-            //    }
-            //}
-            //e1 = getUrlParameter("e5");
-            //if (e1 != null) {
-            //    if (e1 < minTime)
-            //        minTime = e1;
-            //    if (e1 == 0)
-            //        document.getElementById("e5").innerHTML = "已完成";
-            //    else {
-            //        let [day, hour, min, sec] = getTime(parseInt(e1));
-            //        document.getElementById("e5").innerHTML = "剩余" + hour + "小时" + min + "分" + sec + "秒";
-            //    }
-            //}
-            //if (minTime == 0)
-            //    document.getElementById("ert").innerHTML = "";
-            //else {
-            //    let [day, hour, min, sec] = getTime(parseInt(minTime));
-            //    document.getElementById("ert").innerHTML = "最快" + hour + "小时" + min + "分" + sec + "秒后完成派遣";
-            //}
-
-            //var e_img = getUrlParameter("e1i");
-            //if (e_img != null) {
-            //    document.getElementById("e1_img").src = e_img;
-            //} else {
-            //    document.getElementById("e1_img").style.visibility = "hidden";
-            //}
-
-            //e_img = getUrlParameter("e2i");
-            //if (e_img != null) {
-            //    document.getElementById("e2_img").src = e_img;
-            //} else {
-            //    document.getElementById("e2_img").style.visibility = "hidden";
-            //}
-
-            //e_img = getUrlParameter("e3i");
-            //if (e_img != null) {
-            //    document.getElementById("e3_img").src = e_img;
-            //} else {
-            //    document.getElementById("e3_img").style.visibility = "hidden";
-            //}
-
-            //e_img = getUrlParameter("e4i");
-            //if (e_img != null) {
-            //    document.getElementById("e4_img").src = e_img;
-            //} else {
-            //    document.getElementById("e4_img").style.visibility = "hidden";
-            //}
-
-            //e_img = getUrlParameter("e5i");
-            //if (e_img != null) {
-            //    document.getElementById("e5_img").src = e_img;
-            //} else {
-            //    document.getElementById("e5_img").style.visibility = "hidden";
-            //}
         };
 
         loadData();
