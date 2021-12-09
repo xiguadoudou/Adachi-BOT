@@ -409,6 +409,7 @@ note:
   weights: 9999
   regex:
     - ^设置Cookie\s+.+$
+    - ^清除Cookie
     - ^米游币Cookie\s+.+$
     - ^(实时)?(便笺|树脂|便签)\s*$
     - ^(实时)?(便笺|树脂|便签)\s+\d+.*$
@@ -432,6 +433,13 @@ note:
       description:
       entrance:
         - ^设置Cookie
+    del_user_cookie:
+      weights: 9989
+      name: 清除Cookie
+      usage:
+      description:
+      entrance:
+        - ^清除Cookie
     get_note:
       weights: 9899
       name: 实时便笺

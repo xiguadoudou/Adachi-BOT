@@ -381,6 +381,9 @@ ${await doGetMYB(msg, uid, region)}`;
             message = await doLedger(msg, uid, region);
         } else if (hasEntrance(msg.text, "note", "get_pic_note")){
             message = await doPicNote(msg, uid, region);
+        } else if (hasEntrance(msg.text, "note", "del_user_cookie")) {
+            await setUserCookie(uid, "", msg.bot);
+            message = `已清除cookie`;
         } else {
             message = await doPicNote(msg, uid, region);
         }
