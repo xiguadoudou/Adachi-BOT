@@ -1,317 +1,303 @@
 ﻿<!DOCTYPE html>
 <html lang="zh-cn">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>genshin-note</title>
     <style type="text/css">
-        html {
-            width: 964px;
-            height: 100%;
-            font-family: GenshinUsedFont, monospace;
-        }
+      html {
+        width: 964px;
+        height: 100%;
+        font-family: GenshinUsedFont, monospace;
+      }
 
-        .app {
-            background: url(component/note/background.png);
-            background-repeat: no-repeat;
-            width: 1000px;
-            height: 900px;
-        }
+      .app {
+        background: url(component/note/background.png);
+        background-repeat: no-repeat;
+        width: 1000px;
+        height: 900px;
+      }
 
-        #date {
-            position: absolute;
-            width: 180px;
-            height: 58px;
-            left: 234px;
-            top: 64px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 22px;
-        }
+      #date {
+        position: absolute;
+        width: 180px;
+        height: 58px;
+        left: 234px;
+        top: 64px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 22px;
+      }
 
-        #rrt {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 180px;
-            top: 157px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 16px;
-        }
+      #rrt {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 180px;
+        top: 157px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 16px;
+      }
 
-        #resin {
-            position: absolute;
-            width: 200px;
-            height: 40px;
-            left: 240px;
-            top: 200px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 30px;
-        }
+      #resin {
+        position: absolute;
+        width: 200px;
+        height: 40px;
+        left: 240px;
+        top: 200px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 30px;
+      }
 
-        #task {
-            position: absolute;
-            width: 228px;
-            height: 26px;
-            left: 240px;
-            top: 335px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 30px;
-        }
+      #task {
+        position: absolute;
+        width: 228px;
+        height: 26px;
+        left: 240px;
+        top: 335px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 30px;
+      }
 
-        #rrd {
-            position: absolute;
-            width: 228px;
-            height: 26px;
-            left: 240px;
-            top: 460px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 30px;
-        }
+      #rrd {
+        position: absolute;
+        width: 228px;
+        height: 26px;
+        left: 240px;
+        top: 460px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 30px;
+      }
 
-        #ert {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 610px;
-            top: 80px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 16px;
-        }
+      #ert {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 610px;
+        top: 80px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 16px;
+      }
 
-        #e1 {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 622px;
-            top: 145px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e1 {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 622px;
+        top: 145px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e2 {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 622px;
-            top: 217px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e2 {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 622px;
+        top: 217px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e3 {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 622px;
-            top: 289px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e3 {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 622px;
+        top: 289px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e4 {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 622px;
-            top: 361px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e4 {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 622px;
+        top: 361px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e5 {
-            position: absolute;
-            width: 258px;
-            height: 26px;
-            left: 622px;
-            top: 433px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e5 {
+        position: absolute;
+        width: 258px;
+        height: 26px;
+        left: 622px;
+        top: 433px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e1_img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            left: 530px;
-            top: 115px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e1_img {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        left: 530px;
+        top: 115px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e2_img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            left: 530px;
-            top: 187px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e2_img {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        left: 530px;
+        top: 187px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e3_img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            left: 530px;
-            top: 259px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e3_img {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        left: 530px;
+        top: 259px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e4_img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            left: 530px;
-            top: 331px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e4_img {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        left: 530px;
+        top: 331px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
 
-        #e5_img {
-            position: absolute;
-            width: 70px;
-            height: 70px;
-            left: 530px;
-            top: 403px;
-            color: #7B8386;
-            font-weight: bold;
-            font-size: 20px;
-        }
+      #e5_img {
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        left: 530px;
+        top: 403px;
+        color: #7b8386;
+        font-weight: bold;
+        font-size: 20px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="app">
-        <div id="date">
-        </div>
-        <div id="rrt">
-        </div>
-        <div id="resin">
-        </div>
-        <div id="task">
-        </div>
-        <div id="rrd">
-        </div>
-        <div id="ert">
-        </div>
-        <div id="e1">
-        </div>
-        <div id="e2">
-        </div>
-        <div id="e3">
-        </div>
-        <div id="e4">
-        </div>
-        <div id="e5">
-        </div>
-        <img id="e1_img" style="visibility:hidden" />
-        <img id="e2_img" style="visibility:hidden" />
-        <img id="e3_img" style="visibility:hidden" />
-        <img id="e4_img" style="visibility:hidden" />
-        <img id="e5_img" style="visibility:hidden" />
+      <div id="date"></div>
+      <div id="rrt"></div>
+      <div id="resin"></div>
+      <div id="task"></div>
+      <div id="rrd"></div>
+      <div id="ert"></div>
+      <div id="e1"></div>
+      <div id="e2"></div>
+      <div id="e3"></div>
+      <div id="e4"></div>
+      <div id="e5"></div>
+      <img id="e1_img" style="visibility: hidden" />
+      <img id="e2_img" style="visibility: hidden" />
+      <img id="e3_img" style="visibility: hidden" />
+      <img id="e4_img" style="visibility: hidden" />
+      <img id="e5_img" style="visibility: hidden" />
     </div>
     <script type="text/javascript">
-        Date.prototype.Format = function (fmt) { //author: meizz
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (var k in o)
-                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            return fmt;
-        }
-
-        function getDayTime(nowTime, offset) {
-            const newTime = new Date(parseInt(nowTime.valueOf() + offset * 1000));
-            return `${nowTime.getDate() != newTime.getDate() ? "明天" : "今天"}${newTime.Format("hh:mm:ss")}`;
-        }
-
-        function loadData() {
-            const params = JSON.parse(
-                decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
-            );
-            const myDate = new Date();
-            const nowTime = myDate.valueOf();
-            document.getElementById("date").innerHTML = (myDate.getMonth() + 1) + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
-
-            const rrt = parseInt(params.note.resin_recovery_time) + (params.baseTime - nowTime) / 1000;
-
-            if (rrt <= 0) {
-                document.getElementById("rrt").innerHTML = "树脂已回满";
-                document.getElementById("resin").innerHTML = "160/160";
-            } else {
-                document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
-                document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate,rrt) + " 回满";
-            }
-
-            const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
-
-            if (task == -1) {
-                document.getElementById("task").innerHTML = "完成";
-            } else if (task != null)
-                document.getElementById("task").innerHTML = task + "/4";
-
-            const rrd = params.note.remain_resin_discount_num;
-
-            if (rrd == 0)
-                document.getElementById("rrd").innerHTML = "完成";
-            else if (rrd != null)
-                document.getElementById("rrd").innerHTML = (3 - rrd) + "/3";
-
-            let num = 1;
-            let e = 0;
-            let minTime = 76800;
-            for (var expedition of params.note.expeditions) {
-                if (expedition) {
-                    document.getElementById(`e${num}_img`).src = expedition.avatar_side_icon;
-                    document.getElementById(`e${num}_img`).style.visibility = "visible";
-                    if (expedition.status == "Ongoing") {
-                        e = parseInt(parseInt(expedition.remained_time) + (params.baseTime - nowTime) / 1000);
-                        if (e <= 0) {
-                            document.getElementById(`e${num}`).innerHTML = "已完成";
-                            minTime = 0;
-                        } else {
-                            if (num == 1 || e < minTime)
-                                minTime = e;
-                            document.getElementById(`e${num}`).innerHTML = getDayTime(myDate, e) + "完成";
-                        }
-                    } else if (expedition.status == "Finished") {
-                        document.getElementById(`e${num}`).innerHTML = "已完成";
-                        minTime = 0;
-                    }
-                }
-                num++;
-            }
-            if (minTime == 0)
-                document.getElementById("ert").innerHTML = "";
-            else {
-                document.getElementById("ert").innerHTML = "最快" + getDayTime(myDate, minTime) + "完成派遣";
-            }
+      Date.prototype.Format = function (fmt) {
+        //author: meizz
+        var o = {
+          "M+": this.getMonth() + 1, //月份
+          "d+": this.getDate(), //日
+          "h+": this.getHours(), //小时
+          "m+": this.getMinutes(), //分
+          "s+": this.getSeconds(), //秒
+          "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+          S: this.getMilliseconds(), //毫秒
         };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+          if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        return fmt;
+      };
 
-        loadData();
+      function getDayTime(nowTime, offset) {
+        const newTime = new Date(parseInt(nowTime.valueOf() + offset * 1000));
+        return `${nowTime.getDate() != newTime.getDate() ? "明天" : "今天"}${newTime.Format("hh:mm:ss")}`;
+      }
+
+      function loadData() {
+        const params = JSON.parse(
+          decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
+        );
+        const myDate = new Date();
+        const nowTime = myDate.valueOf();
+        document.getElementById("date").innerHTML =
+          myDate.getMonth() + 1 + "月" + myDate.getDate() + "日<br/>" + myDate.Format("hh:mm:ss");
+
+        const rrt = parseInt(params.note.resin_recovery_time) + (params.baseTime - nowTime) / 1000;
+
+        if (rrt <= 0) {
+          document.getElementById("rrt").innerHTML = "树脂已回满";
+          document.getElementById("resin").innerHTML = "160/160";
+        } else {
+          document.getElementById("resin").innerHTML = parseInt((76800 - rrt) / 60 / 8) + "/160";
+          document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate, rrt) + " 回满";
+        }
+
+        const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
+
+        if (task == -1) {
+          document.getElementById("task").innerHTML = "完成";
+        } else if (task != null) document.getElementById("task").innerHTML = task + "/4";
+
+        const rrd = params.note.remain_resin_discount_num;
+
+        if (rrd == 0) document.getElementById("rrd").innerHTML = "完成";
+        else if (rrd != null) document.getElementById("rrd").innerHTML = 3 - rrd + "/3";
+
+        let num = 1;
+        let e = 0;
+        let minTime = 76800;
+        for (var expedition of params.note.expeditions) {
+          if (expedition) {
+            document.getElementById(`e${num}_img`).src = expedition.avatar_side_icon;
+            document.getElementById(`e${num}_img`).style.visibility = "visible";
+            if (expedition.status == "Ongoing") {
+              e = parseInt(parseInt(expedition.remained_time) + (params.baseTime - nowTime) / 1000);
+              if (e <= 0) {
+                document.getElementById(`e${num}`).innerHTML = "已完成";
+                minTime = 0;
+              } else {
+                if (num == 1 || e < minTime) minTime = e;
+                document.getElementById(`e${num}`).innerHTML = getDayTime(myDate, e) + "完成";
+              }
+            } else if (expedition.status == "Finished") {
+              document.getElementById(`e${num}`).innerHTML = "已完成";
+              minTime = 0;
+            }
+          }
+          num++;
+        }
+        if (minTime == 0) document.getElementById("ert").innerHTML = "";
+        else {
+          document.getElementById("ert").innerHTML = "最快" + getDayTime(myDate, minTime) + "完成派遣";
+        }
+      }
+
+      loadData();
     </script>
-</body>
+  </body>
 </html>
-

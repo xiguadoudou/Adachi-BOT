@@ -15,7 +15,7 @@ function initDB() {
   db.init("map");
   db.init("music", { source: [] });
   db.init("time");
-  db.init("note", { user: [], cookie: [], myb:[] });
+  db.init("note", { user: [], cookie: [], myb: [] });
   db.init("nikename", { uid: [] });
 }
 
