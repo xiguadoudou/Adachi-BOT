@@ -267,8 +267,7 @@ async function doSetCookie(msg, uid) {
     return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
   }
   cookie = `cookie_token=${cookie_token}; account_id=${account_id};`;
-  if (login_ticket != undefined)
-    cookie += ` login_uid=${account_id}; login_ticket=${login_ticket};`;
+  if (login_ticket != undefined) cookie += ` login_uid=${account_id}; login_ticket=${login_ticket};`;
   await setUserCookie(uid, cookie, msg.bot);
   return ` 已设置cookie`;
 }
