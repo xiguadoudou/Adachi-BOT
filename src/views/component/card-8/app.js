@@ -7,43 +7,33 @@ const template = `<div class="user-base-page">
         <img class="character" :src="character" alt="ERROR" />
       </div>
     </div>
-    <div class="middle">
-      <div class="_left">
-        <div class="data-name">
-          <p>活跃天数</p>
-          <p>成就达成</p>
-          <p>普通宝箱</p>
-          <p>珍贵宝箱</p>
-          <p>奇馈宝箱</p>
-          <p>岩神瞳数</p>
-        </div>
-        <div class="data-value">
-          <p>{{ stats.active_day_number }}</p>
-          <p>{{ stats.achievement_number }}</p>
-          <p>{{ stats.common_chest_number }}</p>
-          <p>{{ stats.precious_chest_number }}</p>
-          <p>{{ stats.magic_chest_number }}</p>
-          <p>{{ stats.geoculus_number }}</p>
-        </div>
-      </div>
-      <div class="_right">
-        <div class="data-name">
-          <p>获得角色</p>
-          <p>深境螺旋</p>
-          <p>精致宝箱</p>
-          <p>华丽宝箱</p>
-          <p>风神瞳数</p>
-          <p>雷神瞳数</p>
-        </div>
-        <div class="data-value">
-          <p>{{ stats.avatar_number }}</p>
-          <p>{{ stats.spiral_abyss }}</p>
-          <p>{{ stats.exquisite_chest_number }}</p>
-          <p>{{ stats.luxurious_chest_number }}</p>
-          <p>{{ stats.anemoculus_number }}</p>
-          <p>{{ stats.electroculus_number }}</p>
-        </div>
-      </div>
+    <div class="container-middle">
+        <div class="middle">
+              <p>活跃天数</p>
+              <p>{{ stats.active_day_number }}</p>
+              <p>获得角色</p>
+              <p>{{ stats.avatar_number }}</p>
+              <p>成就达成</p>
+              <p>{{ stats.achievement_number }}</p>
+              <p>深境螺旋</p>
+              <p>{{ stats.spiral_abyss }}</p>
+              <p>普通宝箱</p>
+              <p>{{ stats.common_chest_number }}</p>
+              <p>风神瞳数</p>
+              <p>{{ stats.anemoculus_number }}</p>
+              <p>精致宝箱</p>
+              <p>{{ stats.exquisite_chest_number }}</p>
+              <p>岩神瞳数</p>
+              <p>{{ stats.geoculus_number }}</p>
+              <p>珍贵宝箱</p>
+              <p>{{ stats.precious_chest_number }}</p>
+              <p>雷神瞳数</p>
+              <p>{{ stats.electroculus_number }}</p>
+              <p>华丽宝箱</p>
+              <p>{{ stats.luxurious_chest_number }}</p>
+              <p>奇馈宝箱</p>
+              <p>{{ stats.magic_chest_number }}</p>
+            </div>
     </div>
     <SectionTitle class="bottom-split" :title="homeboxTitle" />
     <div class="bottom">
@@ -53,14 +43,17 @@ const template = `<div class="user-base-page">
       <HomeBox :data="homes.hall" />
     </div>
   </div>
+  
   <div class="right">
     <div class="world">
       <SectionTitle title="世界探索" />
-      <div class="explorations">
-        <ExplorationBox v-for="e in explorations" :data="e" />
+      <div class="container-exploration">
+        <div class="explorations">
+          <ExplorationBox v-for="e in explorations" :data="e" />
+        </div>
       </div>
     </div>
-    <div class="character">
+    <div class="container-character">
       <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
@@ -100,10 +93,22 @@ export default defineComponent({
       return params.explorations.find((el) => el.id === id);
     }
 
-    const charsWithoutYe = params.avatars.filter((el) => "旅行者" !== el.name);
-    const target = charsWithoutYe[Math.floor(Math.random() * charsWithoutYe.length)];
+    function disambiguate(characterID, characterName) {
+      switch (parseInt(characterID)) {
+        case 10000005:
+          return "旅行者男";
+        case 10000007:
+          return "旅行者女";
+        default:
+          return characterName;
+      }
+    }
+
+    const target = params.avatars[Math.floor(Math.random() * params.avatars.length)];
     const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${target.id}.png`);
-    const character = computed(() => `http://localhost:9934/resources/Version2/thumb/character/${target.name}.png`);
+    const character = computed(
+      () => "http://localhost:9934/resources/Version2/thumb/character/" + disambiguate(target.id, target.name) + ".png"
+    );
     const level = (l) => "Lv." + l;
     const percentage = (p) => p / 10 + "%";
     const explorations = [
