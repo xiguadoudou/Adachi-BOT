@@ -6,16 +6,16 @@ import { randomString } from "../../utils/tools.js";
 import { v3 as uuidv3 } from "uuid";
 
 const __API = {
-    FETCH_ROLE_DAILY_NOTE: "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote",
+    FETCH_ROLE_DAILY_NOTE: "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote",
   REFERER_URL:
     "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id=e202009291139501&utm_source=bbs&utm_medium=mys&utm_campaign=icon",
-  SIGN_INFO_URL: "https://api-takumi-record.mihoyo.com/event/bbs_sign_reward/info",
-  RESIGN_INFO_URL: "https://api-takumi-record.mihoyo.com/event/bbs_sign_reward/resign_info",
-  SIGN_URL: "https://api-takumi-record.mihoyo.com/event/bbs_sign_reward/sign",
-  RESIGN_URL: "https://api-takumi-record.mihoyo.com/event/bbs_sign_reward/resign",
-  REWARD_URL: "https://api-takumi-record.mihoyo.com/event/bbs_sign_reward/home",
+  SIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/info",
+  RESIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign_info",
+  SIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+  RESIGN_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/resign",
+  REWARD_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home",
   LEDGER_URL: "https://hk4e-api.mihoyo.com/event/ys_ledger/monthInfo",
-  GET_TOKEN_URL: "https://api-takumi-record.mihoyo.com/auth/api/getMultiTokenByLoginTicket",
+  GET_TOKEN_URL: "https://api-takumi.mihoyo.com/auth/api/getMultiTokenByLoginTicket",
   MISSION_STATE_URL: "https://bbs-api.mihoyo.com/apihub/sapi/getUserMissionsState",
   MYB_SIGN_URL: "https://bbs-api.mihoyo.com/apihub/sapi/signIn",
   MYB_POST_LIST_URL: "https://bbs-api.mihoyo.com/post/api/getForumPostList",
