@@ -6,7 +6,7 @@ import { randomString } from "../../utils/tools.js";
 import { v3 as uuidv3 } from "uuid";
 
 const __API = {
-    FETCH_ROLE_DAILY_NOTE: "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote",
+  FETCH_ROLE_DAILY_NOTE: "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote",
   REFERER_URL:
     "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id=e202009291139501&utm_source=bbs&utm_medium=mys&utm_campaign=icon",
   SIGN_INFO_URL: "https://api-takumi.mihoyo.com/event/bbs_sign_reward/info",
