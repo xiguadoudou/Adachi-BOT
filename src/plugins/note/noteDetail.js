@@ -35,8 +35,7 @@ const HEADERS = {
 
 async function getUserCookie(user, bot) {
   if (!(await db.includes("note", "cookie", "user", user))) {
-    const initData = { user, cookie: "" };
-    await db.push("note", "cookie", initData);
+      return undefined;
   }
   let { cookie } = await db.get("note", "cookie", { user });
   return cookie;
@@ -51,9 +50,8 @@ async function setUserCookie(user, userCookie, bot) {
 }
 
 async function getMYBCookie(user, bot) {
-  if (!(await db.includes("note", "myb", "user", user))) {
-    const initData = { user, cookie: "" };
-    await db.push("note", "myb", initData);
+    if (!(await db.includes("note", "myb", "user", user))) {
+        return undefined;
   }
   let { cookie } = await db.get("note", "myb", { user });
   if (!cookie) return undefined;
