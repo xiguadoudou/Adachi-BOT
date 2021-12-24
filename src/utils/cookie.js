@@ -63,8 +63,7 @@ function getEffectiveCookie(uid, s, use_cookie) {
 
 function getUCookie(user, bot) {
   if (!db.includes("note", "cookie", "user", user)) {
-    const initData = { user, cookie: "" };
-    db.push("note", "cookie", initData);
+    return undefined;
   }
   let { cookie } = db.get("note", "cookie", { user });
   if (!cookie) return undefined;
