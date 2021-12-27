@@ -134,38 +134,6 @@ async function doLedger(msg, uid, region) {
     }。`;
 }
 
-async function doNote(msg, uid, region) {
-  const noteInfo = await notePromise(uid, region, msg.uid, msg.bot);
-  const data = noteInfo[1];
-  const baseTime = noteInfo[0];
-  const nowTime = new Date().valueOf();
-  const crtime = parseInt(data.resin_recovery_time) + (baseTime - nowTime) / 1000;
-  const cr = crtime <= 0 ? data.max_resin : parseInt((76800 - crtime) / 60 / 8);
-  let message = `
-树脂${cr}/${data.max_resin} 委托${data.finished_task_num}/${data.total_task_num} 派遣${data.current_expedition_num}/${data.max_expedition_num}`;
-  let [day, hour, min, sec] = getTime(parseInt(data.resin_recovery_time), (baseTime - nowTime) / 1000);
-  message += `
-树脂回满时间：${hour}时${min}分${sec}秒`;
-  message += `
-[每日委托]奖励${data.is_extra_task_reward_received ? "已领取" : "未领取"}`;
-  message += `
-本周剩余消耗减半次数${data.remain_resin_discount_num}/${data.resin_discount_num_limit}`;
-  let num = 1;
-  for (var expedition of data.expeditions) {
-    if (expedition)
-      if (expedition.status == "Ongoing") {
-        [day, hour, min, sec] = getTime(parseInt(expedition.remained_time), (baseTime - nowTime) / 1000);
-        message += `
-派遣${num}：${hour}时${min}分${sec}秒`;
-      } else if (expedition.status == "Finished") {
-        message += `
-派遣${num}：已完成`;
-      }
-    num++;
-  }
-  return message;
-}
-
 async function doPicNote(msg, uid, region) {
   const noteInfo = await notePromise(uid, region, msg.uid, msg.bot);
   const note = noteInfo[1];
@@ -182,9 +150,7 @@ async function doSetCookie(msg, uid) {
   if (account_id == undefined || cookie_token == undefined) {
     account_id = getCookieValue(cookie, "login_uid");
     if (account_id == undefined) account_id = getCookieValue(cookie, "account_id");
-    if (login_ticket == undefined || account_id == undefined)
-      return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
-    else {
+    if (login_ticket != undefined && account_id != undefined){
       const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
       cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket};`;
       await setMYBCookie(uid, cookie, msg.bot);
