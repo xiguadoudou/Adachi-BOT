@@ -500,17 +500,17 @@ async function sharePostPromise(uid, post_id, userID, bot) {
 }
 
 function setCacheTimeout(uid, bot) {
-    if (db.includes("map", "user", "userID", uid)) {
-        const { UID: id } = db.get("map", "user", { userID: uid }) || {};
-        const reason = "因米游社 ID 变更而强制超时";
+  if (db.includes("map", "user", "userID", uid)) {
+    const { UID: id } = db.get("map", "user", { userID: uid }) || {};
+    const reason = "因米游社 ID 变更而强制超时";
 
-        if (id) {
-            db.update("time", "user", { aby: id }, { time: 0 });
-            bot.logger.debug(`缓存：用户 ${id} 的深渊数据${reason}。`);
-            db.update("time", "user", { uid: id }, { time: 0 });
-            bot.logger.debug(`缓存：用户 ${id} 的玩家数据${reason}。`);
-        }
+    if (id) {
+      db.update("time", "user", { aby: id }, { time: 0 });
+      bot.logger.debug(`缓存：用户 ${id} 的深渊数据${reason}。`);
+      db.update("time", "user", { uid: id }, { time: 0 });
+      bot.logger.debug(`缓存：用户 ${id} 的玩家数据${reason}。`);
     }
+  }
 }
 
 export {
@@ -530,6 +530,6 @@ export {
   sharePostPromise,
   setMYBCookie,
   mybSignPromise,
-    getMYBCookie,
-    setCacheTimeout,
+  getMYBCookie,
+  setCacheTimeout,
 };

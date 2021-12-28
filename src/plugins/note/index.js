@@ -19,8 +19,8 @@ import {
   sharePostPromise,
   setMYBCookie,
   mybSignPromise,
-    getMYBCookie,
-    setCacheTimeout,
+  getMYBCookie,
+  setCacheTimeout,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
