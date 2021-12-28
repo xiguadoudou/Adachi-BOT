@@ -6,6 +6,7 @@ import { getID } from "../../utils/id.js";
 
 async function doAby(msg, schedule_type = 1) {
   let dbInfo = getID(msg.text, msg.uid, false); // UID
+  let abyInfo;
 
   if ("string" === typeof dbInfo) {
     msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
@@ -32,7 +33,7 @@ async function doAby(msg, schedule_type = 1) {
       }
     }
 
-    await abyDetail(...dbInfo, msg.uid, schedule_type.toString(), msg.bot);
+    abyInfo = await abyDetail(...dbInfo, msg.uid, schedule_type.toString(), msg.bot);
   } catch (e) {
     const ret = handleDetailError(e);
 
