@@ -25,6 +25,12 @@ function cleanDB(name) {
   return nums;
 }
 
+async function lastWords() {
+  for (const bot of global.bots) {
+    await bot.sayMaster(undefined, "我下线了。");
+  }
+}
+
 function cleanDBJob() {
   let nums = 0;
   nums += cleanDB("aby");
@@ -41,6 +47,11 @@ function syncDBJob() {
   });
 }
 
+async function doPost() {
+  syncDBJob();
+  await lastWords();
+}
+
 function serve(port = 9934) {
   const server = express();
   server.use(express.static(global.rootdir));
@@ -53,9 +64,9 @@ async function init() {
   updateGachaJob();
   cleanDBJob();
 
-  process.on("SIGINT", syncDBJob);
-  process.on("SIGTERM", syncDBJob);
-  process.on("SIGHUP", syncDBJob);
+  for (const signal of ["SIGHUP", "SIGINT", "SIGTERM"]) {
+    process.on(signal, () => doPost().then((n) => process.exit(n)));
+  }
 
   schedule.scheduleJob("1 */1 * * *", async () => updateGachaJob());
   schedule.scheduleJob("1 */1 * * *", async () => cleanDBJob());

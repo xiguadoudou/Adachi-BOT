@@ -150,7 +150,7 @@ async function doSetCookie(msg, uid) {
   if (account_id == undefined || cookie_token == undefined) {
     account_id = getCookieValue(cookie, "login_uid");
     if (account_id == undefined) account_id = getCookieValue(cookie, "account_id");
-    if (login_ticket != undefined && account_id != undefined){
+    if (login_ticket != undefined && account_id != undefined) {
       const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
       cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket};`;
       await setMYBCookie(uid, cookie, msg.bot);
