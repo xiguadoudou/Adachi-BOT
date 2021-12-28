@@ -19,7 +19,8 @@ import {
   sharePostPromise,
   setMYBCookie,
   mybSignPromise,
-  getMYBCookie,
+    getMYBCookie,
+    setCacheTimeout,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
@@ -159,7 +160,8 @@ async function doSetCookie(msg, uid) {
   }
   cookie = `cookie_token=${cookie_token}; account_id=${account_id};`;
   if (login_ticket != undefined) cookie += ` login_uid=${account_id}; login_ticket=${login_ticket};`;
-  await setUserCookie(uid, cookie, msg.bot);
+    await setUserCookie(uid, cookie, msg.bot);
+    setCacheTimeout(msg.uid, msg.bot);
   return ` 已设置cookie`;
 }
 
