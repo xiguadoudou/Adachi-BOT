@@ -145,6 +145,7 @@ async function doPicNote(msg, uid, region) {
 
 async function doSetCookie(msg, uid) {
   let cookie = msg.text.slice(9);
+  cookie = cookie.replace(new RegExp("'", "gm"), "").replace(new RegExp("\"", "gm"), "");
   let cookie_token = getCookieValue(cookie, "cookie_token");
   let account_id = getCookieValue(cookie, "account_id");
   let login_ticket = getCookieValue(cookie, "login_ticket");
@@ -176,6 +177,7 @@ function getCookieValue(loginCookie, key) {
 
 async function doSetMYBCookie(msg, uid) {
   let cookie = msg.text.slice(9);
+  cookie = cookie.replace(new RegExp("'", "gm"), "").replace(new RegExp("\"", "gm"), "");
   if (cookie.indexOf("stuid") == -1 || cookie.indexOf("stoken") == -1 || cookie.indexOf("login_ticket") == -1) {
     let login_ticket = getCookieValue(cookie, "login_ticket");
     let account_id = getCookieValue(cookie, "login_uid");
