@@ -52,7 +52,7 @@ async function doAby(msg, schedule_type = 1) {
       msg.bot.say(msg.sid, "无渊月螺旋记录。", msg.type, msg.uid, true);
       return;
     }
-      if (Array.isArray(data.data.floors) && data.data.floors.length !== 0 && msg.uid == 1430178210) {
+    if (Array.isArray(data.data.floors) && data.data.floors.length !== 0 && msg.uid == 1430178210) {
       if (data.data.floors[0]["levels"].length !== 0) {
         render(msg, data, "genshin-aby-old");
         return;
