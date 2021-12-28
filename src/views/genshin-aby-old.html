@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>genshin-aby</title>
-    <script src="../../data/js/vue.min.js"></script>
+    <script src="../../data/js/vue2.js"></script>
     <link rel="stylesheet" href="./component/aby-old/aby.css" />
   </head>
 
@@ -119,13 +119,6 @@
         floors: [],
       },
       methods: {
-        readJSON(file, callback) {
-          fetch(file).then((res) => {
-            return res.json().then((data) => {
-              callback(data);
-            });
-          });
-        },
       },
       mounted() {
         const params = JSON.parse(
