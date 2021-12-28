@@ -182,30 +182,31 @@
           });
         },
       },
-      mounted() {
-        this.readJSON("../../data/record/genshin-aby.json", (res) => {
-          this.uid = res.uid;
+        mounted() {
+            const params = JSON.parse(
+                decodeURIComponent(escape(window.atob(new URL(window.location.href).searchParams.get("data")) || "{}"))
+            );
+            this.uid = params.uid;
           this.start_time = formatDate(
-            new Date(res.data.start_time * 1000),
+              new Date(params.data.start_time * 1000),
             "yyyy.MM.dd"
           );
           this.end_time = formatDate(
-            new Date(res.data.end_time * 1000),
+              new Date(params.data.end_time * 1000),
             "yyyy.MM.dd"
           );
-          this.total_battle_times = res.data.total_battle_times;
-          this.max_floor = res.data.max_floor;
-          this.total_star = res.data.total_star;
+            this.total_battle_times = params.data.total_battle_times;
+            this.max_floor = params.data.max_floor;
+            this.total_star = params.data.total_star;
 
-          this.reveal_rank = res.data.reveal_rank;
-          this.defeat_rank = res.data.defeat_rank;
-          this.take_damage_rank = res.data.take_damage_rank;
-          this.normal_skill_rank = res.data.normal_skill_rank;
-          this.energy_skill_rank = res.data.energy_skill_rank;
-          this.damage_rank = res.data.damage_rank;
+            this.reveal_rank = params.data.reveal_rank;
+            this.defeat_rank = params.data.defeat_rank;
+            this.take_damage_rank = params.data.take_damage_rank;
+            this.normal_skill_rank = params.data.normal_skill_rank;
+            this.energy_skill_rank = params.data.energy_skill_rank;
+            this.damage_rank = params.data.damage_rank;
 
-          this.floors = res.data.floors;
-        });
+            this.floors = params.data.floors;
       },
     });
 
