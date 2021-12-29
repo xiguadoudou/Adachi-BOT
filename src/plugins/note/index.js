@@ -181,7 +181,7 @@ async function doSetMYBCookie(msg, uid) {
   if (cookie.indexOf("stuid") == -1 || cookie.indexOf("stoken") == -1 || cookie.indexOf("login_ticket") == -1) {
     let login_ticket = getCookieValue(cookie, "login_ticket");
     let account_id = getCookieValue(cookie, "login_uid");
-    if (account_id == undefined) account_id = getCookieValue(cookie, account_id);
+    if (account_id == undefined) account_id = getCookieValue(cookie, "account_id");
     if (login_ticket == undefined || account_id == undefined)
       return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
     else {
