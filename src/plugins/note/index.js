@@ -154,7 +154,7 @@ async function doSetCookie(msg, uid) {
     if (account_id == undefined) account_id = getCookieValue(cookie, "account_id");
     if (login_ticket != undefined && account_id != undefined) {
       const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
-      cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket};`;
+      cookie = `stuid=${account_id}; stoken=${stoken};`;
       await setMYBCookie(uid, cookie, msg.bot);
     }
     return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
@@ -186,7 +186,7 @@ async function doSetMYBCookie(msg, uid) {
       return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
     else {
       const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
-      cookie = `stuid=${account_id}; stoken=${stoken}; login_ticket=${login_ticket};`;
+      cookie = `stuid=${account_id}; stoken=${stoken};`;
     }
   }
 
