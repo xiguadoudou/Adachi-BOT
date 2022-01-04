@@ -301,18 +301,18 @@ async function Plugin(msg) {
     } else if (hasEntrance(msg.text, "note", "re_sign")) {
       message = await doReSign(msg, uid, region);
     } else if (hasEntrance(msg.text, "note", "sign_in")) {
-        message = await doSign(msg, uid, region);
-        try {
-            if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-                message += `
+      message = await doSign(msg, uid, region);
+      try {
+        if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+          message += `
 ${await doGetMYB(msg, uid, region)}`;
-            }
-        } catch (e) {
-            if ("" !== e) {
-                message += `
-米游币签到：${e}`;
-            }
         }
+      } catch (e) {
+        if ("" !== e) {
+          message += `
+米游币签到：${e}`;
+        }
+      }
     } else if (hasEntrance(msg.text, "note", "set_myb_cookie")) {
       message = await doSetMYBCookie(msg, uid, region);
     } else if (hasEntrance(msg.text, "note", "get_myb")) {
