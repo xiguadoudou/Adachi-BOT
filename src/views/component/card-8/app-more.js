@@ -166,6 +166,8 @@ export default defineComponent({
       let leftNum = (params.avatars.length / 4 - 5) / 2;
       if (leftNum >= 1)
           leftNum = leftNum * 4;
+      else
+          leftNum = 4;
     return {
       data: params,
       nameCard,
