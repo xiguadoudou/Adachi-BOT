@@ -162,11 +162,9 @@ export default defineComponent({
     };
     const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
     const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
-      let leftNum = (params.avatars.length / 4 - 5) / 2;
-      if (leftNum >= 1)
-          leftNum = leftNum * 4;
-      else
-          leftNum = 4;
+    let leftNum = (params.avatars.length / 4 - 5) / 2;
+    if (leftNum >= 1) leftNum = leftNum * 4;
+    else leftNum = 4;
     return {
       data: params,
       nameCard,
@@ -177,7 +175,7 @@ export default defineComponent({
       homeboxTitle,
       hasLevelInfo,
       hasPlayerNameInfo,
-      leftNum
+      leftNum,
     };
   },
 });
