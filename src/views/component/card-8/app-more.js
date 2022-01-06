@@ -48,13 +48,6 @@ const template = `<div class="user-base-page">
         </div>
       </div>
     </div>
-    <div class="container-character">
-      <SectionTitle title="角色展柜" />
-      <div class="container-vertical">
-      <div class="box">
-        <CharacterBox v-for="(a, index) in data.avatars.slice(0,8)" :data="a" />
-      </div>
-    </div>
     <SectionTitle class="bottom-split" :title="homeboxTitle" />
     <div class="bottom">
       <HomeBox :data="homes.hole" />
