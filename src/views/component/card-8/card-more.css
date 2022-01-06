@@ -188,15 +188,15 @@ body {
 }
 
 .character-box-more {
-    position: relative;
-    display: grid;
-    grid-template-rows: 88px 1fr;
-    align-items: center;
-    height: 120px;
-    width: 88px;
-    background-color: rgb(233, 229, 220);
-    border-radius: 6px;
-    box-shadow: 0 2px 4px #00000014;
+  position: relative;
+  display: grid;
+  grid-template-rows: 88px 1fr;
+  align-items: center;
+  height: 120px;
+  width: 88px;
+  background-color: rgb(233, 229, 220);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px #00000014;
 }
 
 .container-character {
