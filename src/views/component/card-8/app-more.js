@@ -55,13 +55,21 @@ const template = `<div class="user-base-page">
       <HomeBox :data="homes.island" />
       <HomeBox :data="homes.hall" />
     </div>
+    <div class="container-character">
+      <SectionTitle title="角色展柜" />
+      <div class="container-vertical">
+      <div class="box">
+        <CharacterBox v-for="(a, index) in data.avatars.slice(0,8)" :data="a" />
+      </div>
+    </div>
+    </div>
   </div>
   <div class="right">
-    <div class="container-character-more">
+    <div class="container-character">
       <SectionTitle title="角色展柜" />
-      <div class="container-vertical-more">
-      <div class="box-more">
-        <CharacterBoxMore v-for="(a, index) in data.avatars.slice(8)" :data="a" />
+      <div class="container-vertical">
+      <div class="box">
+        <CharacterBox v-for="(a, index) in data.avatars.slice(8)" :data="a" />
       </div>
     </div>
     </div>
@@ -78,7 +86,6 @@ const template = `<div class="user-base-page">
 import SectionTitle from "./section-title.js";
 import ExplorationBox from "./exploration.js";
 import CharacterBox from "./character-box.js";
-import CharacterBoxMore from "./character-box-more.js";
 import HomeBox from "./home-box.js";
 
 // eslint-disable-next-line no-undef
@@ -92,7 +99,6 @@ export default defineComponent({
     SectionTitle,
     ExplorationBox,
     CharacterBox,
-    CharacterBoxMore,
     HomeBox,
   },
   setup() {
