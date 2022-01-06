@@ -180,6 +180,13 @@ body {
   margin-top: 5px;
 }
 
+.box-8 {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+}
+
 .container-character {
   width: 100%;
 }
