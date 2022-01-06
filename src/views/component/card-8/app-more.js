@@ -48,19 +48,19 @@ const template = `<div class="user-base-page">
         </div>
       </div>
     </div>
-    <SectionTitle class="bottom-split" :title="homeboxTitle" />
-    <div class="bottom">
-      <HomeBox :data="homes.hole" />
-      <HomeBox :data="homes.mountain" />
-      <HomeBox :data="homes.island" />
-      <HomeBox :data="homes.hall" />
-    </div>
     <div class="container-character">
       <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
         <CharacterBox v-for="(a, index) in data.avatars.slice(0,8)" :data="a" />
       </div>
+    </div>
+    <SectionTitle class="bottom-split" :title="homeboxTitle" />
+    <div class="bottom">
+      <HomeBox :data="homes.hole" />
+      <HomeBox :data="homes.mountain" />
+      <HomeBox :data="homes.island" />
+      <HomeBox :data="homes.hall" />
     </div>
   </div>
   <div class="right">
@@ -99,6 +99,7 @@ export default defineComponent({
     SectionTitle,
     ExplorationBox,
     CharacterBox,
+    CharacterBoxMore,
     HomeBox,
   },
   setup() {
