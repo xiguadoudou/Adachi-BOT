@@ -48,8 +48,8 @@ async function doPackage(msg) {
     data.qqid = qqid;
   }
 
-  //if (data.avatars !== undefined && data.avatars.length > 8) render(msg, data, "genshin-card");
-  //else
+  if (data.avatars !== undefined && data.avatars.length > 8) render(msg, data, "genshin-card-more");
+  else
   render(msg, data, "genshin-card-8");
 }
 
