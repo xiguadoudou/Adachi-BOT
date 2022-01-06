@@ -177,7 +177,7 @@ export default defineComponent({
       homeboxTitle,
       hasLevelInfo,
       hasPlayerNameInfo,
-      leftNum
+      leftNum,
     };
   },
 });
