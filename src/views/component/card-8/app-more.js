@@ -59,7 +59,7 @@ const template = `<div class="user-base-page">
       <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
-        <CharacterBox v-for="(a, index) in data.avatars.slice(0,8)" :data="a" />
+        <CharacterBox v-for="(a, index) in data.avatars.slice(0,leftNum)" :data="a" />
       </div>
     </div>
     </div>
@@ -69,7 +69,7 @@ const template = `<div class="user-base-page">
       <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
-        <CharacterBox v-for="(a, index) in data.avatars.slice(8)" :data="a" />
+        <CharacterBox v-for="(a, index) in data.avatars.slice(leftNum)" :data="a" />
       </div>
     </div>
     </div>
@@ -163,7 +163,9 @@ export default defineComponent({
     };
     const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
     const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
-
+      let leftNum = (params.avatars.length / 4 - 5) / 2;
+      if (leftNum >= 1)
+          leftNum = leftNum * 4;
     return {
       data: params,
       nameCard,
@@ -174,6 +176,7 @@ export default defineComponent({
       homeboxTitle,
       hasLevelInfo,
       hasPlayerNameInfo,
+      leftNum
     };
   },
 });
