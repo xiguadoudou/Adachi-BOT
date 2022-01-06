@@ -55,9 +55,9 @@ const template = `<div class="user-base-page">
       <HomeBox :data="homes.island" />
       <HomeBox :data="homes.hall" />
     </div>
-    <div class="container-character">
+    <div class="container-character-8">
       <SectionTitle title="角色展柜" />
-      <div class="container-vertical">
+      <div class="container-vertical-8">
       <div class="box">
         <CharacterBox v-for="(a, index) in data.avatars.slice(0,8)" :data="a" />
       </div>
@@ -65,6 +65,7 @@ const template = `<div class="user-base-page">
   </div>
   <div class="right">
     <div class="container-character">
+      <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
         <CharacterBox v-for="(a, index) in data.avatars.slice(8)" :data="a" />
