@@ -65,10 +65,9 @@ const template = `<div class="user-base-page">
   </div>
   <div class="right">
     <div class="container-character">
-      <SectionTitle title="角色展柜" />
       <div class="container-vertical">
       <div class="box">
-        <CharacterBox v-for="(a, index) in data.avatars.slice(7)" :data="a" />
+        <CharacterBox v-for="(a, index) in data.avatars.slice(8)" :data="a" />
       </div>
     </div>
     </div>
