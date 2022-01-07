@@ -257,6 +257,13 @@
           document.getElementById("rrt").innerHTML = "树脂将在 " + getDayTime(myDate, rrt) + " 回满";
         }
 
+          const hcrt = parseInt(params.note.home_coin_recovery_time) + (params.baseTime - nowTime) / 1000;
+          if (hcrt <= 0) {
+              document.getElementById("resin").innerHTML += "<br />" + params.note.max_home_coin + "/" + params.note.max_home_coin;
+          } else {
+              document.getElementById("resin").innerHTML += "<br />" + params.note.current_home_coin + "/" + params.note.max_home_coin + "<br />将在" + getDayTime(myDate, hcrt) + " 回满";
+          }
+
         const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
 
         if (task == -1) {
