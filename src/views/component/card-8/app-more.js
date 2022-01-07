@@ -68,7 +68,7 @@ const template = `<div class="user-base-page">
     <div class="container-character">
       <div class="container-vertical">
       <div class="box">
-        <CharacterBox v-for="a in data.avatars.slice(0,8)" :data="a" />
+        <CharacterBox v-for="a in data.avatars.slice(leftNum)" :data="a" />
       </div>
     </div>
     </div>
