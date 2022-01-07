@@ -83,6 +83,17 @@
         font-size: 30px;
       }
 
+        #hcrt {
+            position: absolute;
+            width: 300px;
+            height: 40px;
+            left: 240px;
+            top: 560px;
+            color: #7b8386;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
       #ert {
         position: absolute;
         width: 258px;
@@ -207,25 +218,26 @@
   </head>
 
   <body>
-    <div class="app">
-      <div id="date"></div>
-      <div id="rrt"></div>
-      <div id="resin"></div>
-      <div id="task"></div>
-      <div id="rrd"></div>
-      <div id="hc"></div>
-      <div id="ert"></div>
-      <div id="e1"></div>
-      <div id="e2"></div>
-      <div id="e3"></div>
-      <div id="e4"></div>
-      <div id="e5"></div>
-      <img id="e1_img" style="visibility: hidden" />
-      <img id="e2_img" style="visibility: hidden" />
-      <img id="e3_img" style="visibility: hidden" />
-      <img id="e4_img" style="visibility: hidden" />
-      <img id="e5_img" style="visibility: hidden" />
-    </div>
+      <div class="app">
+          <div id="date"></div>
+          <div id="rrt"></div>
+          <div id="resin"></div>
+          <div id="task"></div>
+          <div id="rrd"></div>
+          <div id="hc"></div>
+          <div id="hcrt"></div>
+          <div id="ert"></div>
+          <div id="e1"></div>
+          <div id="e2"></div>
+          <div id="e3"></div>
+          <div id="e4"></div>
+          <div id="e5"></div>
+          <img id="e1_img" style="visibility: hidden" />
+          <img id="e2_img" style="visibility: hidden" />
+          <img id="e3_img" style="visibility: hidden" />
+          <img id="e4_img" style="visibility: hidden" />
+          <img id="e5_img" style="visibility: hidden" />
+      </div>
     <script type="text/javascript">
       Date.prototype.Format = function (fmt) {
         //author: meizz
@@ -272,16 +284,16 @@
         const hcrt = parseInt(params.note.home_coin_recovery_time) + (params.baseTime - nowTime) / 1000;
         if (hcrt <= 0) {
           document.getElementById("hc").innerHTML +=
-            "<br />" + params.note.max_home_coin + "/" + params.note.max_home_coin;
+              "<br />" + params.note.max_home_coin + "/" + params.note.max_home_coin;
+            document.getElementById("hcrt").innerHTML = "";
         } else {
           document.getElementById("hc").innerHTML +=
             "<br />" +
             params.note.current_home_coin +
             "/" +
-            params.note.max_home_coin +
-            "<br />" +
-            new Date(parseInt(myDate.valueOf() + hcrt * 1000)).Format("M月d日 hh:mm:ss") +
-            "";
+            params.note.max_home_coin;
+            document.getElementById("hcrt").innerHTML = new Date(parseInt(myDate.valueOf() + hcrt * 1000)).Format("M月d日 hh:mm:ss") +
+                "回满";
         }
 
         const task = params.note.is_extra_task_reward_received ? -1 : params.note.finished_task_num;
