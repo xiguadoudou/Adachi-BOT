@@ -68,7 +68,7 @@ const template = `<div class="user-base-page">
     <div class="container-character">
       <div class="container-vertical">
       <div class="box">
-        <CharacterBox v-for="(a, index) in data.avatars.slice(leftNum)" :data="a" />
+        <CharacterBox v-for="a in data.avatars.slice(0,8)" :data="a" />
       </div>
     </div>
     </div>
@@ -92,90 +92,54 @@ const { defineComponent, computed } = Vue;
 import { getParams } from "../common/param.js";
 
 export default defineComponent({
-  name: "Card8Box",
-  template,
-  components: {
-    SectionTitle,
-    ExplorationBox,
-    CharacterBox,
-    HomeBox,
-  },
-  setup() {
-    const params = getParams(window.location.href);
+    name: "Card8Box",
+    template,
+    components: {
+        SectionTitle,
+        ExplorationBox,
+        CharacterBox,
+        HomeBox,
+    },
+    setup() {
+        const params = getParams(window.location.href);
 
-    function findArea(id) {
-      return params.explorations.find((el) => el.id === id);
-    }
+        const hasLevelInfo = params.level !== -1;
+        const hasPlayerNameInfo = params.nickname !== "";
+        const target = params.avatars[Math.floor(Math.random() * params.avatars.length)];
+        const ye = { 10000005: "旅行者男", 10000007: "旅行者女" };
+        const name = ye[target.id] || target.name;
+        const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
+        const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${id}.png`);
+        const character = computed(() => `http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
+        const explorations = params.explorations.reverse();
 
-    const hasLevelInfo = params.level !== -1;
-    const hasPlayerNameInfo = params.nickname !== "";
-    const target = params.avatars[Math.floor(Math.random() * params.avatars.length)];
-    const ye = { 10000005: "旅行者男", 10000007: "旅行者女" };
-    const name = ye[target.id] || target.name;
-    const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
-    const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${id}.png`);
-    const character = computed(() => `http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
-    const level = (l) => "Lv." + l;
-    const percentage = (p) => p / 10 + "%";
-    const explorations = [
-      {
-        name: "mondstadt",
-        prop: {
-          探索: percentage(findArea(1).exploration_percentage),
-          声望: level(findArea(1).level),
-        },
-      },
-      {
-        name: "liyue",
-        prop: {
-          探索: percentage(findArea(2).exploration_percentage),
-          声望: level(findArea(2).level),
-        },
-      },
-      {
-        name: "inazuma",
-        prop: {
-          探索: percentage(findArea(4).exploration_percentage),
-          声望: level(findArea(4).level),
-          神樱: level(findArea(4).offerings.find((el) => el.name === "神樱眷顾").level),
-        },
-      },
-      {
-        name: "dragonspine",
-        prop: {
-          探索: percentage(findArea(3).exploration_percentage),
-          供奉: level(findArea(3).offerings.find((el) => el.name === "忍冬之树").level),
-        },
-      },
-    ];
+        function homeData(name) {
+            const d = params.homes.find((el) => el.name === name);
+            return d || { name, level: -1 };
+        }
 
-    function homeData(name) {
-      const d = params.homes.find((el) => el.name === name);
-      return d || { name, level: -1 };
-    }
-
-    const homes = {
-      hole: homeData("罗浮洞"),
-      mountain: homeData("翠黛峰"),
-      island: homeData("清琼岛"),
-      hall: homeData("绘绮庭"),
-    };
-    const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
-    const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
-    let leftNum = parseInt((params.avatars.length / 4 - 5 + 1) / 2);
-    if (leftNum >= 1) leftNum = leftNum * 4;
-    else leftNum = 4;
-    return {
-      data: params,
-      nameCard,
-      character,
-      explorations,
-      stats: params.stats,
-      homes,
-      homeboxTitle,
-      hasLevelInfo,
-      hasPlayerNameInfo,
-      leftNum,
-    };
-  },
+        const homes = {
+            hole: homeData("罗浮洞"),
+            mountain: homeData("翠黛峰"),
+            island: homeData("清琼岛"),
+            hall: homeData("绘绮庭"),
+        };
+        const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
+        const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
+        let leftNum = parseInt((params.avatars.length / 4 - 5 + 1) / 2);
+        if (leftNum >= 1) leftNum = leftNum * 4;
+        else leftNum = 4;
+        return {
+            data: params,
+            nameCard,
+            character,
+            explorations,
+            stats: params.stats,
+            homes,
+            homeboxTitle,
+            hasLevelInfo,
+            hasPlayerNameInfo,
+            leftNum,
+        };
+    },
 });
