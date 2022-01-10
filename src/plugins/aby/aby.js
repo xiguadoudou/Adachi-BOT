@@ -1,4 +1,3 @@
-import lodash from "lodash";
 import db from "../../utils/database.js";
 import { render } from "../../utils/render.js";
 import { abyDetail, baseDetail, handleDetailError } from "../../utils/detail.js";
@@ -6,7 +5,6 @@ import { getID } from "../../utils/id.js";
 
 async function doAby(msg, schedule_type = 1) {
   let dbInfo = getID(msg.text, msg.uid, false); // UID
-  let abyInfo;
 
   if ("string" === typeof dbInfo) {
     msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
@@ -33,7 +31,7 @@ async function doAby(msg, schedule_type = 1) {
       }
     }
 
-    abyInfo = await abyDetail(...dbInfo, msg.uid, schedule_type.toString(), msg.bot);
+    await abyDetail(...dbInfo, msg.uid, schedule_type.toString(), msg.bot);
   } catch (e) {
     if (true === handleDetailError(msg, e)) {
       return;
@@ -41,29 +39,7 @@ async function doAby(msg, schedule_type = 1) {
   }
 
   const data = db.get("aby", "user", { uid: dbInfo[0] });
-
-  if (lodash.hasIn(data, "data")) {
-    if (undefined === data.data.max_floor || "0-0" === data.data.max_floor) {
-      msg.bot.say(msg.sid, "您似乎未挑战深境螺旋。", msg.type, msg.uid, true);
-      return;
-    }
-
-    if (Array.isArray(data.data.floors) && 0 === data.data.floors.length) {
-      msg.bot.say(msg.sid, "无渊月螺旋记录。", msg.type, msg.uid, true);
-      return;
-    }
-    //if (Array.isArray(data.data.floors) && data.data.floors.length !== 0 && msg.uid == 1430178210) {
-    //  if (data.data.floors[0]["levels"].length !== 0) {
-    //    render(msg, data, "genshin-aby-old");
-    //    return;
-    //  }
-    //}
-    render(msg, data, "genshin-aby");
-    return;
-  }
-
-  msg.bot.say(msg.sid, "没有查询到深渊信息。", msg.type, msg.uid, true);
-  return;
+  render(msg, data, "genshin-aby");
 }
 
 export { doAby };
