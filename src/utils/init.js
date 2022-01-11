@@ -103,7 +103,7 @@ async function init() {
   schedule.scheduleJob("*/5 * * * *", () => mysNewsJob());
   schedule.scheduleJob("1 */1 * * *", () => cleanDBJob());
   schedule.scheduleJob("0 */1 * * *", () => updateGachaJob());
-  schedule.scheduleJob("*/10 2-23 * * *", () => autoSignIn());
+  schedule.scheduleJob("*/10 1-23 * * *", () => autoSignIn());
 }
 
 export { init };

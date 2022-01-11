@@ -722,7 +722,7 @@ async function autoSignIn() {
             } catch (e) {
               if ("" !== e) {
                 message += `
-            米游币签到：${e}`;
+米游币签到：${e}`;
               }
             }
           }
