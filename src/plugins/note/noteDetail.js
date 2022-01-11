@@ -686,7 +686,7 @@ async function autoSignIn() {
     say = false;
     status = record.status;
     if (!record.auto) continue;
-    if (record.data && record.date == today) continue;
+    if (record.date == today) continue;
     global.bots.logger.debug(`${record.qq} 签到 ${record.uid}`);
     msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
     uid = record.uid;
