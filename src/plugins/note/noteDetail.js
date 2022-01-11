@@ -671,72 +671,69 @@ async function autoSay(sid, uid, type, text) {
 }
 
 async function autoSignIn() {
-    global.bots.logger.debug(`开始自动签到`);
-    const records = db.get("note", "auto");
-    if (undefined === records || !Array.isArray(records)) {
-        return;
-    }
-    global.bots.logger.debug(`有${records.length}个用户需要签到`);
-    const today = new Date().toLocaleDateString();
-    let record, message, cookie, say, status, msg, uid, region, num;
-    num = 0;
+  global.bots.logger.debug(`开始自动签到`);
+  const records = db.get("note", "auto");
+  if (undefined === records || !Array.isArray(records)) {
+    return;
+  }
+  global.bots.logger.debug(`有${records.length}个用户需要签到`);
+  const today = new Date().toLocaleDateString();
+  let record, message, cookie, say, status, msg, uid, region, num;
+  num = 0;
 
-    for (let i = 0, len = records.length; i < len; ++i) {
-        record = records[i];
-        say = false;
-        status = record.status;
-        if (!record.auto)
-            continue;
-        if (record.data && record.date == today)
-            continue;
-        global.bots.logger.debug(`${record.qq} 签到 ${record.uid}`);
-        msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
-        uid = record.uid;
-        region = record.region;
-        //if (record.status != 1 && record.status != 0)
-        //    continue;
-        cookie = getUserCookie(record.uid);
-        say = true;
-        if (cookie == undefined) {
-            message = `自动签到出错：未设置私人Cookie`;
-            if (status == 0) {
-                message += `。关闭自动签到`;
-                db.update("note", "auto", { qq: record.qq }, { auto: false });
-            } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
-        } else {
-            try {
-                message = await doSign(msg, uid, region);
-                status = 1;
-                num++;
-            } catch (e) {
-                if ("" !== e) {
-                    message += `
+  for (let i = 0, len = records.length; i < len; ++i) {
+    record = records[i];
+    say = false;
+    status = record.status;
+    if (!record.auto) continue;
+    if (record.data && record.date == today) continue;
+    global.bots.logger.debug(`${record.qq} 签到 ${record.uid}`);
+    msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
+    uid = record.uid;
+    region = record.region;
+    //if (record.status != 1 && record.status != 0)
+    //    continue;
+    cookie = getUserCookie(record.uid);
+    say = true;
+    if (cookie == undefined) {
+      message = `自动签到出错：未设置私人Cookie`;
+      if (status == 0) {
+        message += `。关闭自动签到`;
+        db.update("note", "auto", { qq: record.qq }, { auto: false });
+      } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
+    } else {
+      try {
+        message = await doSign(msg, uid, region);
+        status = 1;
+        num++;
+      } catch (e) {
+        if ("" !== e) {
+          message += `
 签到：${e}`;
-                }
-                if (status == 0) {
-                    message += `。关闭自动签到`;
-                    db.update("note", "auto", { qq: record.qq }, { auto: false });
-                } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
-            }
-            try {
-                if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-                    message += `
-            ${await doGetMYB(msg, uid, region)}`;
-                }
-            } catch (e) {
-                if ("" !== e) {
-                    message += `
-米游币签到：${e}`;
-                }
-            }
         }
-
-        if (status == 1) db.update("note", "auto", { qq: record.qq }, { date: today, status });
-        if (say) autoSay(record.sid, record.qq, record.type, message);
-        if (num >= 10) return;
+        if (status == 0) {
+          message += `。关闭自动签到`;
+          db.update("note", "auto", { qq: record.qq }, { auto: false });
+        } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
+      }
+      try {
+        if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+          message += `
+            ${await doGetMYB(msg, uid, region)}`;
+        }
+      } catch (e) {
+        if ("" !== e) {
+          message += `
+米游币签到：${e}`;
+        }
+      }
     }
-}
 
+    if (status == 1) db.update("note", "auto", { qq: record.qq }, { date: today, status });
+    if (say) autoSay(record.sid, record.qq, record.type, message);
+    if (num >= 10) return;
+  }
+}
 
 export {
   notePromise,
