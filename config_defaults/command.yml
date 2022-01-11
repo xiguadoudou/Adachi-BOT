@@ -506,14 +506,14 @@ note:
         - ^图片便签
     auto_sign_in:
       weights: 9701
-      name:
+      name: 开启自动签到
       usage:
       description:
       entrance:
         - ^开启自动签到
     cancel_auto_sign_in:
       weights: 9700
-      name:
+      name: 关闭自动签到
       usage:
       description:
       entrance:
