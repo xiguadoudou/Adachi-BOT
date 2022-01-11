@@ -697,7 +697,7 @@ function autoSignIn() {
             } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
           } else {
             try {
-              message = await doSign(msg, uid, region);
+              //message = await doSign(msg, uid, region);
               status = 1;
             } catch (e) {
               if ("" !== e) {
