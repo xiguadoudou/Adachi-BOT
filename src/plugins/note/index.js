@@ -10,8 +10,8 @@ import {
   signInPromise,
   resignInPromise,
   ledgerPromise,
-    setUserCookie,
-    getUserCookie,
+  setUserCookie,
+  getUserCookie,
   mybCookiePromise,
   mybStatePromise,
   getPostListPromise,
@@ -21,9 +21,9 @@ import {
   setMYBCookie,
   mybSignPromise,
   getMYBCookie,
-    setCacheTimeout,
-    isAuto,
-    changeAuto,
+  setCacheTimeout,
+  isAuto,
+  changeAuto,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
