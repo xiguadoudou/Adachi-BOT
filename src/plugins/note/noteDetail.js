@@ -671,10 +671,12 @@ async function autoSay(sid, uid, type, text) {
 }
 
 async function autoSignIn() {
+  global.bots.logger.debug(`开始自动签到`);
   const records = db.get("note", "auto");
   if (undefined === records || !Array.isArray(records)) {
     return;
   }
+  global.bots.logger.debug(`有${records.length}个用户需要签到`);
   const today = new Date().toLocaleDateString();
   let record, message, cookie, say, status, msg, uid, region;
   for (let i = 0, len = records.length; i < len; ++i) {
