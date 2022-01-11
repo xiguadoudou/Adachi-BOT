@@ -49,6 +49,21 @@ async function setUserCookie(user, userCookie, bot) {
   await db.update("note", "cookie", { user }, { cookie: userCookie });
 }
 
+async function isAuto(user, bot) {
+    if (!(await db.includes("note", "cookie", "user", user))) {
+        return false;
+    }
+    let { auto } = await db.get("note", "cookie", { user });
+    return auto;
+}
+
+async function changeAuto(user, flag, bot) {
+    if (!(await db.includes("note", "cookie", "user", user))) {
+        return;
+    }
+    await db.update("note", "cookie", { user }, { auto: flag });
+}
+
 async function getMYBCookie(user, bot) {
   if (!(await db.includes("note", "myb", "user", user))) {
     return undefined;
@@ -521,7 +536,8 @@ export {
   signInPromise,
   resignInPromise,
   ledgerPromise,
-  setUserCookie,
+    setUserCookie,
+    getUserCookie,
   mybCookiePromise,
   mybStatePromise,
   getPostListPromise,
@@ -531,5 +547,7 @@ export {
   setMYBCookie,
   mybSignPromise,
   getMYBCookie,
-  setCacheTimeout,
+    setCacheTimeout,
+    isAuto,
+    changeAuto,
 };

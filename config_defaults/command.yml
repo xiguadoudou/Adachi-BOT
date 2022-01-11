@@ -468,6 +468,8 @@ note:
     - ^上月札记\s*$
     - ^上上月札记\s*$
     - ^补签\s*$
+    - ^开启自动签到\s*$
+    - ^关闭自动签到\s*$
   functions:
     set_user_cookie:
       weights: 9999
@@ -502,6 +504,20 @@ note:
       description:
       entrance:
         - ^图片便签
+    auto_sign_in:
+      weights: 9701
+      name:
+      usage:
+      description:
+      entrance:
+        - ^开启自动签到
+    cancel_auto_sign_in:
+      weights: 9700
+      name:
+      usage:
+      description:
+      entrance:
+        - ^关闭自动签到
     set_myb_cookie:
       weights: 9299
       name: 米游币Cookie

@@ -10,7 +10,8 @@ import {
   signInPromise,
   resignInPromise,
   ledgerPromise,
-  setUserCookie,
+    setUserCookie,
+    getUserCookie,
   mybCookiePromise,
   mybStatePromise,
   getPostListPromise,
@@ -20,7 +21,9 @@ import {
   setMYBCookie,
   mybSignPromise,
   getMYBCookie,
-  setCacheTimeout,
+    setCacheTimeout,
+    isAuto,
+    changeAuto,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
@@ -323,8 +326,22 @@ ${await doGetMYB(msg, uid, region)}`;
       hasEntrance(msg.text, "note", "lastlastledger")
     ) {
       message = await doLedger(msg, uid, region);
-    } else if (hasEntrance(msg.text, "note", "get_pic_note")) {
-      message = await doPicNote(msg, uid, region);
+    } else if (hasEntrance(msg.text, "note", "auto_sign_in")) {
+        if (await getUserCookie(uid, msg.bot) == undefined) {
+            message = `未设置私人Cookie`;
+        } else if (await isAuto(uid, msg.bot) == true) {
+            message = `请勿重复开启`;
+        } else {
+            await changeAuto(uid, true, msg.bot);
+            message = `已开启自动签到`;
+        }
+    } else if (hasEntrance(msg.text, "note", "cancel_auto_sign_in")) {
+        if (await isAuto(uid, msg.bot) == true) {
+            await changeAuto(uid, false, msg.bot);
+            message = `已关闭自动签到`;
+        } else {
+            message = `未开启自动签到`;
+        }
     } else if (hasEntrance(msg.text, "note", "del_user_cookie")) {
       await setUserCookie(uid, "", msg.bot);
       setCacheTimeout(msg.uid, msg.bot);
