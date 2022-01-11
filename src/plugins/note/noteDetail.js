@@ -696,19 +696,19 @@ function autoSignIn() {
               db.update("note", "auto", { qq: record.qq }, { auto: false });
             } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
           } else {
-//            try {
-//              message = await doSign(msg, uid, region);
-//            } catch (e) {
-//              if ("" !== e) {
-//                message += `
-//签到：${e}`;
-//              }
-//              if (status == 0) {
-//                message += `。关闭自动签到`;
-//                db.update("note", "auto", { qq: record.qq }, { auto: false });
-//              } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
-//            }
-//            status = 1;
+            try {
+                message = await doSign(msg, uid, region);
+                status = 1;
+            } catch (e) {
+              if ("" !== e) {
+                message += `
+签到：${e}`;
+              }
+              if (status == 0) {
+                message += `。关闭自动签到`;
+                db.update("note", "auto", { qq: record.qq }, { auto: false });
+              } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
+            }
 //            try {
 //              message = await doSign(msg, uid, region);
 //              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
