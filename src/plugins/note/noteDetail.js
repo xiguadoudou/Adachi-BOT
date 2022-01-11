@@ -670,7 +670,7 @@ async function autoSay(sid, uid, type, text) {
   }
 }
 
-function autoSignIn() {
+async function autoSignIn() {
   const records = db.get("note", "auto");
   if (undefined === records || !Array.isArray(records)) {
     return;
@@ -697,7 +697,7 @@ function autoSignIn() {
             } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
           } else {
             try {
-              //message = await doSign(msg, uid, region);
+              message = await doSign(msg, uid, region);
               status = 1;
             } catch (e) {
               if ("" !== e) {
@@ -709,18 +709,17 @@ function autoSignIn() {
                 db.update("note", "auto", { qq: record.qq }, { auto: false });
               } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
             }
-            //            try {
-            //              message = await doSign(msg, uid, region);
-            //              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-            //                message += `
-            //${await doGetMYB(msg, uid, region)}`;
-            //              }
-            //            } catch (e) {
-            //              if ("" !== e) {
-            //                message += `
-            //米游币签到：${e}`;
-            //              }
-            //            }
+                        try {
+                          if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+                            message += `
+            ${await doGetMYB(msg, uid, region)}`;
+                          }
+                        } catch (e) {
+                          if ("" !== e) {
+                            message += `
+            米游币签到：${e}`;
+                          }
+                        }
           }
         }
         db.update("note", "auto", { qq: record.qq }, { date: today, status });
