@@ -21,15 +21,6 @@ import {
   doGetMYB,
 } from "./noteDetail.js";
 
-function getTime(s, offset) {
-  if (s + offset < 0) return [0, 0, 0, 0];
-  const sec = parseInt(s + offset);
-  const min = parseInt(sec / 60);
-  const hour = parseInt(min / 60);
-  const day = parseInt(hour / 24);
-  return [day, hour % 24, min % 60, sec % 60];
-}
-
 async function doReSign(msg, uid, region) {
   let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
   if (!signInfo.is_sign) {
