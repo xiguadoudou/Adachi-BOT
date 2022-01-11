@@ -534,6 +534,16 @@ function setCacheTimeout(uid, bot) {
   }
 }
 
+async function autoSay(sid,uid,type,text) {
+    for (const bot of global.bots) {
+        await bot.say(sid, text, type, uid);
+    }
+}
+
+function autoSignIn() {
+
+}
+
 export {
   notePromise,
   signInfoPromise,
@@ -555,5 +565,6 @@ export {
   getMYBCookie,
   setCacheTimeout,
   isAuto,
-  changeAuto,
+    changeAuto,
+    autoSignIn,
 };

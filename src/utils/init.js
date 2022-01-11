@@ -4,6 +4,7 @@ import db from "./database.js";
 import { renderClose } from "./render.js";
 import { mysNewsNotice } from "./notice.js";
 import { gachaUpdate, mysNewsUpdate } from "./update.js";
+import { autoSignIn } from "../plugins/note/noteDetail.js";
 
 let postRunning = false;
 
@@ -102,6 +103,7 @@ async function init() {
   schedule.scheduleJob("*/5 * * * *", () => mysNewsJob());
   schedule.scheduleJob("1 */1 * * *", () => cleanDBJob());
   schedule.scheduleJob("0 */1 * * *", () => updateGachaJob());
+  schedule.scheduleJob("*/10 2-23 * * *", () => autoSignIn());
 }
 
 export { init };
