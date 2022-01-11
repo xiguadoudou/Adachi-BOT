@@ -697,8 +697,8 @@ function autoSignIn() {
             } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
           } else {
             try {
-                message = await doSign(msg, uid, region);
-                status = 1;
+              message = await doSign(msg, uid, region);
+              status = 1;
             } catch (e) {
               if ("" !== e) {
                 message += `
@@ -709,18 +709,18 @@ function autoSignIn() {
                 db.update("note", "auto", { qq: record.qq }, { auto: false });
               } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
             }
-//            try {
-//              message = await doSign(msg, uid, region);
-//              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-//                message += `
-//${await doGetMYB(msg, uid, region)}`;
-//              }
-//            } catch (e) {
-//              if ("" !== e) {
-//                message += `
-//米游币签到：${e}`;
-//              }
-//            }
+            //            try {
+            //              message = await doSign(msg, uid, region);
+            //              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+            //                message += `
+            //${await doGetMYB(msg, uid, region)}`;
+            //              }
+            //            } catch (e) {
+            //              if ("" !== e) {
+            //                message += `
+            //米游币签到：${e}`;
+            //              }
+            //            }
           }
         }
         db.update("note", "auto", { qq: record.qq }, { date: today, status });
