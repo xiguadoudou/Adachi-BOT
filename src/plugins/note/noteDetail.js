@@ -682,7 +682,7 @@ function autoSignIn() {
     say = false;
     if (record.auto == true) {
       if (record.date && record.date != today) {
-          msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
+        msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
         uid = record.uid;
         region = record.region;
         status = record.status;
