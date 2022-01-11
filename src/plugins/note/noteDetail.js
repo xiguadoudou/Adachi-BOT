@@ -683,9 +683,9 @@ async function autoSignIn() {
   for (let i = 0, len = records.length; i < len; ++i) {
     record = records[i];
     say = false;
-    global.bots.logger.debug(`${record.qq} ${record.auto}`);
     if (record.auto == true) {
       if (!record.date || record.date != today) {
+        global.bots.logger.debug(`${record.qq} 签到 ${record.uid}`);
         msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
         uid = record.uid;
         region = record.region;
