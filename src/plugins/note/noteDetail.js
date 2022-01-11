@@ -58,15 +58,20 @@ async function isAuto(msg) {
   return { auto, status };
 }
 
-async function changeAuto(uid,flag, msg) {
+async function changeAuto(uid, flag, msg) {
   if (!(await db.includes("note", "auto", "qq", msg.uid))) {
     if (flag) {
-        const initData = { qq: msg.uid, auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date: "" };
+      const initData = { qq: msg.uid, auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date: "" };
       await db.push("note", "auto", initData);
     }
     return;
   }
-  await db.update("note", "auto", { qq: msg.uid }, { auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date:"" });
+  await db.update(
+    "note",
+    "auto",
+    { qq: msg.uid },
+    { auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date: "" }
+  );
 }
 
 async function getMYBCookie(user, bot) {
@@ -535,213 +540,212 @@ function setCacheTimeout(uid, bot) {
 }
 
 async function checkReSign(msg, uid, region) {
-    let resignInfo = await resignInfoPromise(uid, region, msg.uid, msg.bot);
-    if (resignInfo.sign_cnt_missed > 0) {
-        return `
+  let resignInfo = await resignInfoPromise(uid, region, msg.uid, msg.bot);
+  if (resignInfo.sign_cnt_missed > 0) {
+    return `
 本月漏签${resignInfo.sign_cnt_missed}天
 米游币数量：${resignInfo.coin_cnt}
-${resignInfo.coin_cnt >= resignInfo.coin_cost &&
-                resignInfo.resign_cnt_daily < resignInfo.resign_limit_daily &&
-                resignInfo.resign_cnt_monthly < resignInfo.resign_limit_monthly
-                ? `可以消耗${resignInfo.coin_cost}米游币进行补签`
-                : ""
-            }`;
-    }
-    return ``;
+${
+  resignInfo.coin_cnt >= resignInfo.coin_cost &&
+  resignInfo.resign_cnt_daily < resignInfo.resign_limit_daily &&
+  resignInfo.resign_cnt_monthly < resignInfo.resign_limit_monthly
+    ? `可以消耗${resignInfo.coin_cost}米游币进行补签`
+    : ""
+}`;
+  }
+  return ``;
 }
 
 async function doSign(msg, uid, region) {
-    let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
-    if (signInfo.is_sign) {
-        return `今日已签到,本月累计签到${signInfo.total_sign_day}天${signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
-            }`;
-    }
-    if (signInfo.first_bind) {
-        return `请先手动签到一次`;
-    }
-    let sign = await signInPromise(uid, region, msg.uid, msg.bot);
-    let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
-    return `
+  let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
+  if (signInfo.is_sign) {
+    return `今日已签到,本月累计签到${signInfo.total_sign_day}天${
+      signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
+    }`;
+  }
+  if (signInfo.first_bind) {
+    return `请先手动签到一次`;
+  }
+  let sign = await signInPromise(uid, region, msg.uid, msg.bot);
+  let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
+  return `
 ${data.month}月累计签到：${signInfo.total_sign_day + 1}天
-今日奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
-        }`;
+今日奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${
+    signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
+  }`;
 }
 
 function getRandomArrayElements(arr, count) {
-    var shuffled = arr.slice(0),
-        i = arr.length,
-        min = i - count,
-        temp,
-        index;
-    while (i-- > min) {
-        index = Math.floor((i + 1) * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
-    }
-    return shuffled.slice(min);
+  var shuffled = arr.slice(0),
+    i = arr.length,
+    min = i - count,
+    temp,
+    index;
+  while (i-- > min) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
 }
 
 async function doGetMYB(msg, uid) {
-    const forums = ["崩坏3", "原神", "崩坏2", "未定事件簿", "大别野"];
-    const states = await mybStatePromise(uid, msg.uid, msg.bot);
-    let continuous_sign = false;
-    let view_post_0 = false;
-    let post_up_0 = false;
-    let share_post_0 = false;
-    for (var state of states) {
-        if (state.mission_key == "continuous_sign") {
-            continuous_sign = state.is_get_award;
-        } else if (state.mission_key == "view_post_0") {
-            view_post_0 = state.is_get_award;
-        } else if (state.mission_key == "post_up_0") {
-            post_up_0 = state.is_get_award;
-        } else if (state.mission_key == "share_post_0") {
-            share_post_0 = state.is_get_award;
-        }
+  const forums = ["崩坏3", "原神", "崩坏2", "未定事件簿", "大别野"];
+  const states = await mybStatePromise(uid, msg.uid, msg.bot);
+  let continuous_sign = false;
+  let view_post_0 = false;
+  let post_up_0 = false;
+  let share_post_0 = false;
+  for (var state of states) {
+    if (state.mission_key == "continuous_sign") {
+      continuous_sign = state.is_get_award;
+    } else if (state.mission_key == "view_post_0") {
+      view_post_0 = state.is_get_award;
+    } else if (state.mission_key == "post_up_0") {
+      post_up_0 = state.is_get_award;
+    } else if (state.mission_key == "share_post_0") {
+      share_post_0 = state.is_get_award;
     }
-    let ret = ` `;
-    if (!continuous_sign) {
-        for (let i = 1; i < 6; i++) {
-            let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
-            ret += `
+  }
+  let ret = ` `;
+  if (!continuous_sign) {
+    for (let i = 1; i < 6; i++) {
+      let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
+      ret += `
 ${forums[i - 1]}:${message}`;
-        }
-    } else {
-        ret += `米游币已签到`;
     }
-    if (!view_post_0 || !post_up_0 || !share_post_0) {
-        const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
-        let post_ids = [];
-        for (let post of posts) {
-            post_ids.push(parseInt(post.post.post_id));
-        }
-        if (!view_post_0) {
-            let n = 0;
-            for (var post_id of getRandomArrayElements(post_ids, 3)) {
-                let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
-                if ("OK" == message) n++;
-                else
-                    ret += `
+  } else {
+    ret += `米游币已签到`;
+  }
+  if (!view_post_0 || !post_up_0 || !share_post_0) {
+    const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
+    let post_ids = [];
+    for (let post of posts) {
+      post_ids.push(parseInt(post.post.post_id));
+    }
+    if (!view_post_0) {
+      let n = 0;
+      for (var post_id of getRandomArrayElements(post_ids, 3)) {
+        let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
+        if ("OK" == message) n++;
+        else
+          ret += `
 ${message}`;
-            }
-            ret += `
+      }
+      ret += `
 浏览（${n}/3）`;
-        }
-        if (!post_up_0) {
-            let n = 0;
-            for (var post_id of getRandomArrayElements(post_ids, 10)) {
-                let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
-                if ("OK" == message) n++;
-                else
-                    ret += `
-${message}`;
-            }
-            ret += `
-点赞（${n}/10）`;
-        }
-        if (!share_post_0) {
-            let n = 0;
-            for (var post_id of getRandomArrayElements(post_ids, 1)) {
-                let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
-                if ("OK" == message) n++;
-                else
-                    ret += `
-${message}`;
-            }
-            ret += `
-分享（${n}/1）`;
-        }
     }
-    return ret;
+    if (!post_up_0) {
+      let n = 0;
+      for (var post_id of getRandomArrayElements(post_ids, 10)) {
+        let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
+        if ("OK" == message) n++;
+        else
+          ret += `
+${message}`;
+      }
+      ret += `
+点赞（${n}/10）`;
+    }
+    if (!share_post_0) {
+      let n = 0;
+      for (var post_id of getRandomArrayElements(post_ids, 1)) {
+        let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
+        if ("OK" == message) n++;
+        else
+          ret += `
+${message}`;
+      }
+      ret += `
+分享（${n}/1）`;
+    }
+  }
+  return ret;
 }
 
 async function autoSay(sid, uid, type, text) {
-    for (const bot of global.bots) {
-        await bot.say(sid, text, type, uid);
-    }
+  for (const bot of global.bots) {
+    await bot.say(sid, text, type, uid);
+  }
 }
 
 function autoSignIn() {
-    const records = db.get("note", "auto");
-    if (undefined === records || !Array.isArray(records)) {
-        return;
-    }
-    const today = new Date().toLocaleDateString();
-    let record, message, cookie, say, status, msg, uid, region;
-    for (let i = 0, len = records.length; i < len; ++i) {
-        record = records[i];
-        say = false;
-        if (record.auto == true) {
-            if (record.date && record.date != today) {
-                msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
-                uid = record.uid;
-                region = record.region;
-                status = record.status;
-                if (record.status == 1 || record.status == 0) {
-                    cookie = getUserCookie(record.uid);
-                    say = true;
-                    if (cookie == undefined) {
-                        message = `自动签到出错：未设置私人Cookie`;
-                        if (status == 0) {
-                            message += `。关闭自动签到`;
-                            db.update("note", "auto", { qq: record.qq }, { auto: false });
-                        }else
-                            db.update("note", "auto", { qq: record.qq }, { status: 0 });
-                    } else {
-                        try {
-                            message = await doSign(msg, uid, region);
-                        } catch (e) {
-                            if ("" !== e) {
-                                message += `
+  const records = db.get("note", "auto");
+  if (undefined === records || !Array.isArray(records)) {
+    return;
+  }
+  const today = new Date().toLocaleDateString();
+  let record, message, cookie, say, status, msg, uid, region;
+  for (let i = 0, len = records.length; i < len; ++i) {
+    record = records[i];
+    say = false;
+    if (record.auto == true) {
+      if (record.date && record.date != today) {
+        msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
+        uid = record.uid;
+        region = record.region;
+        status = record.status;
+        if (record.status == 1 || record.status == 0) {
+          cookie = getUserCookie(record.uid);
+          say = true;
+          if (cookie == undefined) {
+            message = `自动签到出错：未设置私人Cookie`;
+            if (status == 0) {
+              message += `。关闭自动签到`;
+              db.update("note", "auto", { qq: record.qq }, { auto: false });
+            } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
+          } else {
+            try {
+              message = await doSign(msg, uid, region);
+            } catch (e) {
+              if ("" !== e) {
+                message += `
 签到：${e}`;
-                            }
-                            if (status == 0) {
-                                message += `。关闭自动签到`;
-                                db.update("note", "auto", { qq: record.qq }, { auto: false });
-                            } else
-                                db.update("note", "auto", { qq: record.qq }, { status: 0 });
-                        }
-                        status = 1;
-                        try {
-                            message = await doSign(msg, uid, region);
-                            if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-                                message += `
-${await doGetMYB(msg, uid, region)}`;
-                            }
-                        } catch (e) {
-                            if ("" !== e) {
-                                message += `
-米游币签到：${e}`;
-                            }
-                        }
-                    }
-
-                }
-                db.update("note", "auto", { qq: record.qq }, { date: today, status });
+              }
+              if (status == 0) {
+                message += `。关闭自动签到`;
+                db.update("note", "auto", { qq: record.qq }, { auto: false });
+              } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
             }
-            if (say)
-                autoSay(record.sid, record.qq, record.type, message);
+            status = 1;
+            try {
+              message = await doSign(msg, uid, region);
+              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+                message += `
+${await doGetMYB(msg, uid, region)}`;
+              }
+            } catch (e) {
+              if ("" !== e) {
+                message += `
+米游币签到：${e}`;
+              }
+            }
+          }
         }
+        db.update("note", "auto", { qq: record.qq }, { date: today, status });
+      }
+      if (say) autoSay(record.sid, record.qq, record.type, message);
     }
+  }
 }
 
 export {
-    notePromise,
-    signInfoPromise,
-    resignInfoPromise,
-    rewardsPromise,
-    resignInPromise,
-    ledgerPromise,
-    setUserCookie,
-    getUserCookie,
-    mybCookiePromise,
-    setMYBCookie,
-    getMYBCookie,
-    setCacheTimeout,
-    isAuto,
-    changeAuto,
-    doSign,
-    doGetMYB,
-    autoSignIn,
+  notePromise,
+  signInfoPromise,
+  resignInfoPromise,
+  rewardsPromise,
+  resignInPromise,
+  ledgerPromise,
+  setUserCookie,
+  getUserCookie,
+  mybCookiePromise,
+  setMYBCookie,
+  getMYBCookie,
+  setCacheTimeout,
+  isAuto,
+  changeAuto,
+  doSign,
+  doGetMYB,
+  autoSignIn,
 };

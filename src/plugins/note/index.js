@@ -16,9 +16,9 @@ import {
   getMYBCookie,
   setCacheTimeout,
   isAuto,
-    changeAuto,
-    doSign,
-    doGetMYB,
+  changeAuto,
+  doSign,
+  doGetMYB,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
@@ -156,8 +156,6 @@ async function doSetMYBCookie(msg, uid) {
   return ` 已设置米游币cookie`;
 }
 
-
-
 async function Plugin(msg) {
   const dbInfo = await getID(msg.text, msg.uid); // 米游社 ID
   let uid, region;
@@ -205,13 +203,13 @@ ${await doGetMYB(msg, uid, region)}`;
       } else if (auto == true) {
         message = `请勿重复开启`;
       } else {
-          await changeAuto(uid,true, msg);
+        await changeAuto(uid, true, msg);
         message = `已开启自动签到`;
       }
     } else if (hasEntrance(msg.text, "note", "cancel_auto_sign_in")) {
       let { auto } = await isAuto(msg);
       if (auto == true) {
-          await changeAuto(uid,false, msg);
+        await changeAuto(uid, false, msg);
         message = `已关闭自动签到`;
       } else {
         message = `未开启自动签到`;
