@@ -671,16 +671,16 @@ async function autoSay(sid, uid, type, text) {
 }
 
 function autoSignIn() {
-//  const records = db.get("note", "auto");
-//  if (undefined === records || !Array.isArray(records)) {
-//    return;
-//  }
-//  const today = new Date().toLocaleDateString();
-//  let record, message, cookie, say, status, msg, uid, region;
-//  for (let i = 0, len = records.length; i < len; ++i) {
-//    record = records[i];
-//    say = false;
-//    if (record.auto == true) {
+  const records = db.get("note", "auto");
+  if (undefined === records || !Array.isArray(records)) {
+    return;
+  }
+  const today = new Date().toLocaleDateString();
+  let record, message, cookie, say, status, msg, uid, region;
+  for (let i = 0, len = records.length; i < len; ++i) {
+    record = records[i];
+    say = false;
+    if (record.auto == true) {
 //      if (record.date && record.date != today) {
 //        msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
 //        uid = record.uid;
@@ -725,9 +725,9 @@ function autoSignIn() {
 //        }
 //        db.update("note", "auto", { qq: record.qq }, { date: today, status });
 //      }
-//      //if (say) autoSay(record.sid, record.qq, record.type, message);
-//    }
-//  }
+      //if (say) autoSay(record.sid, record.qq, record.type, message);
+    }
+  }
 }
 
 export {
