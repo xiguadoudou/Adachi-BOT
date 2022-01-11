@@ -681,21 +681,21 @@ function autoSignIn() {
     record = records[i];
     say = false;
     if (record.auto == true) {
-//      if (record.date && record.date != today) {
-//        msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
-//        uid = record.uid;
-//        region = record.region;
-//        status = record.status;
-//        if (record.status == 1 || record.status == 0) {
-//          cookie = getUserCookie(record.uid);
-//          say = true;
-//          if (cookie == undefined) {
-//            message = `自动签到出错：未设置私人Cookie`;
-//            if (status == 0) {
-//              message += `。关闭自动签到`;
-//              db.update("note", "auto", { qq: record.qq }, { auto: false });
-//            } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
-//          } else {
+      if (record.date && record.date != today) {
+          msg = { uid: record.qq, sid: record.sid, type: record.type, bot: global.bots };
+        uid = record.uid;
+        region = record.region;
+        status = record.status;
+        if (record.status == 1 || record.status == 0) {
+          cookie = getUserCookie(record.uid);
+          say = true;
+          if (cookie == undefined) {
+            message = `自动签到出错：未设置私人Cookie`;
+            if (status == 0) {
+              message += `。关闭自动签到`;
+              db.update("note", "auto", { qq: record.qq }, { auto: false });
+            } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
+          } else {
 //            try {
 //              message = await doSign(msg, uid, region);
 //            } catch (e) {
@@ -721,11 +721,11 @@ function autoSignIn() {
 //米游币签到：${e}`;
 //              }
 //            }
-//          }
-//        }
-//        db.update("note", "auto", { qq: record.qq }, { date: today, status });
-//      }
-      //if (say) autoSay(record.sid, record.qq, record.type, message);
+          }
+        }
+        db.update("note", "auto", { qq: record.qq }, { date: today, status });
+      }
+      if (say) autoSay(record.sid, record.qq, record.type, message);
     }
   }
 }
