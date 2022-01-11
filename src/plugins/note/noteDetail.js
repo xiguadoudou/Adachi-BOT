@@ -709,17 +709,17 @@ async function autoSignIn() {
                 db.update("note", "auto", { qq: record.qq }, { auto: false });
               } else db.update("note", "auto", { qq: record.qq }, { status: 0 });
             }
-                        try {
-                          if ((await getMYBCookie(uid, msg.bot)) != undefined) {
-                            message += `
+            try {
+              if ((await getMYBCookie(uid, msg.bot)) != undefined) {
+                message += `
             ${await doGetMYB(msg, uid, region)}`;
-                          }
-                        } catch (e) {
-                          if ("" !== e) {
-                            message += `
+              }
+            } catch (e) {
+              if ("" !== e) {
+                message += `
             米游币签到：${e}`;
-                          }
-                        }
+              }
+            }
           }
         }
         db.update("note", "auto", { qq: record.qq }, { date: today, status });
