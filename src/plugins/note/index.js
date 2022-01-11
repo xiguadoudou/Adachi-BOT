@@ -203,13 +203,13 @@ ${await doGetMYB(msg, uid, region)}`;
       } else if (auto == true) {
         message = `请勿重复开启`;
       } else {
-        await changeAuto(uid, true, msg);
+          await changeAuto(uid, region, true, msg);
         message = `已开启自动签到`;
       }
     } else if (hasEntrance(msg.text, "note", "cancel_auto_sign_in")) {
       let { auto } = await isAuto(msg);
       if (auto == true) {
-        await changeAuto(uid, false, msg);
+          await changeAuto(uid, region, false, msg);
         message = `已关闭自动签到`;
       } else {
         message = `未开启自动签到`;

@@ -58,10 +58,10 @@ async function isAuto(msg) {
   return { auto, status };
 }
 
-async function changeAuto(uid, flag, msg) {
+async function changeAuto(uid, region, flag, msg) {
   if (!(await db.includes("note", "auto", "qq", msg.uid))) {
     if (flag) {
-      const initData = { qq: msg.uid, auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date: "" };
+        const initData = { qq: msg.uid, auto: flag, uid: uid, region, sid: msg.sid, type: msg.type, status: 1, date: "" };
       await db.push("note", "auto", initData);
     }
     return;
@@ -70,7 +70,7 @@ async function changeAuto(uid, flag, msg) {
     "note",
     "auto",
     { qq: msg.uid },
-    { auto: flag, uid: uid, sid: msg.sid, type: msg.type, status: 1, date: "" }
+      { auto: flag, uid: uid, region, sid: msg.sid, type: msg.type, status: 1, date: "" }
   );
 }
 
