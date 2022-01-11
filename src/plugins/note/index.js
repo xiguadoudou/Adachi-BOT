@@ -7,23 +7,18 @@ import {
   signInfoPromise,
   resignInfoPromise,
   rewardsPromise,
-  signInPromise,
   resignInPromise,
   ledgerPromise,
   setUserCookie,
   getUserCookie,
   mybCookiePromise,
-  mybStatePromise,
-  getPostListPromise,
-  getPostFullPromise,
-  upVotePostPromise,
-  sharePostPromise,
   setMYBCookie,
-  mybSignPromise,
   getMYBCookie,
   setCacheTimeout,
   isAuto,
-  changeAuto,
+    changeAuto,
+    doSign,
+    doGetMYB,
 } from "./noteDetail.js";
 
 function getTime(s, offset) {
@@ -57,42 +52,6 @@ ${data.month}月累计签到：${signInfo.total_sign_day + 1}天
       : ``
   }
 本月剩余补签次数${resignInfo.resign_limit_monthly - resignInfo.resign_cnt_monthly - 1}`;
-}
-
-async function checkReSign(msg, uid, region) {
-  let resignInfo = await resignInfoPromise(uid, region, msg.uid, msg.bot);
-  if (resignInfo.sign_cnt_missed > 0) {
-    return `
-本月漏签${resignInfo.sign_cnt_missed}天
-米游币数量：${resignInfo.coin_cnt}
-${
-  resignInfo.coin_cnt >= resignInfo.coin_cost &&
-  resignInfo.resign_cnt_daily < resignInfo.resign_limit_daily &&
-  resignInfo.resign_cnt_monthly < resignInfo.resign_limit_monthly
-    ? `可以消耗${resignInfo.coin_cost}米游币进行补签`
-    : ""
-}`;
-  }
-  return ``;
-}
-
-async function doSign(msg, uid, region) {
-  let signInfo = await signInfoPromise(uid, region, msg.uid, msg.bot);
-  if (signInfo.is_sign) {
-    return `今日已签到,本月累计签到${signInfo.total_sign_day}天${
-      signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
-    }`;
-  }
-  if (signInfo.first_bind) {
-    return `请先手动签到一次`;
-  }
-  let sign = await signInPromise(uid, region, msg.uid, msg.bot);
-  let data = await rewardsPromise(uid, region, msg.uid, msg.bot);
-  return `
-${data.month}月累计签到：${signInfo.total_sign_day + 1}天
-今日奖励：${data.awards[signInfo.total_sign_day].name} * ${data.awards[signInfo.total_sign_day].cnt}${
-    signInfo.sign_cnt_missed == 0 ? "" : await checkReSign(msg, uid, region)
-  }`;
 }
 
 async function doLedger(msg, uid, region) {
@@ -197,94 +156,7 @@ async function doSetMYBCookie(msg, uid) {
   return ` 已设置米游币cookie`;
 }
 
-function getRandomArrayElements(arr, count) {
-  var shuffled = arr.slice(0),
-    i = arr.length,
-    min = i - count,
-    temp,
-    index;
-  while (i-- > min) {
-    index = Math.floor((i + 1) * Math.random());
-    temp = shuffled[index];
-    shuffled[index] = shuffled[i];
-    shuffled[i] = temp;
-  }
-  return shuffled.slice(min);
-}
 
-async function doGetMYB(msg, uid) {
-  const forums = ["崩坏3", "原神", "崩坏2", "未定事件簿", "大别野"];
-  const states = await mybStatePromise(uid, msg.uid, msg.bot);
-  let continuous_sign = false;
-  let view_post_0 = false;
-  let post_up_0 = false;
-  let share_post_0 = false;
-  for (var state of states) {
-    if (state.mission_key == "continuous_sign") {
-      continuous_sign = state.is_get_award;
-    } else if (state.mission_key == "view_post_0") {
-      view_post_0 = state.is_get_award;
-    } else if (state.mission_key == "post_up_0") {
-      post_up_0 = state.is_get_award;
-    } else if (state.mission_key == "share_post_0") {
-      share_post_0 = state.is_get_award;
-    }
-  }
-  let ret = ` `;
-  if (!continuous_sign) {
-    for (let i = 1; i < 6; i++) {
-      let { retcode, message, data } = await mybSignPromise(uid, i, msg.uid, msg.bot);
-      ret += `
-${forums[i - 1]}:${message}`;
-    }
-  } else {
-    ret += `米游币已签到`;
-  }
-  if (!view_post_0 || !post_up_0 || !share_post_0) {
-    const posts = await getPostListPromise(uid, 26, msg.uid, msg.bot);
-    let post_ids = [];
-    for (let post of posts) {
-      post_ids.push(parseInt(post.post.post_id));
-    }
-    if (!view_post_0) {
-      let n = 0;
-      for (var post_id of getRandomArrayElements(post_ids, 3)) {
-        let { retcode, message, data } = await getPostFullPromise(uid, post_id, msg.uid, msg.bot);
-        if ("OK" == message) n++;
-        else
-          ret += `
-${message}`;
-      }
-      ret += `
-浏览（${n}/3）`;
-    }
-    if (!post_up_0) {
-      let n = 0;
-      for (var post_id of getRandomArrayElements(post_ids, 10)) {
-        let { retcode, message, data } = await upVotePostPromise(uid, post_id, msg.uid, msg.bot);
-        if ("OK" == message) n++;
-        else
-          ret += `
-${message}`;
-      }
-      ret += `
-点赞（${n}/10）`;
-    }
-    if (!share_post_0) {
-      let n = 0;
-      for (var post_id of getRandomArrayElements(post_ids, 1)) {
-        let { retcode, message, data } = await sharePostPromise(uid, post_id, msg.uid, msg.bot);
-        if ("OK" == message) n++;
-        else
-          ret += `
-${message}`;
-      }
-      ret += `
-分享（${n}/1）`;
-    }
-  }
-  return ret;
-}
 
 async function Plugin(msg) {
   const dbInfo = await getID(msg.text, msg.uid); // 米游社 ID
@@ -333,13 +205,13 @@ ${await doGetMYB(msg, uid, region)}`;
       } else if (auto == true) {
         message = `请勿重复开启`;
       } else {
-        await changeAuto(true, msg);
+          await changeAuto(uid,true, msg);
         message = `已开启自动签到`;
       }
     } else if (hasEntrance(msg.text, "note", "cancel_auto_sign_in")) {
       let { auto } = await isAuto(msg);
       if (auto == true) {
-        await changeAuto(false, msg);
+          await changeAuto(uid,false, msg);
         message = `已关闭自动签到`;
       } else {
         message = `未开启自动签到`;
