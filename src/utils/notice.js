@@ -1,6 +1,7 @@
 import path from "path";
 import lodash from "lodash";
 import db from "./database.js";
+import { checkAuth } from "./auth.js";
 import { getCache } from "./cache.js";
 
 function initDB() {
@@ -39,7 +40,16 @@ async function mysNewsNotice() {
 
       const post = n.post || {};
       const { subject, content } = post;
-      const image = "string" === typeof post.images[0] ? await getCache(post.images[0], cacheDir, "base64") : undefined;
+      let image;
+
+      if ("string" === typeof post.images[0]) {
+        try {
+          image = await getCache(post.images[0], cacheDir, "base64");
+        } catch (e) {
+          // do nothing
+        }
+      }
+
       const imageCQ = undefined !== image ? `[CQ:image,type=image,file=base64://${image}]` : "";
       const url = "string" === typeof post.post_id ? `https://bbs.mihoyo.com/ys/article/${post.post_id}` : "";
       const items = [subject, imageCQ, content, url];
@@ -51,8 +61,13 @@ async function mysNewsNotice() {
         const message = items.filter((c) => "string" === typeof c && "" !== c).join("\n");
 
         for (const bot of global.bots) {
+          const delay = 100;
           let count = 0;
-          bot.gl.forEach((c) => setTimeout(() => bot.say(c.group_id, message, "group"), 50 * count++));
+          bot.gl.forEach((c) => {
+            if (false !== checkAuth({ sid: c.group_id }, global.innerAuthName.mysNews, false)) {
+              setTimeout(() => bot.say(c.group_id, message, "group"), delay * count++);
+            }
+          });
         }
       }
     }
