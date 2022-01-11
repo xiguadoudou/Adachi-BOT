@@ -43,25 +43,30 @@ async function getUserCookie(user, bot) {
 
 async function setUserCookie(user, userCookie, bot) {
   if (!(await db.includes("note", "cookie", "user", user))) {
-    const initData = { user, cookie: "" };
-    await db.push("note", "cookie", initData);
+      const initData = { user, cookie: userCookie };
+      await db.push("note", "cookie", initData);
+      return;
   }
   await db.update("note", "cookie", { user }, { cookie: userCookie });
 }
 
-async function isAuto(user, bot) {
-    if (!(await db.includes("note", "cookie", "user", user))) {
-        return false;
+async function isAuto(msg) {
+    if (!(await db.includes("note", "auto", "qq", msg.uid))) {
+        return { auto:false, status:0};
     }
-    let { auto } = await db.get("note", "cookie", { user });
-    return auto;
+    let { auto, status } = await db.get("note", "auto", { qq: msg.uid });
+    return { auto, status };
 }
 
-async function changeAuto(user, flag, bot) {
-    if (!(await db.includes("note", "cookie", "user", user))) {
+async function changeAuto(flag, msg) {
+    if (!(await db.includes("note", "auto", "qq", msg.uid))) {
+        if (flag) {
+            const initData = { qq: msg.uid, auto: flag, sid: msg.sid, type: msg.type, status:1 };
+            await db.push("note", "auto", initData);
+        }
         return;
     }
-    await db.update("note", "cookie", { user }, { auto: flag });
+    await db.update("note", "auto", { qq: msg.uid }, { auto: flag, sid: msg.sid, type: msg.type, status:1 });
 }
 
 async function getMYBCookie(user, bot) {
@@ -75,8 +80,9 @@ async function getMYBCookie(user, bot) {
 
 async function setMYBCookie(user, userCookie, bot) {
   if (!(await db.includes("note", "myb", "user", user))) {
-    const initData = { user, cookie: "" };
-    await db.push("note", "myb", initData);
+      const initData = { user, cookie: userCookie };
+      await db.push("note", "myb", initData);
+      return;
   }
   await db.update("note", "myb", { user }, { cookie: userCookie });
 }

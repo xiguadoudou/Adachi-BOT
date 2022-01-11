@@ -327,17 +327,19 @@ ${await doGetMYB(msg, uid, region)}`;
     ) {
       message = await doLedger(msg, uid, region);
     } else if (hasEntrance(msg.text, "note", "auto_sign_in")) {
+        let { auto } = await isAuto(msg);
         if (await getUserCookie(uid, msg.bot) == undefined) {
             message = `未设置私人Cookie`;
-        } else if (await isAuto(uid, msg.bot) == true) {
+        } else if (auto == true) {
             message = `请勿重复开启`;
         } else {
-            await changeAuto(uid, true, msg.bot);
+            await changeAuto(true, msg);
             message = `已开启自动签到`;
         }
     } else if (hasEntrance(msg.text, "note", "cancel_auto_sign_in")) {
-        if (await isAuto(uid, msg.bot) == true) {
-            await changeAuto(uid, false, msg.bot);
+        let { auto } = await isAuto(msg);
+        if (auto == true) {
+            await changeAuto(false, msg);
             message = `已关闭自动签到`;
         } else {
             message = `未开启自动签到`;
