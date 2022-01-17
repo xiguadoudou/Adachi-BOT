@@ -1,16 +1,24 @@
 import db from "../../utils/database.js";
+import { getEmoticons } from "../../utils/api.js";
 import { render } from "../../utils/render.js";
 import { baseDetail, characterDetail, handleDetailError, indexDetail } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
 import { filterWordsByRegex } from "../../utils/tools.js";
 
 async function doPackage(msg) {
-  let dbInfo = getID(msg.text, msg.uid, false); // UID
   const args = filterWordsByRegex(msg.text, ...global.command.functions.entrance.package);
+  let dbInfo = getID(msg.text, msg.uid, false); // UID
+  let emoticons;
 
   if ("string" === typeof dbInfo) {
     msg.bot.say(msg.sid, dbInfo, msg.type, msg.uid, true);
     return;
+  }
+
+  try {
+    emoticons = await getEmoticons();
+  } catch (e) {
+    emoticons = [];
   }
 
   try {
@@ -48,8 +56,8 @@ async function doPackage(msg) {
     data.qqid = qqid;
   }
 
-  //if (data.avatars !== undefined && data.avatars.length > 8) render(msg, data, "genshin-card-more");
-  //else
+  data.emoticons = emoticons;
+
   render(msg, data, "genshin-card-8");
 }
 
