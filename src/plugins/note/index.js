@@ -98,7 +98,7 @@ async function doPicNote(msg, uid, region) {
 
 async function doSetCookie(msg, uid) {
   let cookie = msg.text.slice(9);
-  cookie = cookie.replace(new RegExp("'", "gm"), "").replace(new RegExp('"', "gm"), "");
+  cookie = cookie.replace(new RegExp(`['"<>]`, "gm"), "");
   let cookie_token = getCookieValue(cookie, "cookie_token");
   let account_id = getCookieValue(cookie, "account_id");
   let login_ticket = getCookieValue(cookie, "login_ticket");
