@@ -142,7 +142,7 @@ export default defineComponent({
       homeboxTitle,
       hasLevelInfo,
       hasPlayerNameInfo,
-      leftNum:leftNum >= 1 ? leftNum * 4:4,
+      leftNum: leftNum >= 1 ? leftNum * 4 : 4,
     };
   },
 });
