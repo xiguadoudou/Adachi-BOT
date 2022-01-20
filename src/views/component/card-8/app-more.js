@@ -98,37 +98,37 @@ export default defineComponent({
     HomeBox,
   },
   setup() {
-      const params = getParams(window.location.href);
-      // 下面这行是方便前端调试时在「仅展示 8 个角色」和「展示所有角色」之间切换的
-      // params.avatars = params.avatars.slice(0, 8);
+    const params = getParams(window.location.href);
+    // 下面这行是方便前端调试时在「仅展示 8 个角色」和「展示所有角色」之间切换的
+    // params.avatars = params.avatars.slice(0, 8);
 
-      const hasLevelInfo = params.level !== -1;
-      const hasPlayerNameInfo = params.nickname !== "";
-      const randomAvatarOrder = Math.floor(Math.random() * params.avatars.length);
-      const target = params.avatars[randomAvatarOrder];
-      const targetHasCostume = params.avatars[randomAvatarOrder]["costumes"].length !== 0;
-      const costumeName = targetHasCostume ? params.avatars[randomAvatarOrder]["costumes"][0]["name"] : "";
+    const hasLevelInfo = params.level !== -1;
+    const hasPlayerNameInfo = params.nickname !== "";
+    const randomAvatarOrder = Math.floor(Math.random() * params.avatars.length);
+    const target = params.avatars[randomAvatarOrder];
+    const targetHasCostume = params.avatars[randomAvatarOrder]["costumes"].length !== 0;
+    const costumeName = targetHasCostume ? params.avatars[randomAvatarOrder]["costumes"][0]["name"] : "";
 
-      const ye = { 10000005: "旅行者男", 10000007: "旅行者女" };
-      const name = ye[target.id] || target.name;
-      const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
-      const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${id}.png`);
-      const character = targetHasCostume
-          ? computed(() => `http://localhost:9934/resources/Version2/costumes/avatars/${costumeName}.png`)
-          : computed(() => `http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
+    const ye = { 10000005: "旅行者男", 10000007: "旅行者女" };
+    const name = ye[target.id] || target.name;
+    const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
+    const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${id}.png`);
+    const character = targetHasCostume
+      ? computed(() => `http://localhost:9934/resources/Version2/costumes/avatars/${costumeName}.png`)
+      : computed(() => `http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
 
-      const explorations = params.explorations.reverse();
+    const explorations = params.explorations.reverse();
 
-      function homeData(name) {
-          const d = params.homes.find((el) => el.name === name);
-          return d || { name, level: -1 };
-      }
+    function homeData(name) {
+      const d = params.homes.find((el) => el.name === name);
+      return d || { name, level: -1 };
+    }
 
-      const homeList = ["罗浮洞", "翠黛峰", "清琼岛", "绘绮庭"];
-      const homes = homeList.map((home) => homeData(home));
+    const homeList = ["罗浮洞", "翠黛峰", "清琼岛", "绘绮庭"];
+    const homes = homeList.map((home) => homeData(home));
 
-      const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
-      const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
+    const comfort = Math.max(...Object.keys(homes).map((k) => homes[k].comfort_num || -Infinity));
+    const homeboxTitle = `尘歌壶${comfort > 0 ? "（" + comfort + " 仙力）" : ""}`;
 
     let leftNum = parseInt((params.avatars.length / 4 - 5 + 1) / 2);
     if (leftNum >= 1) leftNum = leftNum * 4;
