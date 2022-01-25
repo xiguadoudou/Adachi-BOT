@@ -1,4 +1,13 @@
-const template = `<div class="user-base-page">
+import SectionTitle from "./section-title.js";
+import ExplorationBox from "./exploration.js";
+import CharacterBox from "./character-box.js";
+import HomeBox from "./home-box.js";
+import { html } from "../common/html.js";
+import { getParams } from "../common/param.js";
+
+// eslint-disable-next-line no-undef
+const { defineComponent, computed } = Vue;
+const template = html`<div class="user-base-page">
   <div class="left">
     <div class="top" :style="{ 'background-image': 'url(' + nameCard + ')'}">
       <div class="profile">
@@ -79,15 +88,6 @@ const template = `<div class="user-base-page">
   </div>
 </div>`;
 
-import SectionTitle from "./section-title.js";
-import ExplorationBox from "./exploration.js";
-import CharacterBox from "./character-box.js";
-import HomeBox from "./home-box.js";
-
-// eslint-disable-next-line no-undef
-const { defineComponent, computed } = Vue;
-import { getParams } from "../common/param.js";
-
 export default defineComponent({
   name: "Card8Box",
   template,
@@ -109,7 +109,7 @@ export default defineComponent({
     const targetHasCostume = params.avatars[randomAvatarOrder]["costumes"].length !== 0;
     const costumeName = targetHasCostume ? params.avatars[randomAvatarOrder]["costumes"][0]["name"] : "";
 
-    const ye = { 10000005: "旅行者男", 10000007: "旅行者女" };
+    const ye = { 10000005: "空", 10000007: "荧" };
     const name = ye[target.id] || target.name;
     const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
     const nameCard = computed(() => `http://localhost:9934/resources/Version2/namecard/${id}.png`);
