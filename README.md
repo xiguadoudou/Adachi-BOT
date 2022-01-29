@@ -61,12 +61,12 @@ cd ./Adachi-BOT/
 ```
 
 <details>
-  <summary>使用代理克隆本项目</summary>
+    <summary>以镜像克隆本项目</summary>
 
-如果你访问 `GitHub` 的速度很慢，那么你可以使用下面的代理克隆本项目。
+如果你访问 GitHub 的速度很慢，那么请使用下面的命令克隆本项目的镜像。
 
 ```
-git clone https://hub.fastgit.org/Arondight/Adachi-BOT.git
+git clone https://gitee.com/Xm798/Adachi-BOT.git
 ```
 
 </details>
