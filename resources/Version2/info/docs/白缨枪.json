@@ -2,7 +2,7 @@
   "type": "武器",
   "title": "长柄武器",
   "name": "白缨枪",
-  "introduce": "千岩军士兵的制式武器，枪身牢靠，枪尖锋锐，是无比可靠的武器。",
+  "introduce": "千岩军士兵的制式装备，枪身牢靠，枪尖锋锐，是无比可靠的武器。",
   "access": "宝箱",
   "rarity": 3,
   "mainStat": "暴击率",
@@ -14,5 +14,5 @@
   ],
   "time": "【周一/四/日】",
   "skillName": "锐利",
-  "skillContent": "普通攻击造成的伤害提升 <span style='color: rgb(113, 82, 87);'>24%/30%/36%/42%/48%</span> 。"
+  "skillContent": "普通攻击造成的伤害提升<span>24/30/36/42/48</span>%。"
 }
