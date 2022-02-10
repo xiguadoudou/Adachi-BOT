@@ -1,15 +1,21 @@
 import { getRandomInt } from "../../utils/tools.js";
 
-const { breakfast, lunch, dinner } = global.menu;
-
 function menu(msg) {
-  const food = "派蒙";
-  const message = `今日的推荐菜单是：
-早餐：${breakfast ? breakfast[getRandomInt(breakfast.length)] : food}
-午餐：${lunch ? lunch[getRandomInt(lunch.length)] : food}
-晚餐：${dinner ? dinner[getRandomInt(dinner.length)] : food}`;
+  const { eat, drink } = global.menu;
+  const { breakfast, lunch, dinner, snack } = eat;
+  const { base, topping, sweetness } = drink;
+  const eatText = `今日的推荐菜单是：
+早餐：${breakfast[getRandomInt(breakfast.length)] || ""}
+午餐：${lunch[getRandomInt(lunch.length)] || ""}
+晚餐：${dinner[getRandomInt(dinner.length)] || ""}
+夜宵：${snack[getRandomInt(snack.length)] || ""}`;
+  const baseText = base[getRandomInt(base.length)] || "水";
+  const toppingText =
+    Math.random() < 0.5 && baseText.endsWith("茶") ? "加" + (topping[getRandomInt(topping.length)] || "量") : "";
+  const sweetnessText = sweetness[getRandomInt(sweetness.length)] || "";
+  const drinkText = `来一杯${sweetnessText}${toppingText}${baseText}！`;
 
-  msg.bot.say(msg.sid, message, msg.type, msg.uid, true);
+  msg.bot.say(msg.sid, msg.text.includes("喝") ? drinkText : eatText, msg.type, msg.uid, true);
 }
 
 export { menu };
