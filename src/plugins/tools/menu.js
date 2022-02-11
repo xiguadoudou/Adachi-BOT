@@ -11,7 +11,7 @@ function menu(msg) {
 夜宵：${snack[getRandomInt(snack.length)] || ""}`;
   const baseText = base[getRandomInt(base.length)] || "水";
   const toppingText =
-    Math.random() < 0.5 && baseText.endsWith("茶") ? "加" + (topping[getRandomInt(topping.length)] || "量") : "";
+    Math.random() < 0.5 && baseText.endsWith("茶") ? `加${topping[getRandomInt(topping.length)] || "量"}的` : "";
   const sweetnessText = sweetness[getRandomInt(sweetness.length)] || "";
   const drinkText = `来一杯${sweetnessText}${toppingText}${baseText}！`;
 

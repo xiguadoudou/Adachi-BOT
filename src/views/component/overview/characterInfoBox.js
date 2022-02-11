@@ -42,7 +42,16 @@ const template = html` <div class="container-overview-infos">
     <p class="info-content">{{ charInfo.ascensionValue }}</p>
   </div>
   <div class="container-introduction">
-    <p class="introduction">{{ charInfo.introduction }}”</p>
+    <div class="container-intro-info">
+      <p class="introduction">{{ charInfo.introduction }}”</p>
+    </div>
+    <div
+      class="container-passive-talent"
+      v-if="showPassive && charInfo.passiveTalent !== '' && charInfo.passiveDesc !== ''"
+    >
+      <p class="passive-talent title">{{charInfo.passiveTitle}}</p>
+      <p class="passive-talent content">{{charInfo.passiveDesc}}</p>
+    </div>
   </div>
   <div class="container-vertical">
     <div class="split-title">- 养成材料 -</div>
@@ -95,6 +104,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const showPassive = false;
+
     const params = props.data;
     const decoStripContent = "PERSONAL INFORMATION - ".repeat(4);
     let charInfo = {};
@@ -117,6 +128,8 @@ export default defineComponent({
     charInfo.ascensionProp = params.mainStat || "暂无信息";
     charInfo.ascensionValue = params.mainValue || "暂无信息";
     charInfo.introduction = params.introduce || "暂无信息";
+    charInfo.passiveTitle = "固有天赋・" + params.passiveTitle || "";
+    charInfo.passiveDesc = params.passiveDesc || "";
     charInfo.levelUpMaterials = params.levelUpMaterials || [];
     charInfo.talentMaterials = params.talentMaterials || [];
     charInfo.weekdays = params.time || "【】";
@@ -134,6 +147,7 @@ export default defineComponent({
       charImageFilename,
       charImageUrl,
       charInfo,
+      showPassive,
     };
   },
 });
