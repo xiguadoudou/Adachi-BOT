@@ -5,13 +5,13 @@
 
 @font-face {
   font-family: GenshinUsedFont;
-  font-display: block;
+  font-display: swap;
   src: url("../../../../data/font/HYWenHei-85W.ttf");
 }
 
 @font-face {
   font-family: YunXiJinShu;
-  font-display: block;
+  font-display: swap;
   src: url("../../../../data/font/YunXiJinShu.ttf");
 }
 
@@ -339,7 +339,7 @@ p.align-right {
   width: 100%;
   text-align-last: justify;
   /*以下声明暂时未被Chrome支持，但不会有影响*/
-  text-justify: distribute !important;
+  text-justify: inter-character;
 }
 
 .home-box {
