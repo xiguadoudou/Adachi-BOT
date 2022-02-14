@@ -1,9 +1,9 @@
+import lodash from "lodash";
 import moment from "moment-timezone";
 import pLimit from "p-limit";
-import lodash from "lodash";
-import db from "./database.js";
-import { getCookie, tryToWarnInvalidCookie } from "./cookie.js";
-import { getAbyDetail, getBase, getCharacters, getIndex } from "./api.js";
+import { getAbyDetail, getBase, getCharacters, getIndex } from "#utils/api";
+import { getCookie, tryToWarnInvalidCookie } from "#utils/cookie";
+import db from "#utils/database";
 
 function detailError(message, cache = false, master = false, message_master = "") {
   return { detail: true, message, cache, master, message_master };

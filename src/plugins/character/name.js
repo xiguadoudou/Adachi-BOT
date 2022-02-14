@@ -1,4 +1,4 @@
-import { filterWordsByRegex, getWordByRegex } from "../../utils/tools.js";
+import { filterWordsByRegex, getWordByRegex } from "#utils/tools";
 import { getTrueNameByNikeName } from "../nikename/nikename.js";
 
 function getName(text, userID = undefined) {

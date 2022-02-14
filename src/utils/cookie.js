@@ -1,6 +1,6 @@
-import path from "path";
 import lodash from "lodash";
-import db from "./database.js";
+import path from "path";
+import db from "#utils/database";
 
 const cookies = global.cookies || [];
 let index = 0;

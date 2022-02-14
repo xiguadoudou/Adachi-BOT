@@ -20,8 +20,11 @@
   "engines": {
     "node": ">16.6.0"
   },
+  "imports": {
+    "#utils/*": "./src/utils/*.js"
+  },
   "scripts": {
-    "init": "npx node --max-http-header-size=2097152 ./app.js",
+    "init": "npx node --pending-deprecation --trace-warnings --max-http-header-size=2097152 ./app.js",
     "start": "cross-env-shell PM2_HOME=$INIT_CWD/bot.pm2/ npx pm2 start ./.pm2.json; cross-env-shell PM2_HOME=$INIT_CWD/bot.pm2/ npx pm2 save",
     "restart": "cross-env-shell PM2_HOME=$INIT_CWD/bot.pm2/ npx pm2 restart ./.pm2.json",
     "stop": "cross-env-shell PM2_HOME=$INIT_CWD/bot.pm2/ npx pm2 stop ./.pm2.json",
@@ -52,17 +55,17 @@
     "moment-timezone": "0.5.34",
     "node-fetch": "3.2.0",
     "node-schedule": "2.1.0",
-    "npm-check-updates": "^12.3.0",
     "oicq": "2.1.9",
     "p-limit": "4.0.0",
     "pm2": "5.1.2",
-    "pretty-bytes": "5.6.0",
+    "pretty-bytes": "6.0.0",
     "puppeteer": "13.3.1",
     "random-float": "3.0.0",
     "systeminformation": "5.11.2",
     "yargs": "17.3.1"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "3.2.0",
     "eslint": "8.9.0",
     "eslint-plugin-import": "2.25.4",
     "eslint-plugin-node": "11.1.0",
@@ -70,6 +73,7 @@
     "eslint-plugin-sort-exports": "0.6.0",
     "eslint-plugin-vue": "8.4.1",
     "eslint-plugin-yml": "0.13.0",
+    "npm-check-updates": "12.3.0",
     "prettier": "2.5.1"
   }
 }

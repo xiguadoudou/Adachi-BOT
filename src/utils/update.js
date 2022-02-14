@@ -1,6 +1,6 @@
 import lodash from "lodash";
-import db from "./database.js";
-import { getGachaDetail, getGachaList, getMysNews } from "./api.js";
+import { getGachaDetail, getGachaList, getMysNews } from "#utils/api";
+import db from "#utils/database";
 
 async function parseGachaData(gachaID) {
   let res;

@@ -1,9 +1,9 @@
 import lodash from "lodash";
-import { checkAuth } from "../../utils/auth.js";
-import { hasEntrance } from "../../utils/config.js";
-import { guessPossibleNames } from "../../utils/tools.js";
-import { domainInfo } from "./data.js";
+import { checkAuth } from "#utils/auth";
+import { hasEntrance } from "#utils/config";
+import { guessPossibleNames } from "#utils/tools";
 import { doArtifacts } from "./artifacts.js";
+import { domainInfo } from "./data.js";
 import { doStrengthen } from "./strengthen.js";
 import { getText } from "./text.js";
 

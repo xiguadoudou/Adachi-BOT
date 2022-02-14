@@ -1,8 +1,8 @@
 import moment from "moment";
-import si from "systeminformation";
-import pb from "pretty-bytes";
 import path from "path";
-import { du } from "../../utils/file.js";
+import pb from "pretty-bytes";
+import si from "systeminformation";
+import { du } from "#utils/file";
 
 async function status(msg) {
   const os = await si.osInfo();

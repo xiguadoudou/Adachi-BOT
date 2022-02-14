@@ -1,8 +1,8 @@
-import { checkAuth } from "../../utils/auth.js";
-import { hasEntrance } from "../../utils/config.js";
-import { guessPossibleNames } from "../../utils/tools.js";
-import { getName } from "./name.js";
+import { checkAuth } from "#utils/auth";
+import { hasEntrance } from "#utils/config";
+import { guessPossibleNames } from "#utils/tools";
 import { doInfo } from "./info.js";
+import { getName } from "./name.js";
 
 async function Plugin(msg) {
   const name = getName(msg.text);

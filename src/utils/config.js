@@ -379,13 +379,12 @@
  * ==========================================================================
  *                            以上为数据结构
  * ========================================================================== */
-
 import fs from "fs";
+import lodash from "lodash";
 import path from "path";
 import url from "url";
-import lodash from "lodash";
-import { loadYML } from "./yaml.js";
-import { ls } from "./file.js";
+import { ls } from "#utils/file";
+import { loadYML } from "#utils/yaml";
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -919,8 +918,9 @@ function readArtifacts() {
 // Call after readNames()
 //
 // global.info.character    -> array of { type, title, id , name, introduce, birthday, element, cv, constellationName,
-//                                        rarity, mainStat, mainValue, baseATK, ascensionMaterials, levelUpMaterials,
-//                                        talentMaterials, time, constellations }, sorted by rarity
+//                                        rarity, mainStat, mainValue, baseATK, passiveTitle, passiveDesc,
+//                                        ascensionMaterials, levelUpMaterials, talentMaterials, time,
+//                                        constellations }, sorted by rarity
 // global.info.weapon       -> array of { type, title, name, introduce, access, rarity, mainStat, mainValue, baseATK,
 //                                        ascensionMaterials, time, skillName, skillContent }, sorted by rarity
 function readInfo() {

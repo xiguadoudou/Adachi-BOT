@@ -1,5 +1,5 @@
-import db from "../../utils/database.js";
-import { textOfInvalidCookies } from "../../utils/cookie.js";
+import { textOfInvalidCookies } from "#utils/cookie";
+import db from "#utils/database";
 
 function cookiesInvalid(msg) {
   const text = textOfInvalidCookies();
