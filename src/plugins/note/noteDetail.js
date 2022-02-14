@@ -1,9 +1,9 @@
-﻿import db from "../../utils/database.js";
+﻿import md5 from "md5";
 import fetch from "node-fetch";
-import { getDS } from "../../utils/ds.js";
-import md5 from "md5";
-import { randomString } from "../../utils/tools.js";
 import { v3 as uuidv3 } from "uuid";
+import db from "../../utils/database.js";
+import { getDS } from "../../utils/ds.js";
+import { randomString } from "../../utils/tools.js";
 
 const __API = {
   FETCH_ROLE_DAILY_NOTE: "https://api-takumi.mihoyo.com/game_record/app/genshin/api/dailyNote",

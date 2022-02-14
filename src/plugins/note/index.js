@@ -3,22 +3,22 @@ import { baseDetail } from "../../utils/detail.js";
 import { getID } from "../../utils/id.js";
 import { render } from "../../utils/render.js";
 import {
+  changeAuto,
+  doGetMYB,
+  doSign,
+  getMYBCookie,
+  getUserCookie,
+  isAuto,
+  ledgerPromise,
+  mybCookiePromise,
   notePromise,
-  signInfoPromise,
+  resignInPromise,
   resignInfoPromise,
   rewardsPromise,
-  resignInPromise,
-  ledgerPromise,
-  setUserCookie,
-  getUserCookie,
-  mybCookiePromise,
-  setMYBCookie,
-  getMYBCookie,
   setCacheTimeout,
-  isAuto,
-  changeAuto,
-  doSign,
-  doGetMYB,
+  setMYBCookie,
+  setUserCookie,
+  signInfoPromise,
 } from "./noteDetail.js";
 
 async function doReSign(msg, uid, region) {

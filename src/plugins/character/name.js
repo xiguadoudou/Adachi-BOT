@@ -1,5 +1,5 @@
-import { filterWordsByRegex, getWordByRegex } from "#utils/tools";
 import { getTrueNameByNikeName } from "../nikename/nikename.js";
+import { filterWordsByRegex, getWordByRegex } from "#utils/tools";
 
 function getName(text, userID = undefined) {
   let character = filterWordsByRegex(
