@@ -1,9 +1,6 @@
 import { html } from "../common/html.js";
 import { getParams } from "../common/param.js";
-import CharacterBox from "./character-box.js";
-import ExplorationBox from "./exploration.js";
-import HomeBox from "./home-box.js";
-import SectionTitle from "./section-title.js";
+import { CharacterBox, ExplorationBox, HomeBox, SectionTitle } from "./cardComponents.js";
 
 // eslint-disable-next-line no-undef
 const { defineComponent, computed } = Vue;
