@@ -3,7 +3,7 @@ import schedule from "node-schedule";
 import { autoSignIn } from "../plugins/note/noteDetail.js";
 import db from "#utils/database";
 import { mysNewsNotice } from "#utils/notice";
-import { renderClose } from "#utils/render";
+import { renderClose, renderOpen, renderPath } from "#utils/render";
 import { gachaUpdate, mysNewsUpdate } from "#utils/update";
 
 let postRunning = false;
@@ -23,6 +23,11 @@ function initDB() {
   db.init("time");
   db.init("note", { user: [], cookie: [], myb: [], auto: [] });
   db.init("nikename", { uid: [] });
+}
+
+async function initBrowser() {
+  global.bots.logger.debug(`正在从 ${renderPath} 拉起浏览器实例。`);
+  global.browser = await renderOpen();
 }
 
 function doDBClean(name) {
@@ -95,6 +100,7 @@ async function init() {
 
   serve(9934);
   initDB();
+  await initBrowser();
   await updateGachaJob();
   cleanDBJob();
   syncDBJob();
