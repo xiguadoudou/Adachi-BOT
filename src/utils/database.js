@@ -228,7 +228,7 @@ function clean(dbName) {
   return 0;
 }
 function containKey(name, key) {
-    return db[name].chain.has(key).value();
+  return db[name].chain.has(key).value();
 }
 
 export default { clean, file, names, get, has, includes, init, push, remove, set, sync, update, containKey };
