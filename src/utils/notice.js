@@ -8,7 +8,7 @@ const running = { mysNewsNotice: false };
 
 function initDB() {
   for (const t of ["announcement", "event", "information"]) {
-    if (!db.includes("news", "timestamp", "type", t)) {
+    if (!db.includes("news", "timestamp", { type: t })) {
       db.push("news", "timestamp", { type: t, time: 0 });
     }
   }
@@ -32,7 +32,7 @@ async function mysNewsNotice(withImg = true) {
   const data = db.get("news", "data");
 
   for (const t of Object.keys(data)) {
-    if (!lodash.hasIn(data[t], ["data", "list"]) || !Array.isArray(data[t].data.list)) {
+    if (!lodash.hasIn(data[t], "data.list") || !Array.isArray(data[t].data.list)) {
       continue;
     }
 
