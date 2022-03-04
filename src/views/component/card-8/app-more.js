@@ -54,9 +54,11 @@ const template = html`<div class="user-base-page">
         </div>
       </div>
     </div>
-    <SectionTitle class="bottom-split" :title="homeboxTitle" />
-    <div class="bottom">
-      <HomeBox v-for="home in homes" :data="home" />
+    <div class="container-home-box">
+      <SectionTitle class="bottom-split" :title="homeboxTitle" />
+      <div class="container-homes">
+        <HomeBox v-for="home in homes" :data="home" />
+      </div>
     </div>
     <div class="container-character">
       <SectionTitle title="角色展柜" />
