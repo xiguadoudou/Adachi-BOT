@@ -1,6 +1,5 @@
 // noinspection HtmlRequiredAltAttribute
-import { html } from "../common/html.js";
-import { getParams } from "../common/param.js";
+import { getParams, html } from "../common/utils.js";
 
 // eslint-disable-next-line no-undef
 const { defineComponent } = Vue;
