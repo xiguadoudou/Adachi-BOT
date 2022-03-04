@@ -2,7 +2,7 @@ import express from "express";
 import schedule from "node-schedule";
 import { autoSignIn } from "../plugins/note/noteDetail.js";
 import { gachaUpdate } from "#jobs/gacha";
-import { mysNewsNotice, mysNewsUpdate } from "#jobs/news";
+import { mysNewsNotice, mysNewsTryToResetDB, mysNewsUpdate } from "#jobs/news";
 import db from "#utils/database";
 import { renderClose, renderOpen, renderPath } from "#utils/render";
 
@@ -23,6 +23,8 @@ function initDB() {
   db.init("time");
   db.init("note", { user: [], cookie: [], myb: [], auto: [] });
   db.init("nikename", { uid: [] });
+
+  mysNewsTryToResetDB();
 }
 
 async function initBrowser() {
