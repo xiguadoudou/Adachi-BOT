@@ -109,10 +109,10 @@ export default defineComponent({
     const ye = { 10000005: "空", 10000007: "荧" };
     const name = ye[target.id] || target.name;
     const id = 10000007 === target.id ? 10000005 : target.id; // 妹妹名片重定向至哥哥名片
-      const nameCard = encodeURI(`http://localhost:9934/resources/Version2/namecard/${id}.png`);
-      const character = targetHasCostume
-          ? encodeURI(`http://localhost:9934/resources/Version2/costumes/avatars/${costumeName}.png`)
-          : encodeURI(`http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
+    const nameCard = encodeURI(`http://localhost:9934/resources/Version2/namecard/${id}.png`);
+    const character = targetHasCostume
+      ? encodeURI(`http://localhost:9934/resources/Version2/costumes/avatars/${costumeName}.png`)
+      : encodeURI(`http://localhost:9934/resources/Version2/thumb/character/${name}.png`);
 
     const explorations = params.explorations.reverse();
 
