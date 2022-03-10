@@ -450,7 +450,7 @@ save:
         - ^(绑定|改绑)
 note:
   enable: true
-  weights: 9999
+  weights: 9998
   regex:
     - ^设置Cookie\s+.+$
     - ^清除Cookie
@@ -473,7 +473,7 @@ note:
     - ^关闭自动签到\s*$
   functions:
     set_user_cookie:
-      weights: 9999
+      weights: 9998
       name: 设置Cookie
       usage: <米游社Cookie>
       description:
