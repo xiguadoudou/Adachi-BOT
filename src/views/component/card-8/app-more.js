@@ -6,6 +6,11 @@ const { defineComponent } = Vue;
 
 const template = html`<div class="user-base-page">
   <div class="left">
+    <div class="page-frame">
+      <img class="user-namecard-top" src="http://localhost:9934/resources/Version2/frames/namecard-top.svg" />
+      <div class="left-page-middle-frame" />
+      <img class="user-namecard-bottom" src="http://localhost:9934/resources/Version2/frames/namecard-top.svg" />
+    </div>
     <div class="top" :style="{ 'background-image': 'url(' + nameCard + ')'}">
       <div class="profile">
         <img class="character" :src="character" alt="ERROR" />
@@ -47,34 +52,31 @@ const template = html`<div class="user-base-page">
       </div>
     </div>
     <div class="world">
-      <SectionTitle title="世界探索" />
+      <SectionTitle title="世界探索" :subtitle="!1" />
       <div class="container-exploration">
-        <div class="explorations">
-          <ExplorationBox v-for="e in explorations" :data="e" />
-        </div>
+        <ExplorationBox v-for="exploration in explorations" :data="exploration" />
       </div>
     </div>
     <div class="container-home-box">
-      <SectionTitle class="bottom-split" :title="homeboxTitle" />
+      <SectionTitle :title="homeboxTitle" :subtitle="homeboxSubtitle" />
       <div class="container-homes">
         <HomeBox v-for="home in homes" :data="home" />
       </div>
     </div>
     <div class="container-character">
-      <SectionTitle title="角色展柜" />
-      <div class="container-vertical">
-        <div class="box">
-          <CharacterBox v-for="(a, index) in data.avatars.slice(0,leftNum)" :data="a" />
-        </div>
+      <SectionTitle
+        title="角色展柜"
+        :subtitle="data.avatars.length < stats.avatar_number ? '仅展示米游社人物展柜中的至多8个人物' : !1"
+      />
+      <div class="container-character-box">
+        <CharacterBox v-for="a in data.avatars.slice(0,leftNum)" :data="a" />
       </div>
     </div>
   </div>
   <div class="right">
     <div class="container-character">
-      <div class="container-vertical">
-        <div class="box">
-          <CharacterBox v-for="a in data.avatars.slice(leftNum)" :data="a" />
-        </div>
+      <div class="container-character-box">
+        <CharacterBox v-for="a in data.avatars.slice(leftNum)" :data="a" />
       </div>
     </div>
     <div v-if="hasPlayerNameInfo" class="container-traveler-signature">
