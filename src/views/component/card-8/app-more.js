@@ -23,8 +23,8 @@ const template = html`<div class="user-base-page">
         </div>
       </div>
     </div>
-    <div class="container-middle">
-      <div class="middle">
+    <div class="container-stats">
+      <div class="stats">
         <p>活跃天数</p>
         <p>{{ stats.active_day_number }}</p>
         <p>获得角色</p>
