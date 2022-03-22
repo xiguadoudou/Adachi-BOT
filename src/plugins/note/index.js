@@ -129,7 +129,7 @@ function getCookieValue(loginCookie, key) {
 
 async function doSetMYBCookie(msg, uid) {
   let cookie = msg.text.slice(9);
-  cookie = cookie.replace(new RegExp("'", "gm"), "").replace(new RegExp('"', "gm"), "");
+  cookie = cookie.replace(new RegExp(`['"<>]`, "gm"), "");
   if (cookie.indexOf("stuid") == -1 || cookie.indexOf("stoken") == -1 || cookie.indexOf("login_ticket") == -1) {
     let login_ticket = getCookieValue(cookie, "login_ticket");
     let account_id = getCookieValue(cookie, "login_uid");
