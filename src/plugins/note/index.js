@@ -103,10 +103,13 @@ async function doSetCookie(msg, uid) {
   let account_id = getCookieValue(cookie, "account_id");
   let login_ticket = getCookieValue(cookie, "login_ticket");
   if (account_id == undefined) account_id = getCookieValue(cookie, "login_uid");
-  if (login_ticket != undefined && account_id != undefined) {
-    const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
-    cookie = `stuid=${account_id}; stoken=${stoken};`;
-    await setMYBCookie(uid, cookie, msg.bot);
+    if (login_ticket != undefined && account_id != undefined) {
+        try {
+            const { stoken } = await mybCookiePromise(account_id, login_ticket, msg.uid, msg.bot);
+            cookie = `stuid=${account_id}; stoken=${stoken};`;
+            await setMYBCookie(uid, cookie, msg.bot);
+        } catch (e) {
+        }
   }
   if (account_id == undefined || cookie_token == undefined) {
     return ` 未找到登录信息！请登录并进入米哈游通行证页面，再次尝试获取Cookie。`;
