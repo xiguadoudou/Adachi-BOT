@@ -155,6 +155,11 @@ async function Plugin(msg) {
     return;
   }
 
+  if (!dbInfo) {
+    msg.bot.say(msg.sid, "请先绑定米游社通行证 ID。", msg.type, msg.uid, true);
+    return;
+  }
+
   try {
     const baseInfo = await baseDetail(dbInfo, msg.uid, msg.bot);
     uid = baseInfo[0];
