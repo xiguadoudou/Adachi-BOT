@@ -159,11 +159,16 @@ async function Plugin(msg) {
     msg.bot.say(msg.sid, "请先绑定米游社通行证 ID。", msg.type, msg.uid, true);
     return;
   }
-
+    try {
+        const baseInfo = await baseDetail(dbInfo, msg.uid, msg.bot);
+        uid = baseInfo[0];
+        region = baseInfo[1];
+    } catch (e) {
+        await msg.bot.say(msg.sid, `请先绑定米游社通行证，并获取一次角色信息~`, msg.type, msg.uid);
+        return;
+    }
   try {
-    const baseInfo = await baseDetail(dbInfo, msg.uid, msg.bot);
-    uid = baseInfo[0];
-    region = baseInfo[1];
+    
     if (hasEntrance(msg.text, "note", "set_user_cookie")) {
       message = await doSetCookie(msg, uid);
     } else if (hasEntrance(msg.text, "note", "re_sign")) {
@@ -210,7 +215,12 @@ ${await doGetMYB(msg, uid, region)}`;
         message = `未开启自动签到`;
       }
     } else if (hasEntrance(msg.text, "note", "del_user_cookie")) {
-      await setUserCookie(uid, "", msg.bot);
+        try {
+            await setUserCookie(uid, "", msg.bot);
+        } catch {
+            await msg.bot.say(msg.sid, `清除Cookie失败，请确认是否设置过~`, msg.type, msg.uid);
+            return;
+        }
       setCacheTimeout(msg.uid, msg.bot);
       message = `已清除cookie`;
     } else {
