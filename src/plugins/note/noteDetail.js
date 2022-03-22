@@ -43,8 +43,7 @@ async function getUserCookie(user, bot = undefined) {
 
 async function setUserCookie(user, userCookie, bot) {
   if (!(await db.includes("note", "cookie", "user", user))) {
-    if (userCookie === "")
-      return;
+    if (userCookie === "") return;
     const initData = { user, cookie: userCookie };
     await db.push("note", "cookie", initData);
     return;
