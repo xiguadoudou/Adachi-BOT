@@ -166,7 +166,7 @@ async function Plugin(msg) {
     uid = baseInfo[0];
     region = baseInfo[1];
   } catch (e) {
-    await msg.bot.say(msg.sid, `请先绑定米游社通行证，并获取一次角色信息~`, msg.type, msg.uid);
+    await msg.bot.say(msg.sid, `获取游戏UID失败：${e}`, msg.type, msg.uid);
     return;
   }
   try {
