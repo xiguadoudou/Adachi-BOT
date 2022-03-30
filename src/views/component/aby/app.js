@@ -1,4 +1,4 @@
-import { getParams, html, toReadableDate } from "../common/utils.js";
+import { getParams, html } from "../common/utils.js";
 import characterShowbox from "./characterShowbox.js";
 
 // eslint-disable-next-line no-undef
@@ -123,8 +123,28 @@ export default defineComponent({
     abyssFloor,
   },
   setup() {
-    function formatDate(date, format) {
-      return toReadableDate(date, format);
+    function padLeftZero(str) {
+      return ("00" + str).substring(str.length);
+    }
+
+    function formatDate(date, fmt) {
+      if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substring(4 - RegExp.$1.length));
+      }
+      const o = {
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "h+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds(),
+      };
+      for (const k in o) {
+        if (new RegExp(`(${k})`).test(fmt)) {
+          const str = o[k] + "";
+          fmt = fmt.replace(RegExp.$1, 1 === RegExp.$1.length ? str : padLeftZero(str));
+        }
+      }
+      return fmt;
     }
 
     const params = getParams(window.location.href);
@@ -132,8 +152,8 @@ export default defineComponent({
 
     let abyssBriefings = {};
 
-    abyssBriefings.startTime = formatDate(new Date(params.data.start_time * 1000), "YYYY/mm/dd");
-    abyssBriefings.endTime = formatDate(new Date(params.data.end_time * 1000), "YYYY/mm/dd");
+    abyssBriefings.startTime = formatDate(new Date(params.data.start_time * 1000), "yyyy/MM/dd");
+    abyssBriefings.endTime = formatDate(new Date(params.data.end_time * 1000), "yyyy/MM/dd");
     abyssBriefings.totalBattleTimes = params.data.total_battle_times || 0;
     abyssBriefings.maxFloor = params.data.max_floor || "8-3";
     abyssBriefings.totalStar = params.data.total_star || 0;

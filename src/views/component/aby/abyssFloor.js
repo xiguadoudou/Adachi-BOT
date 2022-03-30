@@ -1,5 +1,5 @@
 // noinspection DuplicatedCode
-import { html, toReadableDate } from "../common/utils.js";
+import { html } from "../common/utils.js";
 import characterShowbox from "./characterShowbox.js";
 
 // eslint-disable-next-line no-undef
@@ -11,13 +11,13 @@ const chamberTemplate = html`
       <div class="chamber-indicator">{{floorIndex}}<span>-</span>{{chamberIndex}}</div>
       <div class="chamber-stars">{{chamberStarCount}}</div>
       <div class="chamber-time" v-if="chamberTimestamp != 0">
-        <p>{{formatDate(new Date(chamberTimestamp * 1000), "YY/mm/dd")}}</p>
+        <p>{{formatDate(new Date(chamberTimestamp * 1000), "yy/MM/dd")}}</p>
         <p>
-          <span>{{formatDate(new Date(chamberTimestamp * 1000), "HH")}}</span>
+          <span>{{formatDate(new Date(chamberTimestamp * 1000), "hh")}}</span>
           <span class="kerning">:</span>
-          <span>{{formatDate(new Date(chamberTimestamp * 1000), "MM")}}</span>
+          <span>{{formatDate(new Date(chamberTimestamp * 1000), "mm")}}</span>
           <span class="kerning">:</span>
-          <span>{{formatDate(new Date(chamberTimestamp * 1000), "SS")}}</span>
+          <span>{{formatDate(new Date(chamberTimestamp * 1000), "ss")}}</span>
         </p>
       </div>
     </div>
@@ -59,15 +59,34 @@ const chamber = defineComponent({
     characterShowbox,
   },
   methods: {
-    formatDate(date, format) {
-      return toReadableDate(date, format);
+    padLeftZero(str) {
+      return ("00" + str).substring(str.length);
+    },
+    formatDate(date, fmt) {
+      if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substring(4 - RegExp.$1.length));
+      }
+      const o = {
+        "M+": date.getMonth() + 1,
+        "d+": date.getDate(),
+        "h+": date.getHours(),
+        "m+": date.getMinutes(),
+        "s+": date.getSeconds(),
+      };
+      for (const k in o) {
+        if (new RegExp(`(${k})`).test(fmt)) {
+          const str = o[k] + "";
+          fmt = fmt.replace(RegExp.$1, 1 === RegExp.$1.length ? str : this.padLeftZero(str));
+        }
+      }
+      return fmt;
     },
   },
   setup(props) {
     const chamber = props.chamber;
     const chamberIndex = props.index;
     const floorIndex = props.floorIndex;
-    const chamberStars = chamber.star || 0;
+    const chamberStars = chamber.max_star || 0;
     const chamberStarCount = "*".repeat(chamberStars);
     const chamberDetails = chamber.battles || [{}, {}];
 
