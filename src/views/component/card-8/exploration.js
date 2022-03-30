@@ -1,3 +1,5 @@
+import detailedExplorationData from "./detailedExplorationData.js";
+
 const template = `<div class="exploration">
   <div class="exp-area">
     <img class="logo" :src="areaLogo" alt="ERROR" />
@@ -9,8 +11,6 @@ const template = `<div class="exploration">
 
 // eslint-disable-next-line no-undef
 const { defineComponent, computed } = Vue;
-
-import detailedExplorationData from "./detailedExplorationData.js";
 
 export default defineComponent({
   name: "ExplorationBox",
